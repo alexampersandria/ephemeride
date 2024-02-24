@@ -182,6 +182,12 @@ $ git commit -m "type(scope): message"
 
 The scope is optional and should be a GitHub issue number if applicable.
 
+## 📖 DB Schema
+
+![dbeaver diagram export of postgres db schema](.github/img/dbeaver-2024-02-24-17-09.png)
+
+[DBeaver](https://dbeaver.io/) was used to generate the schema diagram, diagram generated 2024-02-24 17:09
+
 ---
 
 <br />
