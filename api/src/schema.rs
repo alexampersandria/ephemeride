@@ -90,11 +90,4 @@ diesel::joinable!(sessions -> users (user_id));
 diesel::joinable!(tags -> users (user_id));
 diesel::joinable!(users -> invites (invite));
 
-diesel::allow_tables_to_appear_in_same_query!(
-    entries,
-    entry_tags,
-    invites,
-    sessions,
-    tags,
-    users,
-);
+diesel::allow_tables_to_appear_in_same_query!(entries, entry_tags, invites, sessions, tags, users,);
