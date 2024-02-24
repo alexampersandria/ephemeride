@@ -6,6 +6,10 @@
   A mood tracking / short journaling web app built with Rust and Svelte.
 </p>
 
+<p align="center">
+  <img src="https://github.com/alexampersandria/ephemeride/actions/workflows/api.yml/badge.svg" alt="API GitHub Actions Build Badge" />
+</p>
+
 ## 👩‍💻 Getting Started
 
 Coming soon™
