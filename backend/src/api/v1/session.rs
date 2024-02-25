@@ -1,10 +1,11 @@
 use bcrypt::verify;
+use diesel::{prelude::Insertable, RunQueryDsl};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-use crate::{api::v1::user, util};
+use crate::{api::v1::user, establish_connection, schema, schema::sessions, util};
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Insertable)]
 pub struct Session {
   pub id: String,
   pub user_id: String,
@@ -14,15 +15,17 @@ pub struct Session {
   pub user_agent: String,
 }
 
-pub struct CreateSessionMetadata {
+pub struct SessionMetadata {
   pub ip_address: String,
   pub user_agent: String,
 }
 
 pub fn create_user_session(
   auth_user: user::AuthUser,
-  metadata: CreateSessionMetadata,
+  metadata: SessionMetadata,
 ) -> Option<Session> {
+  let mut conn = establish_connection();
+
   let found_user = user::get_user_by_email(&auth_user.email);
 
   match found_user {
@@ -48,7 +51,14 @@ pub fn create_user_session(
     user_agent: metadata.user_agent,
   };
 
-  // #TODO: save session to database
+  let result = diesel::insert_into(schema::sessions::table)
+    .values(&session)
+    .execute(&mut conn);
+
+  match result {
+    Ok(_) => (),
+    Err(_) => return None,
+  }
 
   Some(session)
 }

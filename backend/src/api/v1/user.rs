@@ -1,4 +1,4 @@
-use crate::{api::v1::session, establish_connection, schema, util};
+use crate::{api::v1::session, establish_connection, schema, schema::users, util};
 
 use diesel::{
   deserialize::Queryable, prelude::Insertable, ExpressionMethods, QueryDsl, RunQueryDsl,
@@ -12,7 +12,6 @@ use serde::{Deserialize, Serialize};
 
 use uuid::Uuid;
 
-use crate::schema::users;
 use dotenvy::dotenv;
 use std::env;
 
@@ -142,7 +141,7 @@ pub fn create_user(Json(user): Json<CreateUser>, request: &Request) -> Response 
       email: String::from(&user.email),
       password: String::from(&user.password),
     },
-    session::CreateSessionMetadata {
+    session::SessionMetadata {
       ip_address: request.remote_addr().to_string(),
       user_agent: request
         .header("user-agent")
