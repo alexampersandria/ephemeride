@@ -1,6 +1,8 @@
 use crate::{establish_connection, schema, util};
 
-use diesel::{prelude::Insertable, ExpressionMethods, QueryDsl, RunQueryDsl};
+use diesel::{
+  deserialize::Queryable, prelude::Insertable, ExpressionMethods, QueryDsl, RunQueryDsl,
+};
 
 use poem::{handler, http::StatusCode, web::Json, Response};
 
@@ -25,15 +27,36 @@ pub struct CreateUser {
   invite: Option<String>,
 }
 
-#[derive(Debug, Deserialize, Serialize, Insertable)]
-struct User {
+#[derive(Debug, Deserialize, Serialize, Validate)]
+pub struct AuthUser {
+  #[validate(email)]
+  pub email: String,
+  #[validate(length(min = 7, max = 255))]
+  pub password: String,
+}
+
+#[derive(Debug, Deserialize, Serialize, Insertable, Queryable)]
+pub struct User {
   id: String,
   created_at: i64,
   name: String,
   email: String,
   password: String,
   deleted: bool,
-  invite: Option<Option<String>>,
+  invite: Option<String>,
+}
+
+pub fn get_user_by_email(email: &str) -> Option<User> {
+  let mut conn = establish_connection();
+
+  let found_user = schema::users::table
+    .filter(schema::users::email.eq(&email))
+    .first(&mut conn);
+
+  match found_user {
+    Ok(user) => Some(user),
+    Err(_) => None,
+  }
 }
 
 #[handler]
@@ -42,7 +65,7 @@ pub fn create_user(Json(user): Json<CreateUser>) -> Response {
 
   let mut conn = establish_connection();
 
-  let mut invite_value = Some(None);
+  let mut invite_value = None;
 
   // check if INVITE_REQUIRED .env variable is set to true, if so check if invite is valid
   if env::var("INVITE_REQUIRED").unwrap_or("false".to_string()) == "true" {
@@ -56,7 +79,7 @@ pub fn create_user(Json(user): Json<CreateUser>) -> Response {
 
         // check if invite exists, if not return 401 unauthorized
         match found_invite {
-          Ok(_) => invite_value = Some(Some(invite.to_string())),
+          Ok(_) => invite_value = Some(invite.to_string()),
           Err(_) => {
             return Response::builder()
               .status(StatusCode::UNAUTHORIZED)
@@ -80,15 +103,12 @@ pub fn create_user(Json(user): Json<CreateUser>) -> Response {
   }
 
   // search for user with the same email
-  let found_user = schema::users::table
-    .filter(schema::users::email.eq(&user.email))
-    .select(schema::users::id)
-    .first::<String>(&mut conn);
+  let found_user = get_user_by_email(&user.email);
 
   // check if user already exists, if so return 409 conflict
   match found_user {
-    Ok(_) => return Response::builder().status(StatusCode::CONFLICT).body(()),
-    Err(_) => (),
+    Some(_) => return Response::builder().status(StatusCode::CONFLICT).body(()),
+    None => (),
   }
 
   // create user object
@@ -120,5 +140,6 @@ pub fn create_user(Json(user): Json<CreateUser>) -> Response {
   // #TODO: create session and return token, for now just return 201 created
   return Response::builder()
     .status(StatusCode::CREATED)
+    .header("Content-Type", "application/json")
     .body(serde_json::to_string(&new_user).unwrap());
 }
