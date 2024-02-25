@@ -7,17 +7,17 @@
 </p>
 
 <p align="center">
-  <img src="https://github.com/alexampersandria/ephemeride/actions/workflows/api.yml/badge.svg" alt="API GitHub Actions Build Badge" />
+  <img src="https://github.com/alexampersandria/ephemeride/actions/workflows/backend.yml/badge.svg" alt="Backend GitHub Actions Build Badge" />
 </p>
 
 ## 👩‍💻 Getting Started
 
-### ⚒️ API
+### ⚒️ Backend
 
-All of the following commands should be run from the `api` directory.
+All of the following commands should be run from the `backend` directory.
 
 ```bash
-$ cd api
+$ cd backend
 ```
 
 #### Run
@@ -61,7 +61,7 @@ $ yarn
 
 #### Build
 
-When the frontend is built, it can be served by the API.
+When the frontend is built, it can be served by the backend.
 
 ```bash
 $ yarn build
@@ -110,7 +110,7 @@ psql=# GRANT ALL PRIVILEGES ON DATABASE <database> TO <username>;
 #### Installing diesel_cli and running migrations
 
 ```bash
-$ cd api
+$ cd backend
 $ cargo install diesel_cli --no-default-features --features postgres
 $ echo DATABASE_URL=postgres://<username>:<password>@<host>/<database> > .env
 $ diesel setup
@@ -120,13 +120,13 @@ $ diesel migration run
 #### Redoing migrations
 
 ```bash
-$ cd api
+$ cd backend
 $ diesel migration redo --all
 ```
 
-## 🩺 API Tests
+## 🩺 Backend Tests
 
-GitHub actions will run `cargo test ci --verbose` on commit to `main` or when creaing a pull request. In order to have an API test run using GitHub actions, include `ci` in the test name.
+GitHub actions will run `cargo test ci --verbose` on commit to `main` or when creaing a pull request. In order to have a backend test run using GitHub actions, include `ci` in the test name.
 
 As an example `util::unix_time::ci_unit::positive` could be defined as:
 

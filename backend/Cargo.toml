@@ -1,8 +1,8 @@
 [package]
-name = "ephemeride-api"
+name = "ephemeride-backend"
 version = "0.1.0"
 edition = "2021"
-default-run = "ephemeride-api"
+default-run = "ephemeride-backend"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

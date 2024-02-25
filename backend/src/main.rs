@@ -1,7 +1,7 @@
 use dotenvy::dotenv;
 use std::env;
 
-use ephemeride_api::api;
+use ephemeride_backend::api;
 use poem::{
   endpoint::StaticFilesEndpoint,
   listener::TcpListener,

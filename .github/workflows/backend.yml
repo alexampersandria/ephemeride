@@ -1,4 +1,4 @@
-name: api
+name: backend
 
 on:
   push:
@@ -10,13 +10,13 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  api:
+  backend:
 
     runs-on: ubuntu-latest
 
     defaults:
       run:
-        working-directory: ./api
+        working-directory: ./backend
 
     steps:
     - uses: actions/checkout@v3
