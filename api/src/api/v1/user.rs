@@ -1,19 +1,12 @@
-use crate::establish_connection;
-use crate::schema;
-use crate::util;
+use crate::{establish_connection, schema, util};
 
-use diesel::prelude::Insertable;
-use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
+use diesel::{prelude::Insertable, ExpressionMethods, QueryDsl, RunQueryDsl};
 
-use poem::handler;
-use poem::http::StatusCode;
-use poem::web::Json;
-use poem::Response;
+use poem::{handler, http::StatusCode, web::Json, Response};
 
 use validator::Validate;
 
-use serde::Deserialize;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 use uuid::Uuid;
 
@@ -40,7 +33,7 @@ struct User {
   email: String,
   password: String,
   deleted: bool,
-  invite: String,
+  invite: Option<Option<String>>,
 }
 
 #[handler]
@@ -49,7 +42,7 @@ pub fn create_user(Json(user): Json<CreateUser>) -> Response {
 
   let mut conn = establish_connection();
 
-  let mut invite_value = "".to_string();
+  let mut invite_value = Some(None);
 
   // check if INVITE_REQUIRED .env variable is set to true, if so check if invite is valid
   if env::var("INVITE_REQUIRED").unwrap_or("false".to_string()) == "true" {
@@ -63,7 +56,7 @@ pub fn create_user(Json(user): Json<CreateUser>) -> Response {
 
         // check if invite exists, if not return 401 unauthorized
         match found_invite {
-          Ok(_) => invite_value = invite.to_string(),
+          Ok(_) => invite_value = Some(Some(invite.to_string())),
           Err(_) => {
             return Response::builder()
               .status(StatusCode::UNAUTHORIZED)
@@ -120,9 +113,12 @@ pub fn create_user(Json(user): Json<CreateUser>) -> Response {
     Err(_) => {
       return Response::builder()
         .status(StatusCode::INTERNAL_SERVER_ERROR)
-        .body(())
+        .body(());
     }
   }
 
-  return Response::builder().status(StatusCode::CREATED).body(());
+  // #TODO: create session and return token, for now just return 201 created
+  return Response::builder()
+    .status(StatusCode::CREATED)
+    .body(serde_json::to_string(&new_user).unwrap());
 }

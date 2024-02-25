@@ -2,6 +2,7 @@
 name = "ephemeride-api"
 version = "0.1.0"
 edition = "2021"
+default-run = "ephemeride-api"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -10,8 +11,8 @@ bcrypt = "0.15.0"
 diesel = { version = "2.1.4", features = ["postgres"] }
 dotenvy = "0.15.7"
 poem = { version = "2.0.0", features = ["websocket", "static-files"] }
-poem-openapi = "4.0.0"
 serde = "1.0.197"
+serde_json = "1.0.114"
 tokio = { version = "1.36.0", features = ["rt-multi-thread", "macros"] }
 validator = { version = "0.16.1", features = ["derive"] }
 
