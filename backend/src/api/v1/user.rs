@@ -1,10 +1,10 @@
-use crate::{establish_connection, schema, util};
+use crate::{api::v1::session, establish_connection, schema, util};
 
 use diesel::{
   deserialize::Queryable, prelude::Insertable, ExpressionMethods, QueryDsl, RunQueryDsl,
 };
 
-use poem::{handler, http::StatusCode, web::Json, Response};
+use poem::{handler, http::StatusCode, web::Json, Request, Response};
 
 use validator::Validate;
 
@@ -37,13 +37,13 @@ pub struct AuthUser {
 
 #[derive(Debug, Deserialize, Serialize, Insertable, Queryable)]
 pub struct User {
-  id: String,
-  created_at: i64,
-  name: String,
-  email: String,
-  password: String,
-  deleted: bool,
-  invite: Option<String>,
+  pub id: String,
+  pub created_at: i64,
+  pub name: String,
+  pub email: String,
+  pub password: String,
+  pub deleted: bool,
+  pub invite: Option<String>,
 }
 
 pub fn get_user_by_email(email: &str) -> Option<User> {
@@ -60,7 +60,7 @@ pub fn get_user_by_email(email: &str) -> Option<User> {
 }
 
 #[handler]
-pub fn create_user(Json(user): Json<CreateUser>) -> Response {
+pub fn create_user(Json(user): Json<CreateUser>, request: &Request) -> Response {
   dotenv().ok();
 
   let mut conn = establish_connection();
@@ -115,8 +115,8 @@ pub fn create_user(Json(user): Json<CreateUser>) -> Response {
   let new_user = User {
     id: Uuid::new_v4().to_string(),
     created_at: util::unix_time::unix_ms(),
-    name: user.name,
-    email: user.email,
+    name: String::from(&user.name),
+    email: String::from(&user.email),
     password: bcrypt::hash(&user.password, bcrypt::DEFAULT_COST).unwrap(),
     deleted: false,
     invite: invite_value,
@@ -137,9 +137,32 @@ pub fn create_user(Json(user): Json<CreateUser>) -> Response {
     }
   }
 
-  // #TODO: create session and return token, for now just return 201 created
-  return Response::builder()
-    .status(StatusCode::CREATED)
-    .header("Content-Type", "application/json")
-    .body(serde_json::to_string(&new_user).unwrap());
+  let session = session::create_user_session(
+    AuthUser {
+      email: String::from(&user.email),
+      password: String::from(&user.password),
+    },
+    session::CreateSessionMetadata {
+      ip_address: request.remote_addr().to_string(),
+      user_agent: request
+        .header("user-agent")
+        .unwrap_or("unknown")
+        .to_string(),
+    },
+  );
+
+  match session {
+    Some(session) => {
+      return Response::builder()
+        .status(StatusCode::CREATED)
+        .header("Content-Type", "application/json")
+        .header("Authorization", &session.id)
+        .body(serde_json::to_string(&session).unwrap());
+    }
+    None => {
+      return Response::builder()
+        .status(StatusCode::INTERNAL_SERVER_ERROR)
+        .body(());
+    }
+  }
 }
