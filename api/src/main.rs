@@ -1,3 +1,6 @@
+use dotenvy::dotenv;
+use std::env;
+
 use ephemeride_api::api;
 use poem::{
   endpoint::StaticFilesEndpoint,
@@ -8,16 +11,15 @@ use poem::{
 
 #[tokio::main]
 async fn main() -> Result<(), std::io::Error> {
-  if std::env::var_os("RUST_LOG").is_none() {
-    std::env::set_var("RUST_LOG", "poem=debug");
-  }
+  dotenv().ok();
 
-  // #TODO: make this configurable
+  let port = env::var("PORT").unwrap_or("3000".to_string());
+
   let cors = Cors::new()
     .allow_origin("http://localhost:5173")
-    .allow_origin("http://localhost:3000")
     .allow_origin("http://127.0.0.1:5173")
-    .allow_origin("http://127.0.0.1:3000");
+    .allow_origin(format!("http://localhost:{}", port))
+    .allow_origin(format!("http://127.0.0.1:{}", port));
 
   let app = Route::new()
     .nest("/api", api::index::endpoint())
@@ -27,7 +29,9 @@ async fn main() -> Result<(), std::io::Error> {
     )
     .with((NormalizePath::new(TrailingSlash::Trim), cors));
 
-  Server::new(TcpListener::bind("127.0.0.1:3000"))
+  println!("listening on port {}", port);
+
+  Server::new(TcpListener::bind(format!("127.0.0.1:{}", port)))
     .run(app)
     .await
 }
