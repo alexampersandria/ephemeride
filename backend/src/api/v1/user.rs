@@ -165,3 +165,59 @@ pub fn create_user(Json(user): Json<CreateUser>, request: &Request) -> Response 
     }
   }
 }
+
+#[handler]
+pub fn auth_user(Json(user): Json<AuthUser>, request: &Request) -> Response {
+  dotenv().ok();
+
+  let found_user = get_user_by_email(&user.email);
+
+  match found_user {
+    Some(user_object) => {
+      let valid_password = bcrypt::verify(&user.password, &user_object.password);
+
+      match valid_password {
+        Ok(_) => (),
+        Err(_) => {
+          return Response::builder()
+            .status(StatusCode::UNAUTHORIZED)
+            .body(());
+        }
+      }
+
+      let session = session::create_user_session(
+        AuthUser {
+          email: String::from(&user.email),
+          password: String::from(&user.password),
+        },
+        session::SessionMetadata {
+          ip_address: request.remote_addr().to_string(),
+          user_agent: request
+            .header("user-agent")
+            .unwrap_or("unknown")
+            .to_string(),
+        },
+      );
+
+      match session {
+        Some(session) => {
+          return Response::builder()
+            .status(StatusCode::OK)
+            .header("Content-Type", "application/json")
+            .header("Authorization", &session.id)
+            .body(serde_json::to_string(&session).unwrap());
+        }
+        None => {
+          return Response::builder()
+            .status(StatusCode::INTERNAL_SERVER_ERROR)
+            .body(());
+        }
+      }
+    }
+    None => {
+      return Response::builder()
+        .status(StatusCode::UNAUTHORIZED)
+        .body(());
+    }
+  }
+}

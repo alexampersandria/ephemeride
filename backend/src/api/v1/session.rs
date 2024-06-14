@@ -1,11 +1,14 @@
 use bcrypt::verify;
-use diesel::{prelude::Insertable, RunQueryDsl};
+use diesel::{
+  deserialize::Queryable, prelude::Insertable, query_dsl::methods::FilterDsl, ExpressionMethods,
+  RunQueryDsl,
+};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::{api::v1::user, establish_connection, schema, schema::sessions, util};
 
-#[derive(Debug, Deserialize, Serialize, Insertable)]
+#[derive(Debug, Deserialize, Serialize, Insertable, Queryable)]
 pub struct Session {
   pub id: String,
   pub user_id: String,
@@ -61,4 +64,37 @@ pub fn create_user_session(
   }
 
   Some(session)
+}
+
+pub fn get_user_session_by_id(session_id: &str) -> Option<Session> {
+  let mut conn = establish_connection();
+
+  let found_session = schema::sessions::table
+    .filter(schema::sessions::id.eq(session_id))
+    .first::<Session>(&mut conn);
+
+  match found_session {
+    Ok(session) => Some(session),
+    Err(_) => None,
+  }
+}
+
+pub fn get_all_user_sessions(session_id: &str) -> Vec<Session> {
+  let mut conn = establish_connection();
+
+  let current_session = get_user_session_by_id(session_id);
+
+  match current_session {
+    Some(_) => (),
+    None => return Vec::new(),
+  }
+
+  let found_sessions = schema::sessions::table
+    .filter(schema::sessions::user_id.eq(current_session.unwrap().user_id))
+    .load::<Session>(&mut conn);
+
+  match found_sessions {
+    Ok(sessions) => sessions,
+    Err(_) => Vec::new(),
+  }
 }
