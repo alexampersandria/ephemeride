@@ -5,6 +5,9 @@ www
 # contains private data, use setup.sh to generate
 .env
 
+# node_modules
+node_modules
+
 # vite
 logs
 *.log
@@ -12,8 +15,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
-vite/node_modules
+lerna-debug.log
 *.local
 *.suo
 *.ntvs*
