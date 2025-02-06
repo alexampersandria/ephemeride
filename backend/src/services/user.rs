@@ -8,6 +8,14 @@ use validator::Validate;
 
 use super::delete_all_user_sessions;
 
+#[derive(Debug)]
+pub enum UserError {
+  EmailAlreadyInUse,
+  NotFound,
+  InvalidPassword,
+  DatabaseError,
+}
+
 #[derive(Debug, Deserialize, Serialize, Validate)]
 pub struct CreateUser {
   #[validate(length(min = 1, max = 255))]
@@ -44,7 +52,28 @@ pub struct User {
   pub invite: Option<String>,
 }
 
-pub fn get_user_by_id(id: &str) -> Option<User> {
+#[derive(Debug, Deserialize, Serialize, Queryable)]
+pub struct PublicUser {
+  pub id: String,
+  pub created_at: i64,
+  pub name: String,
+  pub email: String,
+  pub deleted: bool,
+  pub invite: Option<String>,
+}
+
+fn public_user(user: User) -> PublicUser {
+  PublicUser {
+    id: user.id,
+    created_at: user.created_at,
+    name: user.name,
+    email: user.email,
+    deleted: user.deleted,
+    invite: user.invite,
+  }
+}
+
+pub fn get_user_by_id(id: &str) -> Result<PublicUser, UserError> {
   let mut conn = establish_connection();
 
   let found_user = schema::users::table
@@ -53,12 +82,12 @@ pub fn get_user_by_id(id: &str) -> Option<User> {
     .first(&mut conn);
 
   match found_user {
-    Ok(user) => Some(user),
-    Err(_) => None,
+    Ok(user) => Ok(public_user(user)),
+    Err(_) => Err(UserError::NotFound),
   }
 }
 
-pub fn get_user_by_email(email: &str) -> Option<User> {
+pub fn get_user_by_email(email: &str) -> Result<PublicUser, UserError> {
   let mut conn = establish_connection();
 
   let found_user = schema::users::table
@@ -67,15 +96,30 @@ pub fn get_user_by_email(email: &str) -> Option<User> {
     .first(&mut conn);
 
   match found_user {
-    Ok(user) => Some(user),
-    Err(_) => None,
+    Ok(user) => Ok(public_user(user)),
+    Err(_) => Err(UserError::NotFound),
   }
 }
 
-pub fn create_user(user: CreateUser) -> Option<User> {
+pub fn get_password_hash(id: &str) -> Result<String, UserError> {
+  let mut conn = establish_connection();
+
+  let found_user = schema::users::table
+    .filter(schema::users::id.eq(&id))
+    .filter(schema::users::deleted.eq(false))
+    .first::<User>(&mut conn);
+
+  match found_user {
+    Ok(user) => Ok(user.password),
+    Err(_) => Err(UserError::NotFound),
+  }
+}
+
+pub fn create_user(user: CreateUser) -> Result<PublicUser, UserError> {
   let found_user = get_user_by_email(&user.email);
-  if found_user.is_some() {
-    return None;
+
+  if found_user.is_ok() {
+    return Err(UserError::EmailAlreadyInUse);
   }
 
   let mut conn = establish_connection();
@@ -97,30 +141,40 @@ pub fn create_user(user: CreateUser) -> Option<User> {
     .execute(&mut conn);
 
   match result {
-    Ok(_) => Some(new_user),
-    Err(_) => None,
+    Ok(_) => Ok(public_user(new_user)),
+    Err(_) => Err(UserError::DatabaseError),
   }
 }
 
-pub fn delete_user(id: &str) -> bool {
+pub fn delete_user(id: &str) -> Result<bool, UserError> {
   let mut conn = establish_connection();
 
+  let found_user = get_user_by_id(id);
+  match found_user {
+    Ok(_) => (),
+    Err(_) => return Err(UserError::NotFound),
+  }
+
   let deleted_sessions = delete_all_user_sessions(id);
-  if !deleted_sessions {
-    return false;
+  match deleted_sessions {
+    Ok(_) => (),
+    Err(_) => return Err(UserError::DatabaseError),
   }
 
   let result = diesel::update(schema::users::table.filter(schema::users::id.eq(id)))
     .set(schema::users::deleted.eq(true))
     .execute(&mut conn);
 
-  matches!(result, Ok(rows_affected) if rows_affected > 0)
+  match result {
+    Ok(rows_affected) => Ok(rows_affected > 0),
+    Err(_) => Err(UserError::DatabaseError),
+  }
 }
 
-pub fn update_user(id: &str, user: UpdateUser) -> bool {
+pub fn update_user(id: &str, user: UpdateUser) -> Result<PublicUser, UserError> {
   let found_user = get_user_by_id(id);
-  if found_user.is_none() {
-    return false;
+  if found_user.is_err() {
+    return Err(UserError::NotFound);
   }
 
   let mut conn = establish_connection();
@@ -132,13 +186,17 @@ pub fn update_user(id: &str, user: UpdateUser) -> bool {
     ))
     .execute(&mut conn);
 
-  matches!(result, Ok(rows_affected) if rows_affected > 0)
+  match result {
+    Ok(_) => get_user_by_id(id),
+    Err(_) => Err(UserError::NotFound),
+  }
 }
 
-pub fn update_password(id: &str, password: UpdatePassword) -> bool {
+pub fn update_password(id: &str, password: UpdatePassword) -> Result<bool, UserError> {
   let found_user = get_user_by_id(id);
-  if found_user.is_none() {
-    return false;
+  match found_user {
+    Ok(_) => (),
+    Err(_) => return Err(UserError::NotFound),
   }
 
   let mut conn = establish_connection();
@@ -149,7 +207,10 @@ pub fn update_password(id: &str, password: UpdatePassword) -> bool {
     .set(schema::users::password.eq(&password_hash))
     .execute(&mut conn);
 
-  matches!(result, Ok(rows_affected) if rows_affected > 0)
+  match result {
+    Ok(rows_affected) => Ok(rows_affected > 0),
+    Err(_) => Err(UserError::DatabaseError),
+  }
 }
 
 #[cfg(test)]
@@ -170,11 +231,11 @@ mod tests {
 
     let created_user = create_user(user);
 
-    assert!(created_user.is_some());
+    assert!(created_user.is_ok());
 
     let found_user = get_user_by_email(&email);
 
-    assert!(found_user.is_some());
+    assert!(found_user.is_ok());
     assert_eq!(found_user.unwrap().name, random_name);
   }
 
@@ -192,26 +253,26 @@ mod tests {
 
     let created_user = create_user(user);
 
-    assert!(created_user.is_some());
+    assert!(created_user.is_ok());
 
     let found_user = get_user_by_email(&email);
 
-    assert!(found_user.is_some());
+    assert!(found_user.is_ok());
 
     let deleted = delete_user(&found_user.unwrap().id);
 
-    assert!(deleted);
+    assert!(deleted.is_ok());
 
     let found_user = get_user_by_email(&email);
 
-    assert!(found_user.is_none());
+    assert!(found_user.is_err());
   }
 
   #[test]
   fn delete_user_that_does_not_exist() {
     let deleted = delete_user("INVALID_ID");
 
-    assert!(!deleted);
+    assert!(deleted.is_err());
   }
 
   #[test]
@@ -228,12 +289,12 @@ mod tests {
 
     let created_user = create_user(user);
 
-    assert!(created_user.is_some());
+    assert!(created_user.is_ok());
 
     let found_user = get_user_by_email(&email);
 
-    assert!(found_user.is_some());
-    let found_user = found_user.unwrap();
+    assert!(found_user.is_ok());
+    let found_user: PublicUser = found_user.unwrap();
     let found_user_name = found_user.name.clone();
     assert_eq!(found_user_name, random_name);
 
@@ -247,11 +308,11 @@ mod tests {
 
     let updated = update_user(&found_user.id, updated_user);
 
-    assert!(updated);
+    assert!(updated.is_ok());
 
     let found_user = get_user_by_email(&new_email);
 
-    assert!(found_user.is_some());
+    assert!(found_user.is_ok());
     assert_eq!(found_user.unwrap().name, new_random_name);
   }
 }

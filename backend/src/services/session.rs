@@ -1,4 +1,3 @@
-use bcrypt::verify;
 use diesel::{
   deserialize::Queryable, prelude::Insertable, query_dsl::methods::FilterDsl, ExpressionMethods,
   RunQueryDsl,
@@ -7,6 +6,13 @@ use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::{establish_connection, schema, schema::sessions, services::user, util};
+
+#[derive(Debug)]
+pub enum SessionError {
+  NotFound,
+  InvalidPassword,
+  DatabaseError,
+}
 
 #[derive(Debug, Deserialize, Serialize, Insertable, Queryable)]
 pub struct Session {
@@ -32,27 +38,31 @@ pub struct UserCredentials {
 pub fn create_user_session(
   user_credentials: UserCredentials,
   metadata: SessionMetadata,
-) -> Option<Session> {
+) -> Result<Session, SessionError> {
   let mut conn = establish_connection();
 
   let found_user = user::get_user_by_email(&user_credentials.email);
+  let found_user = match found_user {
+    Ok(user) => user,
+    Err(_) => return Err(SessionError::NotFound),
+  };
 
-  match found_user {
-    Some(_) => (),
-    None => return None,
-  }
+  let password_hash = user::get_password_hash(found_user.id.as_str());
+  let password_hash = match password_hash {
+    Ok(hash) => hash,
+    Err(_) => return Err(SessionError::NotFound),
+  };
 
-  let user_object = found_user.unwrap();
-
-  let valid_password = verify(&user_credentials.password, &user_object.password);
+  let valid_password = bcrypt::verify(&user_credentials.password, &password_hash);
 
   match valid_password {
     Ok(_) => (),
-    Err(_) => return None,
+    Err(_) => return Err(SessionError::InvalidPassword),
   }
+
   let session = Session {
     id: Uuid::new_v4().to_string(),
-    user_id: user_object.id,
+    user_id: found_user.id,
     created_at: util::unix_time::unix_ms(),
     accessed_at: util::unix_time::unix_ms(),
     ip_address: metadata.ip_address,
@@ -64,14 +74,12 @@ pub fn create_user_session(
     .execute(&mut conn);
 
   match result {
-    Ok(_) => (),
-    Err(_) => return None,
+    Ok(_) => Ok(session),
+    Err(_) => Err(SessionError::DatabaseError),
   }
-
-  Some(session)
 }
 
-pub fn get_user_session_by_id(session_id: &str) -> Option<Session> {
+pub fn get_user_session_by_id(session_id: &str) -> Result<Session, SessionError> {
   let mut conn = establish_connection();
 
   let found_session = schema::sessions::table
@@ -79,19 +87,19 @@ pub fn get_user_session_by_id(session_id: &str) -> Option<Session> {
     .first::<Session>(&mut conn);
 
   match found_session {
-    Ok(session) => Some(session),
-    Err(_) => None,
+    Ok(session) => Ok(session),
+    Err(_) => Err(SessionError::NotFound),
   }
 }
 
-pub fn get_all_user_sessions(session_id: &str) -> Vec<Session> {
+pub fn get_all_user_sessions(session_id: &str) -> Result<Vec<Session>, SessionError> {
   let mut conn = establish_connection();
 
   let current_session = get_user_session_by_id(session_id);
 
   match current_session {
-    Some(_) => (),
-    None => return Vec::new(),
+    Ok(_) => (),
+    Err(_) => return Err(SessionError::NotFound),
   }
 
   let found_sessions = schema::sessions::table
@@ -99,28 +107,34 @@ pub fn get_all_user_sessions(session_id: &str) -> Vec<Session> {
     .load::<Session>(&mut conn);
 
   match found_sessions {
-    Ok(sessions) => sessions,
-    Err(_) => Vec::new(),
+    Ok(sessions) => Ok(sessions),
+    Err(_) => Err(SessionError::DatabaseError),
   }
 }
 
-pub fn delete_user_session(session_id: &str) -> bool {
+pub fn delete_user_session(session_id: &str) -> Result<bool, SessionError> {
   let mut conn = establish_connection();
 
   let result = diesel::delete(schema::sessions::table.filter(schema::sessions::id.eq(session_id)))
     .execute(&mut conn);
 
-  matches!(result, Ok(rows_affected) if rows_affected > 0)
+  match result {
+    Ok(_) => Ok(true),
+    Err(_) => Err(SessionError::DatabaseError),
+  }
 }
 
-pub fn delete_all_user_sessions(user_id: &str) -> bool {
+pub fn delete_all_user_sessions(user_id: &str) -> Result<bool, SessionError> {
   let mut conn = establish_connection();
 
   let result =
     diesel::delete(schema::sessions::table.filter(schema::sessions::user_id.eq(user_id)))
       .execute(&mut conn);
 
-  result.is_ok()
+  match result {
+    Ok(_) => Ok(true),
+    Err(_) => Err(SessionError::DatabaseError),
+  }
 }
 
 #[cfg(test)]
@@ -144,11 +158,11 @@ mod tests {
 
     let created_user = services::create_user(user);
 
-    assert!(created_user.is_some());
+    assert!(created_user.is_ok());
 
     let found_user = services::get_user_by_email(&email);
 
-    assert!(found_user.is_some());
+    assert!(found_user.is_ok());
 
     let credentials = UserCredentials {
       email: email.clone(),
@@ -161,11 +175,11 @@ mod tests {
 
     let session = create_user_session(credentials, metadata);
 
-    assert!(session.is_some());
+    assert!(session.is_ok());
 
     let found_session = get_user_session_by_id(&session.unwrap().id);
 
-    assert!(found_session.is_some());
+    assert!(found_session.is_ok());
   }
 
   #[test]
@@ -183,11 +197,11 @@ mod tests {
 
     let created_user = services::create_user(user);
 
-    assert!(created_user.is_some());
+    assert!(created_user.is_ok());
 
     let found_user = services::get_user_by_email(&email);
 
-    assert!(found_user.is_some());
+    assert!(found_user.is_ok());
 
     let credentials = UserCredentials {
       email: email.clone(),
@@ -200,19 +214,19 @@ mod tests {
 
     let session = create_user_session(credentials, metadata);
 
-    assert!(session.is_some());
+    assert!(session.is_ok());
 
     let session_id = session.unwrap().id;
     let found_session = get_user_session_by_id(&session_id);
 
-    assert!(found_session.is_some());
+    assert!(found_session.is_ok());
 
     let deleted = delete_user_session(&session_id);
 
-    assert!(deleted);
+    assert!(deleted.unwrap());
 
     let found_session = get_user_session_by_id(&session_id);
 
-    assert!(found_session.is_none());
+    assert!(found_session.is_err());
   }
 }
