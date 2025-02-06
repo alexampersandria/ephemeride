@@ -1,4 +1,9 @@
-use crate::{api::v1::session, establish_connection, schema, schema::users, util};
+use crate::{
+  establish_connection,
+  schema::{self, users},
+  services::{session, user, UserCredentials},
+  util,
+};
 
 use diesel::{
   deserialize::Queryable, prelude::Insertable, ExpressionMethods, QueryDsl, RunQueryDsl,
@@ -45,18 +50,7 @@ pub struct User {
   pub invite: Option<String>,
 }
 
-pub fn get_user_by_email(email: &str) -> Option<User> {
-  let mut conn = establish_connection();
-
-  let found_user = schema::users::table
-    .filter(schema::users::email.eq(&email))
-    .first(&mut conn);
-
-  match found_user {
-    Ok(user) => Some(user),
-    Err(_) => None,
-  }
-}
+// #TODO: use services instead of direct calls
 
 #[handler]
 pub fn create_user(Json(user): Json<CreateUser>, request: &Request) -> Response {
@@ -102,7 +96,7 @@ pub fn create_user(Json(user): Json<CreateUser>, request: &Request) -> Response 
   }
 
   // search for user with the same email
-  let found_user = get_user_by_email(&user.email);
+  let found_user = user::get_user_by_email(&user.email);
 
   // check if user already exists, if so return 409 conflict
   match found_user {
@@ -137,7 +131,7 @@ pub fn create_user(Json(user): Json<CreateUser>, request: &Request) -> Response 
   }
 
   let session = session::create_user_session(
-    AuthUser {
+    UserCredentials {
       email: String::from(&user.email),
       password: String::from(&user.password),
     },
@@ -170,7 +164,7 @@ pub fn create_user(Json(user): Json<CreateUser>, request: &Request) -> Response 
 pub fn auth_user(Json(user): Json<AuthUser>, request: &Request) -> Response {
   dotenv().ok();
 
-  let found_user = get_user_by_email(&user.email);
+  let found_user = user::get_user_by_email(&user.email);
 
   match found_user {
     Some(user_object) => {
@@ -186,7 +180,7 @@ pub fn auth_user(Json(user): Json<AuthUser>, request: &Request) -> Response {
       }
 
       let session = session::create_user_session(
-        AuthUser {
+        UserCredentials {
           email: String::from(&user.email),
           password: String::from(&user.password),
         },

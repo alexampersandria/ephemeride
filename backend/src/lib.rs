@@ -2,6 +2,7 @@
 
 pub mod api;
 pub mod schema;
+pub mod services;
 pub mod util;
 
 use diesel::{pg, Connection};
