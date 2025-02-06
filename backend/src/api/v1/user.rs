@@ -63,8 +63,8 @@ pub fn create_user(Json(user): Json<user::CreateUser>, request: &Request) -> Res
 
   let session = session::create_user_session(
     UserCredentials {
-      email: String::from(&created_user.email),
-      password: String::from(password),
+      email: created_user.email,
+      password,
     },
     session::SessionMetadata {
       ip_address: request.remote_addr().to_string(),
