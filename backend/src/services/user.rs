@@ -28,6 +28,14 @@ pub struct CreateUser {
 }
 
 #[derive(Debug, Deserialize, Serialize, Validate)]
+pub struct AuthUser {
+  #[validate(email)]
+  pub email: String,
+  #[validate(length(min = 7, max = 255))]
+  pub password: String,
+}
+
+#[derive(Debug, Deserialize, Serialize, Validate)]
 pub struct UpdateUser {
   #[validate(length(min = 1, max = 255))]
   name: String,

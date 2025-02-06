@@ -28,6 +28,6 @@ describe('Auth', () => {
       password: user.password,
     }
 
-    post(`${url}/v1/auth`, authUser).expect('status', 200).done(done)
+    post(`${url}/v1/auth`, authUser).expect('status', 201).done(done)
   })
 })
