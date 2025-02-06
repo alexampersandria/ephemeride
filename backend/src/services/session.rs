@@ -127,7 +127,7 @@ pub fn delete_all_user_sessions(user_id: &str) -> bool {
 }
 
 #[cfg(test)]
-mod ci_session {
+mod tests {
   use crate::services;
 
   use super::*;

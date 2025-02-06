@@ -58,7 +58,7 @@ pub fn generate_invite(code: Option<&str>) -> Invite {
 }
 
 #[cfg(test)]
-mod ci_invite {
+mod tests {
   use super::*;
 
   #[test]

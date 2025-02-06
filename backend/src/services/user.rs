@@ -165,7 +165,7 @@ pub fn update_password(id: &str, password: UpdatePassword) -> bool {
 }
 
 #[cfg(test)]
-mod ci_user {
+mod tests {
   use super::*;
 
   #[test]
