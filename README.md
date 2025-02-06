@@ -45,6 +45,22 @@ $ cargo clippy
 $ cargo build
 ```
 
+#### Testing With Frisby
+
+Run the backend locally which frisby will test against. Or configure `env.ts` to point to a different backend.
+
+```bash
+$ cargo run
+```
+
+Run frisby.
+
+```bash
+$ cd frisby
+$ yarn
+$ yarn test
+```
+
 ### 🖥️ Frontend
 
 All of the following commands should be run from the `frontend` directory.
@@ -181,12 +197,6 @@ $ git commit -m "type(scope): message"
 ### 📚 Scope
 
 The scope is optional and should be a GitHub issue number if applicable.
-
-## 📖 DB Schema
-
-![dbeaver diagram export of postgres db schema](.github/img/dbeaver-2024-02-24-17-09.png)
-
-[DBeaver](https://dbeaver.io/) was used to generate the schema diagram, diagram generated 2024-02-24 17:09
 
 ---
 
