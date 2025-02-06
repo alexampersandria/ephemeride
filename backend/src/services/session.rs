@@ -110,10 +110,7 @@ pub fn delete_user_session(session_id: &str) -> bool {
   let result = diesel::delete(schema::sessions::table.filter(schema::sessions::id.eq(session_id)))
     .execute(&mut conn);
 
-  match result {
-    Ok(count) if count > 0 => true,
-    _ => false,
-  }
+  matches!(result, Ok(rows_affected) if rows_affected > 0)
 }
 
 pub fn delete_all_user_sessions(user_id: &str) -> bool {

@@ -74,9 +74,8 @@ pub fn get_user_by_email(email: &str) -> Option<User> {
 
 pub fn create_user(user: CreateUser) -> Option<User> {
   let found_user = get_user_by_email(&user.email);
-  match found_user {
-    Some(_) => return None,
-    None => (),
+  if found_user.is_some() {
+    return None;
   }
 
   let mut conn = establish_connection();
@@ -115,17 +114,13 @@ pub fn delete_user(id: &str) -> bool {
     .set(schema::users::deleted.eq(true))
     .execute(&mut conn);
 
-  match result {
-    Ok(rows_affected) if rows_affected > 0 => true,
-    _ => false,
-  }
+  matches!(result, Ok(rows_affected) if rows_affected > 0)
 }
 
 pub fn update_user(id: &str, user: UpdateUser) -> bool {
   let found_user = get_user_by_id(id);
-  match found_user {
-    Some(_) => (),
-    None => return false,
+  if found_user.is_none() {
+    return false;
   }
 
   let mut conn = establish_connection();
@@ -137,17 +132,13 @@ pub fn update_user(id: &str, user: UpdateUser) -> bool {
     ))
     .execute(&mut conn);
 
-  match result {
-    Ok(rows_affected) if rows_affected > 0 => true,
-    _ => false,
-  }
+  matches!(result, Ok(rows_affected) if rows_affected > 0)
 }
 
 pub fn update_password(id: &str, password: UpdatePassword) -> bool {
   let found_user = get_user_by_id(id);
-  match found_user {
-    Some(_) => (),
-    None => return false,
+  if found_user.is_none() {
+    return false;
   }
 
   let mut conn = establish_connection();
@@ -158,10 +149,7 @@ pub fn update_password(id: &str, password: UpdatePassword) -> bool {
     .set(schema::users::password.eq(&password_hash))
     .execute(&mut conn);
 
-  match result {
-    Ok(rows_affected) if rows_affected > 0 => true,
-    _ => false,
-  }
+  matches!(result, Ok(rows_affected) if rows_affected > 0)
 }
 
 #[cfg(test)]

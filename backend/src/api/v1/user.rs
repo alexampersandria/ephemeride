@@ -99,9 +99,8 @@ pub fn create_user(Json(user): Json<CreateUser>, request: &Request) -> Response 
   let found_user = user::get_user_by_email(&user.email);
 
   // check if user already exists, if so return 409 conflict
-  match found_user {
-    Some(_) => return Response::builder().status(StatusCode::CONFLICT).body(()),
-    None => (),
+  if found_user.is_some() {
+    return Response::builder().status(StatusCode::CONFLICT).body(());
   }
 
   // create user object
@@ -145,18 +144,14 @@ pub fn create_user(Json(user): Json<CreateUser>, request: &Request) -> Response 
   );
 
   match session {
-    Some(session) => {
-      Response::builder()
-        .status(StatusCode::CREATED)
-        .header("Content-Type", "application/json")
-        .header("Authorization", &session.id)
-        .body(serde_json::to_string(&session).unwrap())
-    }
-    None => {
-      Response::builder()
-        .status(StatusCode::INTERNAL_SERVER_ERROR)
-        .body(())
-    }
+    Some(session) => Response::builder()
+      .status(StatusCode::CREATED)
+      .header("Content-Type", "application/json")
+      .header("Authorization", &session.id)
+      .body(serde_json::to_string(&session).unwrap()),
+    None => Response::builder()
+      .status(StatusCode::INTERNAL_SERVER_ERROR)
+      .body(()),
   }
 }
 
@@ -194,24 +189,18 @@ pub fn auth_user(Json(user): Json<AuthUser>, request: &Request) -> Response {
       );
 
       match session {
-        Some(session) => {
-          Response::builder()
-            .status(StatusCode::OK)
-            .header("Content-Type", "application/json")
-            .header("Authorization", &session.id)
-            .body(serde_json::to_string(&session).unwrap())
-        }
-        None => {
-          Response::builder()
-            .status(StatusCode::INTERNAL_SERVER_ERROR)
-            .body(())
-        }
+        Some(session) => Response::builder()
+          .status(StatusCode::OK)
+          .header("Content-Type", "application/json")
+          .header("Authorization", &session.id)
+          .body(serde_json::to_string(&session).unwrap()),
+        None => Response::builder()
+          .status(StatusCode::INTERNAL_SERVER_ERROR)
+          .body(()),
       }
     }
-    None => {
-      Response::builder()
-        .status(StatusCode::UNAUTHORIZED)
-        .body(())
-    }
+    None => Response::builder()
+      .status(StatusCode::UNAUTHORIZED)
+      .body(()),
   }
 }
