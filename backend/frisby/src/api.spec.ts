@@ -16,18 +16,40 @@ const user = {
 }
 
 describe('User', () => {
-  it('POST /v1/user', (done) => {
-    post(`${url}/v1/user`, user).expect('status', 201).done(done)
-  })
-})
+  let userId: String | null = null
 
-describe('Auth', () => {
+  it('POST /v1/user', (done) => {
+    post(`${url}/v1/user`, user)
+      .expect('status', 201)
+      .then((res) => {
+        userId = res.json.user_id
+      })
+      .done(done)
+  })
+
+  let session: String | null = null
+
   it('POST /v1/auth', (done) => {
     const authUser = {
       email: user.email,
       password: user.password,
     }
 
-    post(`${url}/v1/auth`, authUser).expect('status', 201).done(done)
+    post(`${url}/v1/auth`, authUser)
+      .expect('status', 201)
+      .then((res) => {
+        session = res.json.id
+      })
+      .done(done)
+  })
+
+  it('GET /v1/user/:id', (done) => {
+    get(`${url}/v1/user/${userId}`).expect('status', 200).done(done)
+  })
+
+  it('GET /v1/user', (done) => {
+    get(`${url}/v1/user`, { headers: { Authorization: `Bearer ${session}` } })
+      .expect('status', 200)
+      .done(done)
   })
 })

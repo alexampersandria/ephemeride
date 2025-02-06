@@ -1,4 +1,4 @@
-use crate::{establish_connection, schema, schema::users, util};
+use crate::{establish_connection, schema, schema::users, services::auth, util};
 use diesel::{
   deserialize::Queryable, prelude::Insertable, ExpressionMethods, QueryDsl, RunQueryDsl,
 };
@@ -13,6 +13,7 @@ pub enum UserError {
   EmailAlreadyInUse,
   NotFound,
   InvalidPassword,
+  Unauthorized,
   DatabaseError,
 }
 
@@ -65,6 +66,13 @@ pub struct PublicUser {
   pub id: String,
   pub created_at: i64,
   pub name: String,
+}
+
+#[derive(Debug, Deserialize, Serialize, Queryable)]
+pub struct CurrentUser {
+  pub id: String,
+  pub created_at: i64,
+  pub name: String,
   pub email: String,
   pub deleted: bool,
   pub invite: Option<String>,
@@ -72,6 +80,14 @@ pub struct PublicUser {
 
 fn public_user(user: User) -> PublicUser {
   PublicUser {
+    id: user.id,
+    created_at: user.created_at,
+    name: user.name,
+  }
+}
+
+fn current_user(user: User) -> CurrentUser {
+  CurrentUser {
     id: user.id,
     created_at: user.created_at,
     name: user.name,
@@ -109,6 +125,22 @@ pub fn get_user_by_email(email: &str) -> Result<PublicUser, UserError> {
   }
 }
 
+pub fn get_current_user(session_id: &str) -> Result<CurrentUser, UserError> {
+  let mut conn = establish_connection();
+
+  let found_session = auth::get_user_session_by_id(session_id).map_err(|_| UserError::NotFound)?;
+
+  let found_user = schema::users::table
+    .filter(schema::users::id.eq(&found_session.user_id))
+    .filter(schema::users::deleted.eq(false))
+    .first(&mut conn);
+
+  match found_user {
+    Ok(user) => Ok(current_user(user)),
+    Err(_) => Err(UserError::NotFound),
+  }
+}
+
 pub fn get_password_hash(id: &str) -> Result<String, UserError> {
   let mut conn = establish_connection();
 
@@ -123,7 +155,7 @@ pub fn get_password_hash(id: &str) -> Result<String, UserError> {
   }
 }
 
-pub fn create_user(user: CreateUser) -> Result<PublicUser, UserError> {
+pub fn create_user(user: CreateUser) -> Result<CurrentUser, UserError> {
   let found_user = get_user_by_email(&user.email);
 
   if found_user.is_ok() {
@@ -149,7 +181,7 @@ pub fn create_user(user: CreateUser) -> Result<PublicUser, UserError> {
     .execute(&mut conn);
 
   match result {
-    Ok(_) => Ok(public_user(new_user)),
+    Ok(_) => Ok(current_user(new_user)),
     Err(_) => Err(UserError::DatabaseError),
   }
 }

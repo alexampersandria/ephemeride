@@ -1,5 +1,10 @@
-use crate::services::{invite, session, user, UserCredentials};
-use poem::{handler, http::StatusCode, web::Json, Request, Response};
+use crate::services::{auth, invite, user, UserCredentials};
+use poem::{
+  handler,
+  http::StatusCode,
+  web::{Json, Path},
+  Request, Response,
+};
 
 use validator::Validate;
 
@@ -10,7 +15,6 @@ use std::env;
 pub fn create_user(Json(user): Json<user::CreateUser>, request: &Request) -> Response {
   dotenv().ok();
 
-  // validate user object, if invalid return 400 bad request
   match user.validate() {
     Ok(_) => (),
     Err(_) => {
@@ -20,7 +24,6 @@ pub fn create_user(Json(user): Json<user::CreateUser>, request: &Request) -> Res
     }
   }
 
-  // check if INVITE_REQUIRED .env variable is set to true, if so check if invite is valid
   if env::var("INVITE_REQUIRED").unwrap_or("false".to_string()) == "true" {
     match &user.invite {
       Some(invite) => {
@@ -40,7 +43,6 @@ pub fn create_user(Json(user): Json<user::CreateUser>, request: &Request) -> Res
           }
         }
       }
-      // if invite is not provided but required in .env return 401 unauthorized
       None => {
         return Response::builder()
           .status(StatusCode::UNAUTHORIZED)
@@ -61,18 +63,12 @@ pub fn create_user(Json(user): Json<user::CreateUser>, request: &Request) -> Res
     }
   };
 
-  let session = session::create_user_session(
+  let session = auth::create_user_session(
     UserCredentials {
       email: created_user.email,
       password,
     },
-    session::SessionMetadata {
-      ip_address: request.remote_addr().to_string(),
-      user_agent: request
-        .header("user-agent")
-        .unwrap_or("unknown")
-        .to_string(),
-    },
+    auth::session_metadata(request),
   );
 
   match session {
@@ -88,43 +84,44 @@ pub fn create_user(Json(user): Json<user::CreateUser>, request: &Request) -> Res
 }
 
 #[handler]
-pub fn auth_user(Json(user): Json<user::AuthUser>, request: &Request) -> Response {
-  // validate user object, if invalid return 400 bad request
-  match user.validate() {
-    Ok(_) => (),
-    Err(_) => {
-      return Response::builder()
-        .status(StatusCode::BAD_REQUEST)
-        .body("Invalid user")
-    }
-  }
+pub fn get_user(id: Path<String>) -> Response {
+  let found_user = user::get_user_by_id(&id);
 
-  let session = session::create_user_session(
-    UserCredentials {
-      email: String::from(&user.email),
-      password: String::from(&user.password),
-    },
-    session::SessionMetadata {
-      ip_address: request.remote_addr().to_string(),
-      user_agent: request
-        .header("user-agent")
-        .unwrap_or("unknown")
-        .to_string(),
-    },
-  );
-
-  match session {
-    Ok(session) => Response::builder()
-      .status(StatusCode::CREATED)
+  match found_user {
+    Ok(user) => Response::builder()
+      .status(StatusCode::OK)
       .header("Content-Type", "application/json")
-      .header("Authorization", &session.id)
-      .body(serde_json::to_string(&session).unwrap()),
-    Err(session::SessionError::NotFound) => Response::builder()
-      .status(StatusCode::UNAUTHORIZED)
+      .body(serde_json::to_string(&user).unwrap()),
+    Err(user::UserError::NotFound) => Response::builder()
+      .status(StatusCode::NOT_FOUND)
+      .body(format!("User with id {} not found", *id)),
+    Err(_) => Response::builder()
+      .status(StatusCode::INTERNAL_SERVER_ERROR)
+      .body(()),
+  }
+}
+
+#[handler]
+pub fn get_current_user(request: &Request) -> Response {
+  let session_id = match auth::authorization_from_header(request) {
+    Some(session_id) => session_id,
+    None => {
+      return Response::builder()
+        .status(StatusCode::UNAUTHORIZED)
+        .body("Unauthorized");
+    }
+  };
+
+  let found_user = user::get_current_user(&session_id);
+
+  match found_user {
+    Ok(user) => Response::builder()
+      .status(StatusCode::OK)
+      .header("Content-Type", "application/json")
+      .body(serde_json::to_string(&user).unwrap()),
+    Err(user::UserError::NotFound) => Response::builder()
+      .status(StatusCode::NOT_FOUND)
       .body("User not found"),
-    Err(session::SessionError::InvalidPassword) => Response::builder()
-      .status(StatusCode::UNAUTHORIZED)
-      .body("Invalid password"),
     Err(_) => Response::builder()
       .status(StatusCode::INTERNAL_SERVER_ERROR)
       .body(()),

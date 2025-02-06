@@ -2,6 +2,7 @@ use diesel::{
   deserialize::Queryable, prelude::Insertable, query_dsl::methods::FilterDsl, ExpressionMethods,
   RunQueryDsl,
 };
+use poem::Request;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
@@ -33,6 +34,24 @@ pub struct SessionMetadata {
 pub struct UserCredentials {
   pub email: String,
   pub password: String,
+}
+
+pub fn session_metadata(request: &Request) -> SessionMetadata {
+  SessionMetadata {
+    ip_address: request.remote_addr().to_string(),
+    user_agent: request
+      .header("user-agent")
+      .unwrap_or("unknown")
+      .to_string(),
+  }
+}
+
+pub fn authorization_from_header(request: &Request) -> Option<String> {
+  let token = request.header("Authorization");
+  match token {
+    Some(token) => Some(token.replace("Bearer ", "")),
+    None => None,
+  }
 }
 
 pub fn create_user_session(
