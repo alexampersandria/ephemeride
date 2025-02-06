@@ -43,10 +43,6 @@ describe('User', () => {
       .done(done)
   })
 
-  it('GET /v1/user/:id', (done) => {
-    get(`${url}/v1/user/${userId}`).expect('status', 200).done(done)
-  })
-
   it('GET /v1/user', (done) => {
     get(`${url}/v1/user`, { headers: { Authorization: `Bearer ${session}` } })
       .expect('status', 200)

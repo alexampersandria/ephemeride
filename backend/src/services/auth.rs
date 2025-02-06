@@ -46,11 +46,15 @@ pub fn session_metadata(request: &Request) -> SessionMetadata {
   }
 }
 
-pub fn authorization_from_header(request: &Request) -> Option<String> {
+fn token_from_header(request: &Request) -> Option<String> {
   let token = request.header("Authorization");
-  match token {
-    Some(token) => Some(token.replace("Bearer ", "")),
-    None => None,
+  token.map(|token| token.replace("Bearer ", ""))
+}
+
+pub fn authorize_request(request: &Request) -> Result<Session, SessionError> {
+  match token_from_header(request) {
+    Some(token) => get_user_session_by_id(&token),
+    None => Err(SessionError::NotFound),
   }
 }
 
@@ -60,16 +64,14 @@ pub fn create_user_session(
 ) -> Result<Session, SessionError> {
   let mut conn = establish_connection();
 
-  let found_user = user::get_user_by_email(&user_credentials.email);
-  let found_user = match found_user {
-    Ok(user) => user,
+  let user_id = match user::get_user_id(&user_credentials.email) {
+    Ok(id) => id,
     Err(_) => return Err(SessionError::NotFound),
   };
 
-  let password_hash = user::get_password_hash(found_user.id.as_str());
-  let password_hash = match password_hash {
+  let password_hash = match user::get_password_hash(&user_id) {
     Ok(hash) => hash,
-    Err(_) => return Err(SessionError::NotFound),
+    Err(_) => return Err(SessionError::DatabaseError),
   };
 
   let valid_password = bcrypt::verify(&user_credentials.password, &password_hash);
@@ -81,7 +83,7 @@ pub fn create_user_session(
 
   let session = Session {
     id: Uuid::new_v4().to_string(),
-    user_id: found_user.id,
+    user_id,
     created_at: util::unix_time::unix_ms(),
     accessed_at: util::unix_time::unix_ms(),
     ip_address: metadata.ip_address,
@@ -98,14 +100,32 @@ pub fn create_user_session(
   }
 }
 
+pub fn update_accessed_at(session_id: &str) -> Result<bool, SessionError> {
+  let mut conn = establish_connection();
+
+  let result = diesel::update(schema::sessions::table.filter(schema::sessions::id.eq(session_id)))
+    .set(schema::sessions::accessed_at.eq(util::unix_time::unix_ms()))
+    .execute(&mut conn);
+
+  match result {
+    Ok(_) => Ok(true),
+    Err(_) => Err(SessionError::DatabaseError),
+  }
+}
+
 pub fn get_user_session_by_id(session_id: &str) -> Result<Session, SessionError> {
   let mut conn = establish_connection();
 
-  let found_session = schema::sessions::table
+  let result = schema::sessions::table
     .filter(schema::sessions::id.eq(session_id))
     .first::<Session>(&mut conn);
 
-  match found_session {
+  match update_accessed_at(session_id) {
+    Ok(_) => (),
+    Err(_) => return Err(SessionError::DatabaseError),
+  }
+
+  match result {
     Ok(session) => Ok(session),
     Err(_) => Err(SessionError::NotFound),
   }
@@ -114,18 +134,16 @@ pub fn get_user_session_by_id(session_id: &str) -> Result<Session, SessionError>
 pub fn get_all_user_sessions(session_id: &str) -> Result<Vec<Session>, SessionError> {
   let mut conn = establish_connection();
 
-  let current_session = get_user_session_by_id(session_id);
-
-  match current_session {
-    Ok(_) => (),
+  let current_session = match get_user_session_by_id(session_id) {
+    Ok(session) => session,
     Err(_) => return Err(SessionError::NotFound),
-  }
+  };
 
-  let found_sessions = schema::sessions::table
-    .filter(schema::sessions::user_id.eq(current_session.unwrap().user_id))
+  let result = schema::sessions::table
+    .filter(schema::sessions::user_id.eq(current_session.user_id))
     .load::<Session>(&mut conn);
 
-  match found_sessions {
+  match result {
     Ok(sessions) => Ok(sessions),
     Err(_) => Err(SessionError::DatabaseError),
   }
@@ -179,9 +197,9 @@ mod tests {
 
     assert!(created_user.is_ok());
 
-    let found_user = services::get_user_by_email(&email);
+    let user_id = services::get_user_id(&email);
 
-    assert!(found_user.is_ok());
+    assert!(user_id.is_ok());
 
     let credentials = UserCredentials {
       email: email.clone(),
@@ -218,7 +236,7 @@ mod tests {
 
     assert!(created_user.is_ok());
 
-    let found_user = services::get_user_by_email(&email);
+    let found_user = services::get_user_id(&email);
 
     assert!(found_user.is_ok());
 

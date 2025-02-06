@@ -28,11 +28,11 @@ pub struct Invite {
 pub fn get_invite(code: &str) -> Result<Invite, InviteError> {
   let mut conn = establish_connection();
 
-  let found_invite = schema::invites::table
+  let result = schema::invites::table
     .filter(schema::invites::code.eq(&code))
     .first(&mut conn);
 
-  match found_invite {
+  match result {
     Ok(invite) => Ok(invite),
     Err(_) => Err(InviteError::NotFound),
   }
@@ -41,9 +41,7 @@ pub fn get_invite(code: &str) -> Result<Invite, InviteError> {
 pub fn use_invite(code: &str) -> Result<Invite, InviteError> {
   let mut conn = establish_connection();
 
-  let found_invite = get_invite(code);
-
-  let invite = match found_invite {
+  let invite = match get_invite(code) {
     Ok(invite) => invite,
     Err(e) => return Err(e),
   };
