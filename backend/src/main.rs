@@ -1,5 +1,6 @@
 use dotenvy::dotenv;
 use std::env;
+use tracing_subscriber::fmt::format::FmtSpan;
 
 use ephemeride_backend::api;
 use poem::{
@@ -21,13 +22,20 @@ async fn main() -> Result<(), std::io::Error> {
     .allow_origin(format!("http://localhost:{}", port))
     .allow_origin(format!("http://127.0.0.1:{}", port));
 
+  tracing_subscriber::fmt()
+    .with_span_events(FmtSpan::FULL)
+    .init();
+
+  use poem::middleware::Tracing;
+
   let app = Route::new()
     .nest("/api", api::index::endpoint())
     .nest(
       "/",
       StaticFilesEndpoint::new("../www").index_file("index.html"),
     )
-    .with((NormalizePath::new(TrailingSlash::Trim), cors));
+    .with((NormalizePath::new(TrailingSlash::Trim), cors))
+    .with(Tracing);
 
   println!("listening on port {}", port);
 

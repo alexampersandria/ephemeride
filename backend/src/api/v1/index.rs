@@ -6,7 +6,7 @@ pub fn endpoint() -> poem::Route {
   Route::new()
     .at("/", get(package_version))
     .at("/user", post(v1::user::create_user))
-    .at("/user/auth", post(v1::user::auth_user))
+    .at("/auth", post(v1::user::auth_user))
 }
 
 #[handler]
