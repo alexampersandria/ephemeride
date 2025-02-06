@@ -45,7 +45,7 @@ pub fn generate_invite(code: Option<&str>) -> Invite {
   let new_invite = Invite {
     id: Uuid::new_v4().to_string(),
     created_at: crate::util::unix_time::unix_ms(),
-    code: code,
+    code,
     used: false,
   };
 
@@ -64,7 +64,7 @@ mod ci_invite {
   #[test]
   fn generates_an_invite() {
     let code = generate_invite(None);
-    assert!(code.code.len() > 0);
+    assert!(!code.code.is_empty());
   }
 
   #[test]

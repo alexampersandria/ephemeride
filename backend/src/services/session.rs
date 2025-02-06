@@ -123,10 +123,7 @@ pub fn delete_all_user_sessions(user_id: &str) -> bool {
     diesel::delete(schema::sessions::table.filter(schema::sessions::user_id.eq(user_id)))
       .execute(&mut conn);
 
-  match result {
-    Ok(_) => true,
-    Err(_) => false,
-  }
+  result.is_ok()
 }
 
 #[cfg(test)]

@@ -146,16 +146,16 @@ pub fn create_user(Json(user): Json<CreateUser>, request: &Request) -> Response 
 
   match session {
     Some(session) => {
-      return Response::builder()
+      Response::builder()
         .status(StatusCode::CREATED)
         .header("Content-Type", "application/json")
         .header("Authorization", &session.id)
-        .body(serde_json::to_string(&session).unwrap());
+        .body(serde_json::to_string(&session).unwrap())
     }
     None => {
-      return Response::builder()
+      Response::builder()
         .status(StatusCode::INTERNAL_SERVER_ERROR)
-        .body(());
+        .body(())
     }
   }
 }
@@ -195,23 +195,23 @@ pub fn auth_user(Json(user): Json<AuthUser>, request: &Request) -> Response {
 
       match session {
         Some(session) => {
-          return Response::builder()
+          Response::builder()
             .status(StatusCode::OK)
             .header("Content-Type", "application/json")
             .header("Authorization", &session.id)
-            .body(serde_json::to_string(&session).unwrap());
+            .body(serde_json::to_string(&session).unwrap())
         }
         None => {
-          return Response::builder()
+          Response::builder()
             .status(StatusCode::INTERNAL_SERVER_ERROR)
-            .body(());
+            .body(())
         }
       }
     }
     None => {
-      return Response::builder()
+      Response::builder()
         .status(StatusCode::UNAUTHORIZED)
-        .body(());
+        .body(())
     }
   }
 }
