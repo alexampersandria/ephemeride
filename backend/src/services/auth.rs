@@ -7,11 +7,11 @@ use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::{
-  error::EphemerideError,
   establish_connection,
   schema::{self, sessions},
   services::user,
   util,
+  util::error::EphemerideError,
 };
 
 #[derive(Debug, Deserialize, Serialize, Insertable, Queryable)]
@@ -53,7 +53,7 @@ fn token_from_header(request: &Request) -> Option<String> {
 pub fn authorize_request(request: &Request) -> Result<Session, EphemerideError> {
   match token_from_header(request) {
     Some(token) => get_user_session_by_id(&token),
-    None => Err(EphemerideError::SessionNotFound),
+    None => Err(EphemerideError::Unauthorized),
   }
 }
 

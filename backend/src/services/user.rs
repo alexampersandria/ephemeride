@@ -1,8 +1,8 @@
 use crate::{
-  error::EphemerideError,
   establish_connection,
   schema::{self, users},
   util,
+  util::error::EphemerideError,
 };
 use diesel::{
   deserialize::Queryable, prelude::Insertable, ExpressionMethods, QueryDsl, RunQueryDsl,

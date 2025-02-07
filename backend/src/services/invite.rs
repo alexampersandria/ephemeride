@@ -1,7 +1,7 @@
 use crate::{
-  error::EphemerideError,
   establish_connection,
   schema::{self, invites},
+  util::error::EphemerideError,
   util::generate_invite_code,
 };
 use diesel::{

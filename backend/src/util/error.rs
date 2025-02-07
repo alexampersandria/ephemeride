@@ -1,3 +1,4 @@
+use crate::util::response::response;
 use poem::{http::StatusCode, Response};
 use serde::Serialize;
 
@@ -49,19 +50,25 @@ fn status_code(error: EphemerideError) -> StatusCode {
   }
 }
 
-fn error_body(error: EphemerideError) -> String {
-  match serde_json::to_string(&ErrorBody {
+fn error_body(error: EphemerideError) -> ErrorBody {
+  ErrorBody {
     code: error,
     message: error_message(error),
-  }) {
-    Ok(body) => body,
-    Err(_) => "".to_string(),
   }
 }
 
 pub fn error_response(error: EphemerideError) -> Response {
-  Response::builder()
-    .status(status_code(error))
-    .header("Content-Type", "application/json")
-    .body(error_body(error))
+  response(status_code(error), &error_body(error))
+}
+
+#[cfg(test)]
+mod ci_unit {
+  use super::*;
+
+  #[test]
+  fn test_error_response() {
+    let error = EphemerideError::Unauthorized;
+    let response = error_response(error);
+    assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
+  }
 }

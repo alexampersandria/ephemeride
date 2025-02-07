@@ -1,6 +1,9 @@
 use crate::{
-  error::{error_response, EphemerideError},
   services::{auth, authorize_request, invite, user, UserCredentials},
+  util::{
+    error::{error_response, EphemerideError},
+    response,
+  },
 };
 use poem::{handler, http::StatusCode, web::Json, Request, Response};
 
@@ -43,11 +46,7 @@ pub fn create_user(Json(user): Json<user::CreateUser>, request: &Request) -> Res
   );
 
   match session {
-    Ok(session) => Response::builder()
-      .status(StatusCode::CREATED)
-      .header("Content-Type", "application/json")
-      .header("Authorization", &session.id)
-      .body(serde_json::to_string(&session).unwrap()),
+    Ok(session) => response(StatusCode::CREATED, &session),
     Err(error) => error_response(error),
   }
 }
@@ -62,10 +61,7 @@ pub fn get_current_user(request: &Request) -> Response {
   let user = user::get_user(&session.user_id);
 
   match user {
-    Ok(user) => Response::builder()
-      .status(StatusCode::OK)
-      .header("Content-Type", "application/json")
-      .body(serde_json::to_string(&user).unwrap()),
+    Ok(user) => response(StatusCode::OK, &user),
     Err(error) => error_response(error),
   }
 }

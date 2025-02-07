@@ -1,7 +1,6 @@
 #![forbid(unsafe_code)]
 
 pub mod api;
-pub mod error;
 pub mod schema;
 pub mod services;
 pub mod util;

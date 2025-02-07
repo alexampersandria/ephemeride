@@ -1,6 +1,9 @@
 use crate::{
-  error::{error_response, EphemerideError},
   services::{auth, user, UserCredentials},
+  util::{
+    error::{error_response, EphemerideError},
+    response,
+  },
 };
 use poem::{handler, http::StatusCode, web::Json, Request, Response};
 
@@ -22,11 +25,7 @@ pub fn authenticate_user(Json(user): Json<user::AuthUser>, request: &Request) ->
   );
 
   match session {
-    Ok(session) => Response::builder()
-      .status(StatusCode::CREATED)
-      .header("Content-Type", "application/json")
-      .header("Authorization", &session.id)
-      .body(serde_json::to_string(&session).unwrap()),
+    Ok(session) => response(StatusCode::CREATED, &session),
     Err(error) => error_response(error),
   }
 }
