@@ -1,5 +1,5 @@
 {
-  "name": "ephemeride-frontend",
+  "name": "frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,16 +7,16 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "check": "svelte-check --tsconfig ./tsconfig.json"
+    "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^3.0.2",
-    "@tsconfig/svelte": "^5.0.2",
-    "@types/node": "^20.11.20",
-    "svelte": "^4.2.11",
-    "svelte-check": "^3.6.4",
-    "tslib": "^2.6.2",
-    "typescript": "^5.2.2",
-    "vite": "^5.1.4"
-  }
+    "@sveltejs/vite-plugin-svelte": "^5.0.3",
+    "@tsconfig/svelte": "^5.0.4",
+    "@types/node": "^22.13.1",
+    "svelte": "^5.19.6",
+    "svelte-check": "^4.1.4",
+    "typescript": "~5.7.2",
+    "vite": "^6.1.0"
+  },
+  "packageManager": "yarn@4.6.0+sha512.5383cc12567a95f1d668fbe762dfe0075c595b4bfff433be478dbbe24e05251a8e8c3eb992a986667c1d53b6c3a9c85b8398c35a960587fbd9fa3a0915406728"
 }

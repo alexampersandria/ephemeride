@@ -27,3 +27,10 @@ vite.config.ts.timestamp-*
 
 .routify
 .vite
+
+#yarn
+**/.yarn/install-state.gz
+**/.yarn/cache
+**/.pnp.*
+**/.yarn/sdks
+**/.yarn/unplugged
