@@ -1,4 +1,7 @@
-use crate::services::{auth, authorize_request, invite, user, UserCredentials};
+use crate::{
+  errors::EphemerideError,
+  services::{auth, authorize_request, invite, user, UserCredentials},
+};
 use poem::{handler, http::StatusCode, web::Json, Request, Response};
 
 use validator::Validate;
@@ -21,14 +24,8 @@ pub fn create_user(Json(user): Json<user::CreateUser>, request: &Request) -> Res
 
   if env::var("INVITE_REQUIRED").unwrap_or("false".to_string()) == "true" {
     match &user.invite {
-      Some(invite) => match invite::get_invite(invite) {
-        Ok(invite) => {
-          if invite.used {
-            return Response::builder()
-              .status(StatusCode::UNAUTHORIZED)
-              .body("Invite has already been used");
-          }
-        }
+      Some(invite) => match invite::use_invite(invite) {
+        Ok(_) => (),
         Err(_) => {
           return Response::builder()
             .status(StatusCode::UNAUTHORIZED)
@@ -44,9 +41,7 @@ pub fn create_user(Json(user): Json<user::CreateUser>, request: &Request) -> Res
   }
 
   let password = user.password.clone();
-  let created_user = user::create_user(user);
-
-  let created_user = match created_user {
+  let created_user = match user::create_user(user) {
     Ok(user) => user,
     Err(_) => {
       return Response::builder()
@@ -93,7 +88,7 @@ pub fn get_current_user(request: &Request) -> Response {
       .status(StatusCode::OK)
       .header("Content-Type", "application/json")
       .body(serde_json::to_string(&user).unwrap()),
-    Err(user::UserError::NotFound) => Response::builder()
+    Err(EphemerideError::UserNotFound) => Response::builder()
       .status(StatusCode::NOT_FOUND)
       .body("User not found"),
     Err(_) => Response::builder()

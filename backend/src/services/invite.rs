@@ -1,4 +1,5 @@
 use crate::{
+  errors::EphemerideError,
   establish_connection,
   schema::{self, invites},
   util::generate_invite_code,
@@ -10,13 +11,6 @@ use diesel::{
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-#[derive(Debug)]
-pub enum InviteError {
-  NotFound,
-  Used,
-  DatabaseError,
-}
-
 #[derive(Debug, Deserialize, Serialize, Insertable, Queryable)]
 pub struct Invite {
   pub id: String,
@@ -25,7 +19,7 @@ pub struct Invite {
   pub used: bool,
 }
 
-pub fn get_invite(code: &str) -> Result<Invite, InviteError> {
+pub fn get_invite(code: &str) -> Result<Invite, EphemerideError> {
   let mut conn = establish_connection();
 
   let result = schema::invites::table
@@ -34,11 +28,11 @@ pub fn get_invite(code: &str) -> Result<Invite, InviteError> {
 
   match result {
     Ok(invite) => Ok(invite),
-    Err(_) => Err(InviteError::NotFound),
+    Err(_) => Err(EphemerideError::InviteNotFound),
   }
 }
 
-pub fn use_invite(code: &str) -> Result<Invite, InviteError> {
+pub fn use_invite(code: &str) -> Result<Invite, EphemerideError> {
   let mut conn = establish_connection();
 
   let invite = match get_invite(code) {
@@ -47,7 +41,7 @@ pub fn use_invite(code: &str) -> Result<Invite, InviteError> {
   };
 
   if invite.used {
-    return Err(InviteError::Used);
+    return Err(EphemerideError::InviteUsed);
   }
 
   let result = diesel::update(schema::invites::table.filter(schema::invites::code.eq(&code)))
@@ -56,11 +50,11 @@ pub fn use_invite(code: &str) -> Result<Invite, InviteError> {
 
   match result {
     Ok(invite) => Ok(invite),
-    Err(_) => Err(InviteError::DatabaseError),
+    Err(_) => Err(EphemerideError::DatabaseError),
   }
 }
 
-pub fn generate_invite(code: Option<&str>) -> Result<Invite, InviteError> {
+pub fn generate_invite(code: Option<&str>) -> Result<Invite, EphemerideError> {
   let mut conn = establish_connection();
 
   let code = match code {
@@ -84,6 +78,6 @@ pub fn generate_invite(code: Option<&str>) -> Result<Invite, InviteError> {
 
   match result {
     Ok(_) => Ok(new_invite),
-    Err(_) => Err(InviteError::DatabaseError),
+    Err(_) => Err(EphemerideError::DatabaseError),
   }
 }

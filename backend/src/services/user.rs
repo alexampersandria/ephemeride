@@ -1,4 +1,9 @@
-use crate::{establish_connection, schema, schema::users, util};
+use crate::{
+  errors::EphemerideError,
+  establish_connection,
+  schema::{self, users},
+  util,
+};
 use diesel::{
   deserialize::Queryable, prelude::Insertable, ExpressionMethods, QueryDsl, RunQueryDsl,
 };
@@ -7,15 +12,6 @@ use uuid::Uuid;
 use validator::Validate;
 
 use super::delete_all_user_sessions;
-
-#[derive(Debug)]
-pub enum UserError {
-  EmailAlreadyInUse,
-  NotFound,
-  InvalidPassword,
-  Unauthorized,
-  DatabaseError,
-}
 
 #[derive(Debug, Deserialize, Serialize, Validate)]
 pub struct CreateUser {
@@ -82,7 +78,7 @@ fn user_details(user: User) -> UserDetails {
   }
 }
 
-pub fn get_user_id(email: &str) -> Result<String, UserError> {
+pub fn get_user_id(email: &str) -> Result<String, EphemerideError> {
   let mut conn = establish_connection();
 
   let result = schema::users::table
@@ -93,11 +89,11 @@ pub fn get_user_id(email: &str) -> Result<String, UserError> {
 
   match result {
     Ok(id) => Ok(id),
-    Err(_) => Err(UserError::NotFound),
+    Err(_) => Err(EphemerideError::UserNotFound),
   }
 }
 
-pub fn get_user(id: &str) -> Result<UserDetails, UserError> {
+pub fn get_user(id: &str) -> Result<UserDetails, EphemerideError> {
   let mut conn = establish_connection();
 
   let result = schema::users::table
@@ -107,11 +103,11 @@ pub fn get_user(id: &str) -> Result<UserDetails, UserError> {
 
   match result {
     Ok(user) => Ok(user_details(user)),
-    Err(_) => Err(UserError::NotFound),
+    Err(_) => Err(EphemerideError::UserNotFound),
   }
 }
 
-pub fn get_password_hash(id: &str) -> Result<String, UserError> {
+pub fn get_password_hash(id: &str) -> Result<String, EphemerideError> {
   let mut conn: diesel::PgConnection = establish_connection();
 
   let result = schema::users::table
@@ -121,18 +117,22 @@ pub fn get_password_hash(id: &str) -> Result<String, UserError> {
 
   match result {
     Ok(user) => Ok(user.password),
-    Err(_) => Err(UserError::NotFound),
+    Err(_) => Err(EphemerideError::UserNotFound),
   }
 }
 
-pub fn create_user(user: CreateUser) -> Result<UserDetails, UserError> {
+pub fn create_user(user: CreateUser) -> Result<UserDetails, EphemerideError> {
   if get_user_id(&user.email).is_ok() {
-    return Err(UserError::EmailAlreadyInUse);
+    return Err(EphemerideError::EmailAlreadyInUse);
   }
 
   let mut conn = establish_connection();
 
-  let password_hash = bcrypt::hash(&user.password, bcrypt::DEFAULT_COST).unwrap();
+  let password_hash = match bcrypt::hash(&user.password, bcrypt::DEFAULT_COST) {
+    Ok(hash) => hash,
+    Err(_) => return Err(EphemerideError::InternalServerError),
+  };
+
   let new_user = User {
     id: Uuid::new_v4().to_string(),
     created_at: util::unix_time::unix_ms(),
@@ -149,18 +149,17 @@ pub fn create_user(user: CreateUser) -> Result<UserDetails, UserError> {
 
   match result {
     Ok(_) => Ok(user_details(new_user)),
-    Err(_) => Err(UserError::DatabaseError),
+    Err(_) => Err(EphemerideError::DatabaseError),
   }
 }
 
-pub fn delete_user(id: &str) -> Result<bool, UserError> {
+pub fn delete_user(id: &str) -> Result<bool, EphemerideError> {
   let mut conn = establish_connection();
 
-  let deleted_sessions = delete_all_user_sessions(id);
-  match deleted_sessions {
+  match delete_all_user_sessions(id) {
     Ok(_) => (),
-    Err(_) => return Err(UserError::DatabaseError),
-  }
+    Err(_) => return Err(EphemerideError::DatabaseError),
+  };
 
   let result = diesel::update(schema::users::table.filter(schema::users::id.eq(id)))
     .set(schema::users::deleted.eq(true))
@@ -168,11 +167,11 @@ pub fn delete_user(id: &str) -> Result<bool, UserError> {
 
   match result {
     Ok(rows_affected) => Ok(rows_affected > 0),
-    Err(_) => Err(UserError::DatabaseError),
+    Err(_) => Err(EphemerideError::DatabaseError),
   }
 }
 
-pub fn update_user(id: &str, user: UpdateUser) -> Result<bool, UserError> {
+pub fn update_user(id: &str, user: UpdateUser) -> Result<bool, EphemerideError> {
   let mut conn = establish_connection();
 
   let result = diesel::update(schema::users::table.filter(schema::users::id.eq(id)))
@@ -184,11 +183,11 @@ pub fn update_user(id: &str, user: UpdateUser) -> Result<bool, UserError> {
 
   match result {
     Ok(rows_affected) => Ok(rows_affected > 0),
-    Err(_) => Err(UserError::NotFound),
+    Err(_) => Err(EphemerideError::UserNotFound),
   }
 }
 
-pub fn update_password(id: &str, password: UpdatePassword) -> Result<bool, UserError> {
+pub fn update_password(id: &str, password: UpdatePassword) -> Result<bool, EphemerideError> {
   let mut conn = establish_connection();
 
   let password_hash = bcrypt::hash(password.password, bcrypt::DEFAULT_COST).unwrap();
@@ -199,6 +198,6 @@ pub fn update_password(id: &str, password: UpdatePassword) -> Result<bool, UserE
 
   match result {
     Ok(rows_affected) => Ok(rows_affected > 0),
-    Err(_) => Err(UserError::DatabaseError),
+    Err(_) => Err(EphemerideError::DatabaseError),
   }
 }

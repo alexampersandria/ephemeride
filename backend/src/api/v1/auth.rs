@@ -1,4 +1,7 @@
-use crate::services::{auth, user, UserCredentials};
+use crate::{
+  errors::EphemerideError,
+  services::{auth, user, UserCredentials},
+};
 use poem::{handler, http::StatusCode, web::Json, Request, Response};
 
 use validator::Validate;
@@ -28,10 +31,10 @@ pub fn authenticate_user(Json(user): Json<user::AuthUser>, request: &Request) ->
       .header("Content-Type", "application/json")
       .header("Authorization", &session.id)
       .body(serde_json::to_string(&session).unwrap()),
-    Err(auth::SessionError::NotFound) => Response::builder()
+    Err(EphemerideError::UserNotFound) => Response::builder()
       .status(StatusCode::UNAUTHORIZED)
       .body("User not found"),
-    Err(auth::SessionError::InvalidPassword) => Response::builder()
+    Err(EphemerideError::InvalidPassword) => Response::builder()
       .status(StatusCode::UNAUTHORIZED)
       .body("Invalid password"),
     Err(_) => Response::builder()
