@@ -1,5 +1,5 @@
 use crate::{
-  errors::EphemerideError,
+  error::{error_response, EphemerideError},
   services::{auth, user, UserCredentials},
 };
 use poem::{handler, http::StatusCode, web::Json, Request, Response};
@@ -10,11 +10,7 @@ use validator::Validate;
 pub fn authenticate_user(Json(user): Json<user::AuthUser>, request: &Request) -> Response {
   match user.validate() {
     Ok(_) => (),
-    Err(_) => {
-      return Response::builder()
-        .status(StatusCode::BAD_REQUEST)
-        .body("Invalid user")
-    }
+    Err(_) => return error_response(EphemerideError::BadRequest),
   }
 
   let session = auth::create_user_session(
@@ -31,14 +27,6 @@ pub fn authenticate_user(Json(user): Json<user::AuthUser>, request: &Request) ->
       .header("Content-Type", "application/json")
       .header("Authorization", &session.id)
       .body(serde_json::to_string(&session).unwrap()),
-    Err(EphemerideError::UserNotFound) => Response::builder()
-      .status(StatusCode::UNAUTHORIZED)
-      .body("User not found"),
-    Err(EphemerideError::InvalidPassword) => Response::builder()
-      .status(StatusCode::UNAUTHORIZED)
-      .body("Invalid password"),
-    Err(_) => Response::builder()
-      .status(StatusCode::INTERNAL_SERVER_ERROR)
-      .body(()),
+    Err(error) => error_response(error),
   }
 }

@@ -1,5 +1,5 @@
 use crate::{
-  errors::EphemerideError,
+  error::{error_response, EphemerideError},
   services::{auth, authorize_request, invite, user, UserCredentials},
 };
 use poem::{handler, http::StatusCode, web::Json, Request, Response};
@@ -15,39 +15,23 @@ pub fn create_user(Json(user): Json<user::CreateUser>, request: &Request) -> Res
 
   match user.validate() {
     Ok(_) => (),
-    Err(_) => {
-      return Response::builder()
-        .status(StatusCode::BAD_REQUEST)
-        .body("Invalid user")
-    }
+    Err(_) => return error_response(EphemerideError::BadRequest),
   }
 
   if env::var("INVITE_REQUIRED").unwrap_or("false".to_string()) == "true" {
     match &user.invite {
       Some(invite) => match invite::use_invite(invite) {
         Ok(_) => (),
-        Err(_) => {
-          return Response::builder()
-            .status(StatusCode::UNAUTHORIZED)
-            .body("Invalid invite");
-        }
+        Err(_) => return error_response(EphemerideError::InviteNotFound),
       },
-      None => {
-        return Response::builder()
-          .status(StatusCode::UNAUTHORIZED)
-          .body("Invite is required");
-      }
+      None => return error_response(EphemerideError::InviteNotFound),
     }
   }
 
   let password = user.password.clone();
   let created_user = match user::create_user(user) {
     Ok(user) => user,
-    Err(_) => {
-      return Response::builder()
-        .status(StatusCode::INTERNAL_SERVER_ERROR)
-        .body("Failed to create user");
-    }
+    Err(error) => return error_response(error),
   };
 
   let session = auth::create_user_session(
@@ -64,9 +48,7 @@ pub fn create_user(Json(user): Json<user::CreateUser>, request: &Request) -> Res
       .header("Content-Type", "application/json")
       .header("Authorization", &session.id)
       .body(serde_json::to_string(&session).unwrap()),
-    Err(_) => Response::builder()
-      .status(StatusCode::INTERNAL_SERVER_ERROR)
-      .body(()),
+    Err(error) => error_response(error),
   }
 }
 
@@ -74,11 +56,7 @@ pub fn create_user(Json(user): Json<user::CreateUser>, request: &Request) -> Res
 pub fn get_current_user(request: &Request) -> Response {
   let session = match authorize_request(request) {
     Ok(session) => session,
-    Err(_) => {
-      return Response::builder()
-        .status(StatusCode::UNAUTHORIZED)
-        .body("Unauthorized");
-    }
+    Err(error) => return error_response(error),
   };
 
   let user = user::get_user(&session.user_id);
@@ -88,11 +66,6 @@ pub fn get_current_user(request: &Request) -> Response {
       .status(StatusCode::OK)
       .header("Content-Type", "application/json")
       .body(serde_json::to_string(&user).unwrap()),
-    Err(EphemerideError::UserNotFound) => Response::builder()
-      .status(StatusCode::NOT_FOUND)
-      .body("User not found"),
-    Err(_) => Response::builder()
-      .status(StatusCode::INTERNAL_SERVER_ERROR)
-      .body(()),
+    Err(error) => error_response(error),
   }
 }

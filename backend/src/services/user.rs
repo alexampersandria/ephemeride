@@ -1,5 +1,5 @@
 use crate::{
-  errors::EphemerideError,
+  error::EphemerideError,
   establish_connection,
   schema::{self, users},
   util,

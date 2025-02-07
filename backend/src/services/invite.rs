@@ -1,5 +1,5 @@
 use crate::{
-  errors::EphemerideError,
+  error::EphemerideError,
   establish_connection,
   schema::{self, invites},
   util::generate_invite_code,

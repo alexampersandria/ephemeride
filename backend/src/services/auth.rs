@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::{
-  errors::EphemerideError,
+  error::EphemerideError,
   establish_connection,
   schema::{self, sessions},
   services::user,
