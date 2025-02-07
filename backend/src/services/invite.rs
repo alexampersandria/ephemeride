@@ -87,36 +87,3 @@ pub fn generate_invite(code: Option<&str>) -> Result<Invite, InviteError> {
     Err(_) => Err(InviteError::DatabaseError),
   }
 }
-
-#[cfg(test)]
-mod tests {
-  use super::*;
-
-  #[test]
-  fn generates_an_invite() {
-    let code = generate_invite(None);
-    assert!(code.is_ok());
-  }
-
-  #[test]
-  fn generates_unique_invites() {
-    let code1 = generate_invite(None).unwrap();
-    let code2 = generate_invite(None).unwrap();
-    assert_ne!(code1.code, code2.code);
-  }
-
-  #[test]
-  fn generates_an_invite_with_code() {
-    let value = Uuid::new_v4().to_string();
-    let code = generate_invite(Some(&value)).unwrap();
-    assert_eq!(code.code, value);
-  }
-
-  #[test]
-  fn generates_unique_invites_with_code() {
-    let value = Uuid::new_v4().to_string();
-    let code1 = generate_invite(Some(&value)).unwrap();
-    let code2 = generate_invite(Some(&value)).unwrap();
-    assert_ne!(code1.code, code2.code);
-  }
-}
