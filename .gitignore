@@ -1,9 +1,16 @@
+# OS
+.DS_Store
+Thumbs.db
+
 # cargo build target
 target
 # vite build target
 www
 # contains private data, use setup.sh to generate
 .env
+.env.*
+!.env.example
+!.env.test
 
 # node_modules
 node_modules
@@ -23,9 +30,9 @@ lerna-debug.log
 *.sln
 *.sw?
 
+vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
-.routify
 .vite
 
 #yarn
@@ -34,3 +41,16 @@ vite.config.ts.timestamp-*
 **/.pnp.*
 **/.yarn/sdks
 **/.yarn/unplugged
+
+# sveltekit
+**/.output
+**/.vercel
+**/.netlify
+**/.wrangler
+**/.svelte-kit
+
+# Paraglide
+**/src/lib/paraglide
+
+# inlang
+**/*.inlang/cache

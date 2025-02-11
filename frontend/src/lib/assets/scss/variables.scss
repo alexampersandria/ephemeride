@@ -1,0 +1,23 @@
+$container-width: 900px;
+
+$radius-xs: 0.125rem;
+$radius-s: 0.25rem;
+$radius-m: 0.5rem;
+$radius-l: 1rem;
+$radius-xl: 2rem;
+
+$spinner-size: 2rem;
+$spinner-animation-duration: 1.2s;
+
+:root {
+  --container-width: #{$container-width};
+
+  --radius-xs: #{$radius-xs};
+  --radius-s: #{$radius-s};
+  --radius-m: #{$radius-m};
+  --radius-l: #{$radius-l};
+  --radius-xl: #{$radius-xl};
+
+  --spinner-size: #{$spinner-size};
+  --spinner-animation-duration: #{$spinner-animation-duration};
+}
