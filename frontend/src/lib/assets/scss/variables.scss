@@ -1,23 +1,56 @@
-$container-width: 900px;
+$container-width: 1120px;
 
-$radius-xs: 0.125rem;
 $radius-s: 0.25rem;
 $radius-m: 0.5rem;
 $radius-l: 1rem;
 $radius-xl: 2rem;
 
+$padding-s: 0.5rem;
+$padding-m: 1rem;
+$padding-l: 2rem;
+$padding-xl: 4rem;
+
+$border-width: 1px;
+
 $spinner-size: 2rem;
 $spinner-animation-duration: 1.2s;
+
+$h1-size: 2.5rem;
+$h2-size: 2rem;
+$h3-size: 1.75rem;
+$h4-size: 1.5rem;
+$h5-size: 1.25rem;
+$h6-size: 1rem;
+
+$code-size: 0.875rem;
 
 :root {
   --container-width: #{$container-width};
 
-  --radius-xs: #{$radius-xs};
   --radius-s: #{$radius-s};
   --radius-m: #{$radius-m};
   --radius-l: #{$radius-l};
   --radius-xl: #{$radius-xl};
 
+  --padding-s: #{$padding-s};
+  --padding-m: #{$padding-m};
+  --padding-l: #{$padding-l};
+  --padding-xl: #{$padding-xl};
+
+  --button-padding: var(--padding-s);
+  --button-radius: var(--radius-s);
+
+  --border-width: #{$border-width};
+
   --spinner-size: #{$spinner-size};
   --spinner-animation-duration: #{$spinner-animation-duration};
+
+  --h1-size: #{$h1-size};
+  --h2-size: #{$h2-size};
+  --h3-size: #{$h3-size};
+  --h4-size: #{$h4-size};
+  --h5-size: #{$h5-size};
+  --h6-size: #{$h6-size};
+
+  --code-size: #{$code-size};
 }

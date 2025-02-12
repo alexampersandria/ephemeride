@@ -1,21 +1,24 @@
 <script lang="ts">
-import FullPage from './FullPage.svelte'
+import { fade } from 'svelte/transition'
 import Spinner from './Spinner.svelte'
 </script>
 
-<FullPage>
-  <div class="preloader">
-    <Spinner --spinner-size="2rem" --spinner-color="var(--base-60)" />
-  </div>
-</FullPage>
+<div class="preloader" transition:fade>
+  <Spinner --spinner-size="2rem" --spinner-color="var(--base-60)" />
+</div>
 
 <style lang="scss">
 .preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
-  width: 100%;
+
   background-color: var(--base-00);
 }
 </style>

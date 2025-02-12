@@ -31,9 +31,11 @@
 
       background-color: var(--spinner-color);
 
+      animation: spinner variables.$spinner-animation-duration infinite linear;
+
       @for $i from 1 through 12 {
         &:nth-child(#{$i}) {
-          animation-delay: variables.$spinner-animation-duration * ($i / 12) - 2;
+          animation-delay: variables.$spinner-animation-duration * calc($i / 12) - 2;
           transform: rotate(#{$i * 30deg}) translate(150%);
         }
       }
@@ -46,8 +48,6 @@
           opacity: 0.15;
         }
       }
-
-      animation: spinner variables.$spinner-animation-duration infinite linear;
     }
   }
 }

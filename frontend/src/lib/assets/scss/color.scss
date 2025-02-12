@@ -1,5 +1,7 @@
+@use 'sass:color';
+
 $base-00: #000000;
-$base-10: #151617;
+$base-10: #101111;
 $base-20: #252627;
 $base-30: #303336;
 $base-40: #474d52;
@@ -9,6 +11,41 @@ $base-70: #a2a8ae;
 $base-80: #c1c6cb;
 $base-90: #e8ebed;
 $base-100: #ffffff;
+
+$blue-00: $base-00;
+$blue-10: #0f1c2e;
+$blue-20: #10233d;
+$blue-30: #0f2f57;
+$blue-40: #0d3868;
+$blue-50: #0a4380;
+$blue-60: #0090ff;
+$blue-70: #3cbeff;
+$blue-80: #6fd7ff;
+$blue-90: #a0e7ff;
+$blue-100: $base-00;
+
+$blue-transparent-base: $blue-60;
+$blue-transparent-00: transparent;
+$blue-transparent-10: color.adjust($blue-transparent-base, $alpha: -0.9);
+$blue-transparent-20: color.adjust($blue-transparent-base, $alpha: -0.8);
+$blue-transparent-30: color.adjust($blue-transparent-base, $alpha: -0.7);
+$blue-transparent-40: color.adjust($blue-transparent-base, $alpha: -0.6);
+$blue-transparent-50: color.adjust($blue-transparent-base, $alpha: -0.5);
+$blue-transparent-60: color.adjust($blue-transparent-base, $alpha: -0.4);
+$blue-transparent-70: color.adjust($blue-transparent-base, $alpha: -0.3);
+$blue-transparent-80: color.adjust($blue-transparent-base, $alpha: -0.2);
+$blue-transparent-90: color.adjust($blue-transparent-base, $alpha: -0.1);
+$blue-transparent-100: $blue-transparent-base;
+
+$yellow-60: #e79d13;
+
+$green-60: #3cb124;
+
+$red-60: #d93030;
+
+$pink-60: #ea3e83;
+
+$purple-60: #8e4ec6;
 
 :root {
   --base-00: #{$base-00};
@@ -23,118 +60,74 @@ $base-100: #ffffff;
   --base-90: #{$base-90};
   --base-100: #{$base-100};
 
+  --blue-00: #{$blue-00};
+  --blue-10: #{$blue-10};
+  --blue-20: #{$blue-20};
+  --blue-30: #{$blue-30};
+  --blue-40: #{$blue-40};
+  --blue-50: #{$blue-50};
+  --blue-60: #{$blue-60};
+  --blue-70: #{$blue-70};
+  --blue-80: #{$blue-80};
+  --blue-90: #{$blue-90};
+  --blue-100: #{$blue-100};
+
+  --blue-transparent-00: #{$blue-transparent-00};
+  --blue-transparent-10: #{$blue-transparent-10};
+  --blue-transparent-20: #{$blue-transparent-20};
+  --blue-transparent-30: #{$blue-transparent-30};
+  --blue-transparent-40: #{$blue-transparent-40};
+  --blue-transparent-50: #{$blue-transparent-50};
+  --blue-transparent-60: #{$blue-transparent-60};
+  --blue-transparent-70: #{$blue-transparent-70};
+  --blue-transparent-80: #{$blue-transparent-80};
+  --blue-transparent-90: #{$blue-transparent-90};
+  --blue-transparent-100: #{$blue-transparent-100};
+
+  --yellow-60: #{$yellow-60};
+  --green-60: #{$green-60};
+  --red-60: #{$red-60};
+  --pink-60: #{$pink-60};
+  --purple-60: #{$purple-60};
+
   --background-primary: var(--base-100);
-  --background-primary-accent: var(--base-80);
   --background-secondary: var(--base-90);
-  --background-secondary-accent: var(--base-70);
+  --background-accent: var(--base-70);
 
   --text-primary: var(--base-00);
   --texted-muted: var(--base-40);
   --text-dimmed: var(--base-60);
 
+  --link-color: var(--blue-60);
+  --link-color-hover: var(--blue-70);
+
+  --focus-color: var(--blue-transparent-80);
+  --focus-color-outer: var(--blue-transparent-40);
+
   --spinner-color: var(--base-40);
 
-  --full-page-background: var(--background-primary);
+  --hr-color: var(--background-accent);
+
+  --selection-color: var(--blue-70);
 }
 
 .theme-dark {
   color-scheme: dark;
 
   --background-primary: var(--base-00);
-  --background-primary-accent: var(--base-20);
   --background-secondary: var(--base-10);
-  --background-secondary-accent: var(--base-30);
+  --background-accent: var(--base-30);
 
   --text-primary: var(--base-100);
   --text-muted: var(--base-70);
   --text-dimmed: var(--base-50);
 
+  --link-color: var(--blue-60);
+  --link-color-hover: var(--blue-50);
+
   --spinner-color: var(--base-60);
 
-  --full-page-background: var(--background-primary);
-}
+  --hr-color: var(--background-accent);
 
-.background-base-00 {
-  background-color: var(--base-00);
-}
-.background-base-10 {
-  background-color: var(--base-10);
-}
-.background-base-20 {
-  background-color: var(--base-20);
-}
-.background-base-30 {
-  background-color: var(--base-30);
-}
-.background-base-40 {
-  background-color: var(--base-40);
-}
-.background-base-50 {
-  background-color: var(--base-50);
-}
-.background-base-60 {
-  background-color: var(--base-60);
-}
-.background-base-70 {
-  background-color: var(--base-70);
-}
-.background-base-80 {
-  background-color: var(--base-80);
-}
-.background-base-90 {
-  background-color: var(--base-90);
-}
-.background-base-100 {
-  background-color: var(--base-100);
-}
-
-.background-primary {
-  background-color: var(--background-primary);
-}
-.background-secondary {
-  background-color: var(--background-secondary);
-}
-
-.text-base-00 {
-  color: var(--base-00);
-}
-.text-base-10 {
-  color: var(--base-10);
-}
-.text-base-20 {
-  color: var(--base-20);
-}
-.text-base-30 {
-  color: var(--base-30);
-}
-.text-base-40 {
-  color: var(--base-40);
-}
-.text-base-50 {
-  color: var(--base-50);
-}
-.text-base-60 {
-  color: var(--base-60);
-}
-.text-base-70 {
-  color: var(--base-70);
-}
-.text-base-80 {
-  color: var(--base-80);
-}
-.text-base-90 {
-  color: var(--base-90);
-}
-.text-base-100 {
-  color: var(--base-100);
-}
-
-.text-primary {
-  color: var(--text-primary);
-}
-.text-muted {
-  color: var(--text-muted);
-}
-.text-dimmed {
-  color: var(--text-dimmed);
+  --selection-color: var(--blue-50);
 }

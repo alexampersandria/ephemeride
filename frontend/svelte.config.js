@@ -12,8 +12,13 @@ const config = {
       fallback: 'index.html',
     }),
   },
-  preprocess: [mdsvex(), vitePreprocess()],
-  extensions: ['.svelte', '.svx'],
+  preprocess: [
+    mdsvex({
+      extension: '.md',
+    }),
+    vitePreprocess(),
+  ],
+  extensions: ['.svelte', '.svx', '.md'],
 }
 
 export default config

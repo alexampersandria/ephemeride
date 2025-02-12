@@ -5,6 +5,7 @@ import svelteEslint from 'eslint-plugin-svelte'
 import svelteParser from 'svelte-eslint-parser'
 import markdown from 'eslint-plugin-markdown'
 import globals from 'globals'
+import svelteConfig from './svelte.config'
 
 import { includeIgnoreFile } from '@eslint/compat'
 import { fileURLToPath } from 'node:url'
@@ -27,6 +28,7 @@ export default [
     languageOptions: {
       parser: svelteParser,
       parserOptions: {
+        svelteConfig,
         parser: tsEslint.parser,
       },
       globals: {
