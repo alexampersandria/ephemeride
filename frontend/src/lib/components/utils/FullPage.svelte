@@ -1,5 +1,5 @@
 <script>
-import { teleport } from '$lib/teleport'
+import { teleport } from '$lib/actions/teleport'
 
 let { children } = $props()
 </script>
