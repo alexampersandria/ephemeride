@@ -3,11 +3,11 @@ import DocsExample from '$lib/components/utils/DocsExample.svelte'
 import Spinner from '$lib/components/Spinner.svelte'
 </script>
 
-## Spinner
+# Spinner
 
 Used to indicate that an action is being performed in the background.
 
----
+## Usage
 
 ### Default Size
 
@@ -18,8 +18,6 @@ Used to indicate that an action is being performed in the background.
 ```svelte
 <Spinner />
 ```
-
----
 
 ### Custom Size
 

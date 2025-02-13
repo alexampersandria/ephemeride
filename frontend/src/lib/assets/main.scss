@@ -1,6 +1,7 @@
 @use 'scss/color.scss';
 @use 'scss/variables.scss';
 @use 'scss/code.scss';
+@use 'scss/markdown.scss';
 
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
@@ -34,37 +35,24 @@ body {
 }
 
 a {
-  color: var(--link-color);
+  color: var(--color-link);
   text-decoration: none;
 
   &:hover {
-    color: var(--link-color-hover);
-  }
-}
-
-select,
-input,
-button,
-.button {
-  padding: var(--button-padding);
-  border-radius: var(--button-radius);
-  background-color: var(--background-primary);
-  border: var(--border-width) solid var(--border-color);
-  cursor: pointer;
-
-  &:hover {
-    background-color: var(--background-secondary);
+    color: var(--color-link-hover);
   }
 }
 
 *:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--focus-color);
+  box-shadow:
+    0 0 0 var(--border-width) var(--color-focus),
+    0 0 0 calc(var(--focus-shadow-width) + var(--border-width)) var(--color-focus-bg) !important;
 }
 
 ::selection {
   background-color: var(--selection-color);
-  color: var(--text-primary);
+  color: var(--selection-text-color);
 }
 
 .container {

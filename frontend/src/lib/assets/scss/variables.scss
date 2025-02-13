@@ -11,6 +11,7 @@ $padding-l: 2rem;
 $padding-xl: 4rem;
 
 $border-width: 1px;
+$focus-shadow-width: 2px;
 
 $spinner-size: 2rem;
 $spinner-animation-duration: 1.2s;
@@ -41,6 +42,8 @@ $code-size: 0.875rem;
   --button-radius: var(--radius-s);
 
   --border-width: #{$border-width};
+  --focus-shadow-width: #{$focus-shadow-width};
+  --state-shadow-width: var(--focus-shadow-width);
 
   --spinner-size: #{$spinner-size};
   --spinner-animation-duration: #{$spinner-animation-duration};

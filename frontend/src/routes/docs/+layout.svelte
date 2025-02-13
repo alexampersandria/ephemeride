@@ -8,6 +8,7 @@ let uiStore = useUiStore()
 
 const design = getRoutes(/\/docs\/design\/[^\/]+\//)
 const components = getRoutes(/\/docs\/components\/[^\/]+\//)
+const types = getRoutes(/\/docs\/types\/[^\/]+\//)
 
 let { children } = $props()
 let themeObjects = themes.map(theme => ({
@@ -42,6 +43,16 @@ let themeObjects = themes.map(theme => ({
     <div class="docs-routes">
       <div class="docs-route-title">Components</div>
       {#each components as route}
+        <div class="docs-route-link">
+          <InternalLink href={route}>
+            {routeTail(route)}
+          </InternalLink>
+        </div>
+      {/each}
+    </div>
+    <div class="docs-routes">
+      <div class="docs-route-title">Types</div>
+      {#each types as route}
         <div class="docs-route-link">
           <InternalLink href={route}>
             {routeTail(route)}

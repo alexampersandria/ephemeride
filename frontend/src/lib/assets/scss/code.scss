@@ -90,7 +90,16 @@ pre[class*='language-'] {
     border-top: 0;
   }
 
-  &:has(+ pre) {
+  & + .docs-example {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-top: 0;
+    border: var(--border-width) solid var(--border-color);
+    border-top: 0;
+  }
+
+  &:has(+ pre),
+  &:has(+ .docs-example) {
     border-bottom-left-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
   }

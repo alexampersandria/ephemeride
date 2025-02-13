@@ -180,19 +180,36 @@ $color-pink-100: #ffdaec;
   --border-color: var(--color-base-80);
 
   --text-primary: var(--color-base-00);
-  --texted-muted: var(--color-base-30);
+  --text-muted: var(--color-base-30);
   --text-dimmed: var(--color-base-60);
 
-  --link-color: var(--color-blue-50);
-  --link-color-hover: var(--color-blue-60);
+  --color-success: var(--color-green-50);
+  --color-warning: var(--color-yellow-50);
+  --color-error: var(--color-red-50);
+  --color-info: var(--color-blue-50);
 
-  --focus-color: var(--color-blue-50);
+  --color-success-bg: var(--color-green-90);
+  --color-warning-bg: var(--color-yellow-90);
+  --color-error-bg: var(--color-red-90);
+  --color-info-bg: var(--color-blue-90);
+
+  --color-link: var(--color-blue-50);
+  --color-link-hover: var(--color-blue-60);
+
+  --color-focus: var(--color-link);
+  --color-valid: var(--color-success);
+  --color-invalid: var(--color-error);
+
+  --color-focus-bg: var(--color-info-bg);
+  --color-valid-bg: var(--color-success-bg);
+  --color-invalid-bg: var(--color-error-bg);
 
   --spinner-color: var(--color-base-30);
 
   --hr-color: var(--border-color);
 
   --selection-color: var(--color-blue-50);
+  --selection-text-color: var(--color-base-100);
 }
 
 .theme-dark {
@@ -208,12 +225,31 @@ $color-pink-100: #ffdaec;
   --text-muted: var(--color-base-70);
   --text-dimmed: var(--color-base-50);
 
-  --link-color: var(--color-blue-50);
-  --link-color-hover: var(--color-blue-40);
+  --color-success: var(--color-green-50);
+  --color-warning: var(--color-yellow-50);
+  --color-error: var(--color-red-50);
+  --color-info: var(--color-blue-50);
+
+  --color-success-bg: var(--color-green-10);
+  --color-warning-bg: var(--color-yellow-10);
+  --color-error-bg: var(--color-red-10);
+  --color-info-bg: var(--color-blue-10);
+
+  --color-link: var(--color-blue-50);
+  --color-link-hover: var(--color-blue-40);
+
+  --color-focus: var(--color-link);
+  --color-valid: var(--color-success);
+  --color-invalid: var(--color-error);
+
+  --color-focus-bg: var(--color-info-bg);
+  --color-valid-bg: var(--color-success-bg);
+  --color-invalid-bg: var(--color-error-bg);
 
   --spinner-color: var(--color-base-70);
 
   --hr-color: var(--border-color);
 
   --selection-color: var(--color-blue-50);
+  --selection-text-color: var(--color-base-100);
 }

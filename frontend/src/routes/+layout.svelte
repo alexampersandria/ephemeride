@@ -9,7 +9,7 @@ let uiStore = useUiStore()
 let { children } = $props()
 </script>
 
-<div id="root" class="theme-{uiStore.appliedTheme.toLowerCase()}">
+<div id="root" class="theme-{uiStore.appliedTheme}">
   {@render children()}
 </div>
 

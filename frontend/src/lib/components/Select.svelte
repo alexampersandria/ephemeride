@@ -1,24 +1,79 @@
 <script lang="ts">
-import type { SelectOption } from '$lib/types/select'
+import type { SelectProps } from '$lib/types/select'
 
 let {
   options,
   value = $bindable(),
-}: {
-  options: SelectOption[]
-  value?: SelectOption['value']
-} = $props()
+  placeholder,
+  disabled,
+  state = $bindable('untouched'),
+}: SelectProps = $props()
 
 const onchange = (event: Event) => {
   const target = event.target as HTMLSelectElement
   value = target.value
+
+  if (state === 'untouched') {
+    state = 'touched'
+  }
 }
 </script>
 
-<select class="select" {onchange}>
+<select
+  class="select"
+  class:valid={state === 'valid'}
+  class:invalid={state === 'invalid'}
+  {disabled}
+  aria-disabled={disabled}
+  {onchange}
+>
+  {#if placeholder}
+    <option class="select-option" value="" disabled aria-disabled="true" selected={!value}>
+      {placeholder}
+    </option>
+  {/if}
   {#each options as option}
-    <option class="select-option" value={option.value} selected={option.value === value}>
+    <option
+      class="select-option"
+      value={option.value}
+      selected={option.value === value}
+      disabled={option.disabled}
+    >
       {option.label}
     </option>
   {/each}
 </select>
+
+<style lang="scss">
+.select {
+  padding: var(--button-padding);
+  border-radius: var(--button-radius);
+  background-color: var(--background-primary);
+  border: var(--border-width) solid var(--border-color);
+
+  &:not(:disabled) {
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--background-secondary);
+    }
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 1;
+    color: var(--text-dimmed);
+    background-color: var(--background-secondary);
+  }
+
+  &.invalid {
+    box-shadow: 0 0 0 var(--state-shadow-width) var(--color-invalid-bg);
+    border-color: var(--color-invalid);
+  }
+
+  &.valid {
+    box-shadow: 0 0 0 var(--state-shadow-width) var(--color-valid-bg);
+    border-color: var(--color-valid);
+  }
+}
+</style>

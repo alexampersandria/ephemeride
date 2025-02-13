@@ -1,6 +1,6 @@
 import { browser } from '$app/environment'
 
-export const themes = ['DARK', 'LIGHT', 'SYSTEM'] as const
+export const themes = ['dark', 'light', 'system'] as const
 export type Theme = (typeof themes)[number]
 
 export type UiState = {
@@ -11,12 +11,12 @@ export type UiState = {
 
 const mountedAt: number = new Date().getTime()
 
-let theme: Theme = $state('SYSTEM')
+let theme: Theme = $state('system')
 let loading = $state(true)
 
 let appliedTheme: Theme = $derived.by(() => {
-  if (theme === 'SYSTEM' && browser) {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'DARK' : 'LIGHT'
+  if (theme === 'system' && browser) {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
   }
   return theme
 })
