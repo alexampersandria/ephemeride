@@ -8,23 +8,18 @@ let options = $state([
   { value: '3', label: 'Option 3' },
 ])
 
-let selected = $state('null')
+let value = $state('null')
 </script>
 
 ## Select
 
 Default HTML `<select>` element with `<option>`'s.
 
-Used in forms or as a dropdown menu to select an option from a list. Modifies the selected prop via `$bindable`.
+Used in forms or as a dropdown menu to select an option from a list. Modifies the value prop via `$bindable`.
 
 <DocsExample>
-  <Select
-    bind:selected
-    bind:options
-  />
-  <p style="margin-bottom:0;">
-    Selected: <code>{selected}</code>
-  </p>
+  <Select bind:value {options} />
+  <p style="margin-bottom:0;">value: <code>{value}</code></p>
 </DocsExample>
 
 ```svelte
@@ -35,15 +30,10 @@ let options = $state([
   { value: '3', label: 'Option 3' },
 ])
 
-let selected = $state('null')
+let value = $state('null')
 </script>
 
-<Select
-  bind:selected
-  bind:options
-/>
-<p>
-  Selected: <code>{selected}</code>
-</p>
+<Select bind:value {options} />
+<p>value: <code>{value}</code></p>
 ```
 

@@ -62,6 +62,11 @@ button,
   box-shadow: 0 0 0 2px var(--focus-color);
 }
 
+::selection {
+  background-color: var(--selection-color);
+  color: var(--text-primary);
+}
+
 .container {
   max-width: var(--container-width);
   margin: 0 auto;
@@ -125,8 +130,4 @@ hr {
   border: 0;
   border-top: var(--border-width) solid var(--hr-color);
   margin: var(--padding-m) 0;
-}
-
-::selection {
-  background-color: var(--selection-color);
 }

@@ -3,15 +3,15 @@ import type { SelectOption } from '$lib/types/select'
 
 let {
   options,
-  selected = $bindable(),
+  value = $bindable(),
 }: {
   options: SelectOption[]
-  selected?: SelectOption['value']
+  value?: SelectOption['value']
 } = $props()
 
 const onchange = (event: Event) => {
   const target = event.target as HTMLSelectElement
-  selected = target.value
+  value = target.value
 }
 </script>
 

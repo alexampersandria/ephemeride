@@ -2,6 +2,7 @@
 import InternalLink from '$lib/components/InternalLink.svelte'
 import { getRoutes, routeTail } from '$lib/utils/routes'
 
+const design = getRoutes(/\/docs\/design\/[^\/]+\//)
 const components = getRoutes(/\/docs\/components\/[^\/]+\//)
 
 let { children } = $props()
@@ -19,6 +20,14 @@ let { children } = $props()
   <div class="docs-main">
     <div class="docs-navigation">
       <div class="docs-routes">
+        <div class="docs-route-title">Design</div>
+        {#each design as route}
+          <div class="docs-route-link">
+            <InternalLink href={route}>
+              {routeTail(route)}
+            </InternalLink>
+          </div>
+        {/each}
         <div class="docs-route-title">Components</div>
         {#each components as route}
           <div class="docs-route-link">
@@ -103,6 +112,7 @@ let { children } = $props()
 
   .docs-content {
     flex: 1;
+    padding-bottom: 20vh;
   }
 
   :global(.internal-link) {
