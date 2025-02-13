@@ -2,11 +2,12 @@
 import '$lib/assets/main.scss'
 
 import Preloader from '$lib/components/Preloader.svelte'
-import { registerStore } from '$lib/store/registerStore.svelte'
+import { initializeStores } from '$lib/store/index.svelte'
 import { useUiStore } from '$lib/store/uiStore.svelte'
 
+initializeStores()
+
 let uiStore = useUiStore()
-registerStore('ui', uiStore)
 
 let { children } = $props()
 </script>
