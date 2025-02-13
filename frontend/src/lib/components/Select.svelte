@@ -25,6 +25,7 @@ const onchange = (event: Event) => {
   class:invalid={state === 'invalid'}
   {disabled}
   aria-disabled={disabled}
+  aria-invalid={state === 'invalid'}
   {onchange}
 >
   {#if placeholder}
