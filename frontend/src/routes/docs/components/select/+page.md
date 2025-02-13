@@ -13,6 +13,8 @@ let selected = $state('null')
 
 ## Select
 
+Default HTML `<select>` element with `<option>`'s.
+
 Used in forms or as a dropdown menu to select an option from a list. Modifies the selected prop via `$bindable`.
 
 <DocsExample>

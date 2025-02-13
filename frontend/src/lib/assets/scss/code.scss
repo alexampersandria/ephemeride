@@ -81,16 +81,17 @@ pre[class*='language-'] {
   color: var(--purple-60);
 }
 
-.docs-example + pre {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  margin-top: 0;
-  border: var(--border-width) solid var(--background-accent);
-  border-top: 0;
-  background-color: var(--background-primary);
-}
+.docs-example {
+  & + pre {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-top: 0;
+    border: var(--border-width) solid var(--border-color);
+    border-top: 0;
+  }
 
-.docs-example:has(+ pre) {
-  border-bottom-left-radius: 0 !important;
-  border-bottom-right-radius: 0 !important;
+  &:has(+ pre) {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
 }

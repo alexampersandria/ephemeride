@@ -11,7 +11,7 @@ let { children } = $props()
   <div class="docs-menu">
     <div class="docs-home">
       <div class="docs-route-link">
-        <InternalLink href="/docs">Ephemeride Documentation</InternalLink>
+        <InternalLink href="/docs">📆 Ephemeride Documentation</InternalLink>
       </div>
     </div>
   </div>
@@ -41,10 +41,10 @@ let { children } = $props()
   display: flex;
   flex-direction: column;
   gap: var(--border-width);
-  background-color: var(--background-accent);
+  background-color: var(--border-color);
   min-height: 100vh;
-  border-left: var(--border-width) solid var(--background-accent);
-  border-right: var(--border-width) solid var(--background-accent);
+  border-left: var(--border-width) solid var(--border-color);
+  border-right: var(--border-width) solid var(--border-color);
 
   .docs-menu,
   .docs-content {
@@ -52,15 +52,18 @@ let { children } = $props()
   }
 
   .docs-menu {
-    flex: 0;
     position: sticky;
+    display: flex;
+    align-items: center;
+    min-height: 6rem;
+    flex: 0;
     background-color: var(--background-secondary);
   }
 
   .docs-main {
     flex: 1;
     display: flex;
-    background-color: var(--background-accent);
+    background-color: var(--border-color);
     gap: var(--border-width);
 
     .docs-navigation,

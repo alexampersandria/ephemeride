@@ -14,6 +14,6 @@ const { children } = $props()
   align-items: center;
   padding: var(--padding-l);
   border-radius: var(--radius-s);
-  border: var(--border-width) solid var(--background-accent);
+  border: var(--border-width) solid var(--border-color);
 }
 </style>

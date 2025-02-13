@@ -49,7 +49,7 @@ button,
   padding: var(--button-padding);
   border-radius: var(--button-radius);
   background-color: var(--background-primary);
-  border: var(--border-width) solid var(--background-accent);
+  border: var(--border-width) solid var(--border-color);
   cursor: pointer;
 
   &:hover {
@@ -59,9 +59,7 @@ button,
 
 *:focus-visible {
   outline: none;
-  box-shadow:
-    0 0 0 2px var(--focus-color),
-    0 0 0 6px var(--focus-color-outer);
+  box-shadow: 0 0 0 2px var(--focus-color);
 }
 
 .container {

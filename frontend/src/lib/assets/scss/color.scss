@@ -1,54 +1,94 @@
 @use 'sass:color';
 
-$base-00: #000000;
-$base-10: #101111;
-$base-20: #252627;
-$base-30: #303336;
-$base-40: #474d52;
-$base-50: #5f666d;
-$base-60: #788087;
-$base-70: #a2a8ae;
-$base-80: #c1c6cb;
-$base-90: #e8ebed;
+$base-00: #05070a;
+$base-05: #0d0f13;
+$base-10: #14181d;
+$base-20: #262c36;
+$base-30: #2a313c;
+$base-40: #2f3742;
+$base-50: #3d444d;
+$base-60: #656c76;
+$base-70: #9198a1;
+$base-80: #b7bdc8;
+$base-90: #d1d7e0;
+$base-95: #f0f6fc;
 $base-100: #ffffff;
 
-$blue-00: $base-00;
-$blue-10: #0f1c2e;
-$blue-20: #10233d;
-$blue-30: #0f2f57;
-$blue-40: #0d3868;
-$blue-50: #0a4380;
-$blue-60: #0090ff;
-$blue-70: #3cbeff;
-$blue-80: #6fd7ff;
-$blue-90: #a0e7ff;
-$blue-100: $base-00;
+$blue-00: #040f25;
+$blue-10: #051d4d;
+$blue-20: #0c2d6b;
+$blue-30: #0d419d;
+$blue-40: #1158c7;
+$blue-50: #1f6feb;
+$blue-60: #388bfd;
+$blue-70: #58a6ff;
+$blue-80: #79c0ff;
+$blue-90: #a5d6ff;
+$blue-100: #cae8ff;
 
-$blue-transparent-base: $blue-60;
-$blue-transparent-00: transparent;
-$blue-transparent-10: color.adjust($blue-transparent-base, $alpha: -0.9);
-$blue-transparent-20: color.adjust($blue-transparent-base, $alpha: -0.8);
-$blue-transparent-30: color.adjust($blue-transparent-base, $alpha: -0.7);
-$blue-transparent-40: color.adjust($blue-transparent-base, $alpha: -0.6);
-$blue-transparent-50: color.adjust($blue-transparent-base, $alpha: -0.5);
-$blue-transparent-60: color.adjust($blue-transparent-base, $alpha: -0.4);
-$blue-transparent-70: color.adjust($blue-transparent-base, $alpha: -0.3);
-$blue-transparent-80: color.adjust($blue-transparent-base, $alpha: -0.2);
-$blue-transparent-90: color.adjust($blue-transparent-base, $alpha: -0.1);
-$blue-transparent-100: $blue-transparent-base;
+$green-00: #031408;
+$green-10: #04260f;
+$green-20: #033a16;
+$green-30: #0f5323;
+$green-40: #196c2e;
+$green-50: #238636;
+$green-60: #2ea043;
+$green-70: #3fb950;
+$green-80: #56d364;
+$green-90: #7ee787;
+$green-100: #aff5b4;
 
-$yellow-60: #e79d13;
+$yellow-00: #1b0e00;
+$yellow-10: #341a00;
+$yellow-20: #4b2900;
+$yellow-30: #693e00;
+$yellow-40: #845306;
+$yellow-50: #9e6a03;
+$yellow-60: #bb8009;
+$yellow-70: #d29922;
+$yellow-80: #e3b341;
+$yellow-90: #f2cc60;
+$yellow-100: #f8e3a1;
 
-$green-60: #3cb124;
+$red-00: #2c0000;
+$red-10: #490202;
+$red-20: #67060c;
+$red-30: #8e1519;
+$red-40: #b62324;
+$red-50: #da3633;
+$red-60: #f85149;
+$red-70: #ff7b72;
+$red-80: #ffa198;
+$red-90: #ffc1ba;
+$red-100: #ffdcd7;
 
-$red-60: #d93030;
+$purple-00: #170930;
+$purple-10: #271052;
+$purple-20: #3c1e70;
+$purple-30: #553098;
+$purple-40: #6e40c9;
+$purple-50: #8957e5;
+$purple-60: #ab7df8;
+$purple-70: #be8fff;
+$purple-80: #d2a8ff;
+$purple-90: #e2c5ff;
+$purple-100: #eddeff;
 
-$pink-60: #ea3e83;
-
-$purple-60: #8e4ec6;
+$pink-00: #200314;
+$pink-10: #42062a;
+$pink-20: #5e103e;
+$pink-30: #7d2457;
+$pink-40: #9e3670;
+$pink-50: #bf4b8a;
+$pink-60: #db61a2;
+$pink-70: #f778ba;
+$pink-80: #ff9bce;
+$pink-90: #ffbedd;
+$pink-100: #ffdaec;
 
 :root {
   --base-00: #{$base-00};
+  --base-05: #{$base-05};
   --base-10: #{$base-10};
   --base-20: #{$base-20};
   --base-30: #{$base-30};
@@ -58,6 +98,7 @@ $purple-60: #8e4ec6;
   --base-70: #{$base-70};
   --base-80: #{$base-80};
   --base-90: #{$base-90};
+  --base-95: #{$base-95};
   --base-100: #{$base-100};
 
   --blue-00: #{$blue-00};
@@ -72,62 +113,95 @@ $purple-60: #8e4ec6;
   --blue-90: #{$blue-90};
   --blue-100: #{$blue-100};
 
-  --blue-transparent-00: #{$blue-transparent-00};
-  --blue-transparent-10: #{$blue-transparent-10};
-  --blue-transparent-20: #{$blue-transparent-20};
-  --blue-transparent-30: #{$blue-transparent-30};
-  --blue-transparent-40: #{$blue-transparent-40};
-  --blue-transparent-50: #{$blue-transparent-50};
-  --blue-transparent-60: #{$blue-transparent-60};
-  --blue-transparent-70: #{$blue-transparent-70};
-  --blue-transparent-80: #{$blue-transparent-80};
-  --blue-transparent-90: #{$blue-transparent-90};
-  --blue-transparent-100: #{$blue-transparent-100};
-
-  --yellow-60: #{$yellow-60};
+  --green-00: #{$green-00};
+  --green-10: #{$green-10};
+  --green-20: #{$green-20};
+  --green-30: #{$green-30};
+  --green-40: #{$green-40};
+  --green-50: #{$green-50};
   --green-60: #{$green-60};
+  --green-70: #{$green-70};
+  --green-80: #{$green-80};
+  --green-90: #{$green-90};
+  --green-100: #{$green-100};
+
+  --yellow-00: #{$yellow-00};
+  --yellow-10: #{$yellow-10};
+  --yellow-20: #{$yellow-20};
+  --yellow-30: #{$yellow-30};
+  --yellow-40: #{$yellow-40};
+  --yellow-50: #{$yellow-50};
+  --yellow-60: #{$yellow-60};
+  --yellow-70: #{$yellow-70};
+  --yellow-80: #{$yellow-80};
+  --yellow-90: #{$yellow-90};
+  --yellow-100: #{$yellow-100};
+
+  --red-00: #{$red-00};
+  --red-10: #{$red-10};
+  --red-20: #{$red-20};
+  --red-30: #{$red-30};
+  --red-40: #{$red-40};
+  --red-50: #{$red-50};
   --red-60: #{$red-60};
-  --pink-60: #{$pink-60};
+  --red-70: #{$red-70};
+  --red-80: #{$red-80};
+  --red-90: #{$red-90};
+  --red-100: #{$red-100};
+
+  --purple-00: #{$purple-00};
+  --purple-10: #{$purple-10};
+  --purple-20: #{$purple-20};
+  --purple-30: #{$purple-30};
+  --purple-40: #{$purple-40};
+  --purple-50: #{$purple-50};
   --purple-60: #{$purple-60};
+  --purple-70: #{$purple-70};
+  --purple-80: #{$purple-80};
+  --purple-90: #{$purple-90};
+  --purple-100: #{$purple-100};
 
   --background-primary: var(--base-100);
-  --background-secondary: var(--base-90);
-  --background-accent: var(--base-70);
+  --background-secondary: var(--base-95);
+  --background-accent: var(--base-90);
+
+  --border-color: var(--base-80);
 
   --text-primary: var(--base-00);
-  --texted-muted: var(--base-40);
+  --texted-muted: var(--base-30);
   --text-dimmed: var(--base-60);
 
-  --link-color: var(--blue-60);
-  --link-color-hover: var(--blue-70);
+  --link-color: var(--blue-50);
+  --link-color-hover: var(--blue-60);
 
-  --focus-color: var(--blue-transparent-80);
-  --focus-color-outer: var(--blue-transparent-40);
+  --focus-color: var(--blue-50);
 
-  --spinner-color: var(--base-40);
+  --spinner-color: var(--base-30);
 
-  --hr-color: var(--background-accent);
+  --hr-color: var(--border-color);
 
-  --selection-color: var(--blue-70);
+  --selection-color: var(--blue-50);
 }
 
 .theme-dark {
   color-scheme: dark;
 
   --background-primary: var(--base-00);
-  --background-secondary: var(--base-10);
-  --background-accent: var(--base-30);
+  --background-secondary: var(--base-05);
+  --background-accent: var(--base-10);
+
+  --border-color: var(--base-20);
 
   --text-primary: var(--base-100);
   --text-muted: var(--base-70);
   --text-dimmed: var(--base-50);
 
-  --link-color: var(--blue-60);
-  --link-color-hover: var(--blue-50);
+  --link-color: var(--blue-50);
+  --link-color-hover: var(--blue-40);
 
-  --spinner-color: var(--base-60);
+  --spinner-color: var(--base-70);
 
-  --hr-color: var(--background-accent);
+  --hr-color: var(--border-color);
 
   --selection-color: var(--blue-50);
 }
