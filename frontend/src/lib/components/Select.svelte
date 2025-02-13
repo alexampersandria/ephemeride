@@ -17,7 +17,7 @@ const onchange = (event: Event) => {
 
 <select class="select" {onchange}>
   {#each options as option}
-    <option class="select-option" value={option.value}>
+    <option class="select-option" value={option.value} selected={option.value === value}>
       {option.label}
     </option>
   {/each}

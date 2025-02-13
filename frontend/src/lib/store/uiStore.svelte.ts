@@ -1,6 +1,7 @@
 import { browser } from '$app/environment'
 
-export type Theme = 'DARK' | 'LIGHT' | 'SYSTEM'
+export const themes = ['DARK', 'LIGHT', 'SYSTEM'] as const
+export type Theme = (typeof themes)[number]
 
 export type UiState = {
   theme: Theme
@@ -10,16 +11,17 @@ export type UiState = {
 
 const mountedAt: number = new Date().getTime()
 
-export const useUiStore: () => UiState = () => {
-  let theme: Theme = $state('SYSTEM')
-  let loading = $state(true)
-  let appliedTheme: Theme = $derived.by(() => {
-    if (theme === 'SYSTEM' && browser) {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'DARK' : 'LIGHT'
-    }
-    return theme
-  })
+let theme: Theme = $state('SYSTEM')
+let loading = $state(true)
 
+let appliedTheme: Theme = $derived.by(() => {
+  if (theme === 'SYSTEM' && browser) {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'DARK' : 'LIGHT'
+  }
+  return theme
+})
+
+export const useUiStore: () => UiState = () => {
   $effect(() => {
     if (browser) {
       // wait min 300ms before setting loading to false, less if time difference between mountedAt and now is less
