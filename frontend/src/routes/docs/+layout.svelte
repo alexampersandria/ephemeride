@@ -1,8 +1,8 @@
 <script lang="ts">
-import InternalLink from '$lib/components/InternalLink.svelte'
+import { active } from '$lib/actions/active.svelte'
 import Select from '$lib/components/Select.svelte'
 import { themes, useUiStore } from '$lib/store/uiStore.svelte'
-import { getRoutes, routeTail } from '$lib/utils/routes'
+import { getRoutes, routeTail } from '$lib/utils/routes.svelte'
 
 let uiStore = useUiStore()
 
@@ -21,7 +21,7 @@ let themeObjects = themes.map(theme => ({
   <div class="docs-menu">
     <div class="docs-home">
       <div class="docs-route-link">
-        <InternalLink href="/docs">📆 Ephemeride Documentation</InternalLink>
+        <a href="/docs">📆 Ephemeride Documentation</a>
       </div>
     </div>
     <div class="docs-theme-changer">
@@ -34,9 +34,9 @@ let themeObjects = themes.map(theme => ({
       <div class="docs-route-title">Design</div>
       {#each design as route}
         <div class="docs-route-link">
-          <InternalLink href={route}>
+          <a href={route} use:active>
             {routeTail(route)}
-          </InternalLink>
+          </a>
         </div>
       {/each}
     </div>
@@ -44,9 +44,9 @@ let themeObjects = themes.map(theme => ({
       <div class="docs-route-title">Components</div>
       {#each components as route}
         <div class="docs-route-link">
-          <InternalLink href={route}>
+          <a href={route} use:active>
             {routeTail(route)}
-          </InternalLink>
+          </a>
         </div>
       {/each}
     </div>
@@ -54,9 +54,9 @@ let themeObjects = themes.map(theme => ({
       <div class="docs-route-title">Types</div>
       {#each types as route}
         <div class="docs-route-link">
-          <InternalLink href={route}>
+          <a href={route} use:active>
             {routeTail(route)}
-          </InternalLink>
+          </a>
         </div>
       {/each}
     </div>
@@ -103,6 +103,12 @@ let themeObjects = themes.map(theme => ({
     align-items: center;
     background-color: var(--background-secondary);
 
+    .docs-home {
+      a {
+        color: var(--text-primary);
+      }
+    }
+
     .docs-theme-changer {
       margin-left: auto;
     }
@@ -127,7 +133,7 @@ let themeObjects = themes.map(theme => ({
         flex: 1;
       }
 
-      .docs-route-link :global(.internal-link),
+      .docs-route-link a,
       .docs-route-title {
         display: block;
         padding: var(--padding-s) var(--padding-m);
@@ -139,21 +145,17 @@ let themeObjects = themes.map(theme => ({
     }
   }
 
-  :global(.internal-link) {
+  a {
     color: var(--text-dimmed);
 
     &:hover {
       background-color: var(--background-secondary);
       color: var(--text-muted);
     }
-  }
 
-  :global(.internal-link.active) {
-    color: var(--text-primary);
-  }
-
-  .docs-home :global(.internal-link) {
-    color: var(--text-primary);
+    &:global(.active) {
+      color: var(--text-primary);
+    }
   }
 }
 </style>
