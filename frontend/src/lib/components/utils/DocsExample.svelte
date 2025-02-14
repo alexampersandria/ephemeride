@@ -8,6 +8,7 @@ const { children } = $props()
 
 <style lang="scss">
 .docs-example {
+  flex-wrap: wrap;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -14,7 +14,7 @@ $color-base-90: #d1d7e0;
 $color-base-95: #f0f6fc;
 $color-base-100: #ffffff;
 
-$color-blue-00: #040f25;
+$color-blue-00: #07132c;
 $color-blue-10: #051d4d;
 $color-blue-20: #0c2d6b;
 $color-blue-30: #0d419d;
@@ -50,7 +50,7 @@ $color-yellow-80: #e3b341;
 $color-yellow-90: #f2cc60;
 $color-yellow-100: #f8e3a1;
 
-$color-red-00: #2c0000;
+$color-red-00: #270404;
 $color-red-10: #490202;
 $color-red-20: #67060c;
 $color-red-30: #8e1519;
@@ -190,10 +190,10 @@ $color-pink-100: #ffdaec;
   --color-error: var(--color-red-50);
   --color-info: var(--color-blue-50);
 
-  --color-success-bg: var(--color-green-90);
-  --color-warning-bg: var(--color-yellow-90);
-  --color-error-bg: var(--color-red-90);
-  --color-info-bg: var(--color-blue-90);
+  --color-success-bg: var(--color-green-100);
+  --color-warning-bg: var(--color-yellow-100);
+  --color-error-bg: var(--color-red-100);
+  --color-info-bg: var(--color-blue-100);
 
   --color-link: var(--color-blue-50);
   --color-link-hover: var(--color-blue-60);
@@ -234,10 +234,10 @@ $color-pink-100: #ffdaec;
   --color-error: var(--color-red-50);
   --color-info: var(--color-blue-50);
 
-  --color-success-bg: var(--color-green-10);
-  --color-warning-bg: var(--color-yellow-10);
-  --color-error-bg: var(--color-red-10);
-  --color-info-bg: var(--color-blue-10);
+  --color-success-bg: var(--color-green-00);
+  --color-warning-bg: var(--color-yellow-00);
+  --color-error-bg: var(--color-red-00);
+  --color-info-bg: var(--color-blue-00);
 
   --color-link: var(--color-blue-50);
   --color-link-hover: var(--color-blue-40);

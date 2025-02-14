@@ -163,4 +163,4 @@ let optionsWithDisabled = $state([
 
 ## References
 
-- [Input Types](/docs/types/Input)
+- [Input Types](/docs/types/input#inputstate)
