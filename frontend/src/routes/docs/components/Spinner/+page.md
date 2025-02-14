@@ -9,7 +9,7 @@ Used to indicate that an action is being performed in the background.
 
 ## Usage
 
-### Default Size
+### Default
 
 <DocsExample>
   <Spinner />
@@ -20,6 +20,8 @@ Used to indicate that an action is being performed in the background.
 ```
 
 ### Custom Size
+
+Generally custom size should not be specified unless used in a specific context where the default size is not appropriate, such as in a button where the default size would be too big.
 
 <DocsExample>
   <Spinner --spinner-size="1rem" />

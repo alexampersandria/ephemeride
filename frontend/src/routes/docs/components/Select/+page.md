@@ -15,6 +15,7 @@ let optionsWithDisabled = $state([
 ])
 
 let value = $state('null')
+let otherValue = $state('2')
 let state = $state('untouched')
 </script>
 
@@ -28,8 +29,10 @@ Used in forms or as a dropdown menu to select an option from a list. Modifies th
 
 ### Options & Value
 
+Options are an array of objects with `value` and `label` properties. The `value` is the value of the option and the `label` is the text displayed in the dropdown. The `value` of the selected option is stored in the `value` prop.
+
 <DocsExample>
-  <Select bind:value {options} />
+  <Select bind:value {options} placeholder="Select an option" />
 </DocsExample>
 <DocsExample>
   <p style="margin: 0;">value: <code>{value}</code></p>
@@ -46,11 +49,13 @@ let options = $state([
 let value = $state('null')
 </script>
 
-<Select bind:value {options} />
+<Select bind:value {options} placeholder="Select an option" />
 <p>value: <code>{value}</code></p>
 ```
 
 ### Placeholder
+
+Placeholder text can be set to display when no option is selected. The placeholder is rendered as a disabled option at the top of the list which is selected if no value is set.
 
 <DocsExample>
   <Select {options} placeholder="Select an option" />
@@ -60,19 +65,23 @@ let value = $state('null')
 <Select {options} placeholder="Select an option" />
 ```
 
-Placeholder can also be included even when a value is selected.
+Placeholder can also be included even when a value is set.
 
 <DocsExample>
-  <Select bind:value {options} placeholder="Select an option" />
+  <Select bind:value={otherValue} {options} placeholder="Select an option" />
 </DocsExample>
 
 ```svelte
+<script>
+let value = $state('2')
+</script>
+
 <Select bind:value {options} placeholder="Select an option" />
 ```
 
 ### State
 
-State can be set to `touched`, `untouched`, `valid`, or `invalid`. If not set, the default state is `untouched`. State used `$bindable` to modify the state prop, on change will set state to `touched` if state is `untouched`.
+State can be set to `touched`, `untouched`, `valid`, or `invalid`. If not set, the default state is `untouched`. State uses `$bindable` to modify the state prop, on change will set state to `touched` if state is `untouched`.
 
 See [Input Types](/docs/types/Input) for more information on states.
 

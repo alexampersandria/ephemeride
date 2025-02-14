@@ -1,4 +1,5 @@
 <script lang="ts">
+import { page } from '$app/state'
 import { active } from '$lib/actions/active.svelte'
 import Select from '$lib/components/Select.svelte'
 import { themes, useUiStore } from '$lib/store/uiStore.svelte'
@@ -15,10 +16,26 @@ let themeObjects = themes.map(theme => ({
   value: theme,
   label: `${theme.charAt(0).toUpperCase()}${theme.slice(1).toLowerCase()}`,
 }))
+let sidebarOpen = $state(false)
+
+$effect(() => {
+  if (page.route.id) {
+    sidebarOpen = false
+  }
+})
 </script>
 
 <div class="docs">
   <div class="docs-menu">
+    <div class="docs-sidebar-toggle">
+      <button
+        onclick={() => {
+          sidebarOpen = !sidebarOpen
+        }}
+      >
+        ⚙️
+      </button>
+    </div>
     <div class="docs-home">
       <div class="docs-route-link">
         <a href="/docs">📆 Ephemeride Documentation</a>
@@ -29,7 +46,8 @@ let themeObjects = themes.map(theme => ({
     </div>
   </div>
 
-  <div class="docs-navigation">
+  <div class="docs-navigation-backdrop"></div>
+  <div class="docs-navigation" class:sidebarOpen>
     <div class="docs-routes">
       <div class="docs-route-title">Design</div>
       {#each design as route}
@@ -112,6 +130,10 @@ let themeObjects = themes.map(theme => ({
     .docs-theme-changer {
       margin-left: auto;
     }
+
+    .docs-sidebar-toggle {
+      display: none;
+    }
   }
 
   .docs-navigation,
@@ -155,6 +177,57 @@ let themeObjects = themes.map(theme => ({
 
     &:global(.active) {
       color: var(--text-primary);
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .docs {
+    grid-template-columns: 0 1fr;
+
+    .docs-navigation-backdrop {
+      position: fixed;
+      top: calc(6rem + var(--border-width));
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background-color: var(--background-overlay);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+
+      &:has(+ .sidebarOpen) {
+        opacity: 1;
+      }
+    }
+
+    .docs-navigation {
+      position: fixed;
+      top: calc(6rem + var(--border-width));
+      border-right: var(--border-width) solid var(--border-color);
+      left: calc(-100% - var(--border-width));
+      width: 100%;
+      z-index: 1;
+
+      transition: left 0.3s;
+
+      &.sidebarOpen {
+        left: 0;
+      }
+    }
+
+    .docs-menu {
+      .docs-sidebar-toggle {
+        display: block;
+
+        button {
+          background-color: transparent;
+          border: none;
+          font-size: 1.5rem;
+          cursor: pointer;
+          margin-right: var(--padding-m);
+        }
+      }
     }
   }
 }

@@ -177,6 +177,8 @@ $color-pink-100: #ffdaec;
   --background-secondary: var(--color-base-95);
   --background-accent: var(--color-base-90);
 
+  --background-overlay: #{color.adjust($color-base-100, $alpha: -0.33)};
+
   --border-color: var(--color-base-80);
 
   --text-primary: var(--color-base-00);
@@ -218,6 +220,8 @@ $color-pink-100: #ffdaec;
   --background-primary: var(--color-base-00);
   --background-secondary: var(--color-base-05);
   --background-accent: var(--color-base-10);
+
+  --background-overlay: #{color.adjust($color-base-00, $alpha: -0.33)};
 
   --border-color: var(--color-base-20);
 
