@@ -7,7 +7,11 @@ export const getRoutes = (filter?: RegExp) => {
 
   // remove the /src/routes/ and +page.svelte from the route
   const sanitizedRoutes = filteredRoutes.map(route => {
-    return route.replace('/src/routes', '').replace('+page.svelte', '').replace('+page.md', '')
+    return route
+      .replace('/src/routes', '')
+      .replace('+page.svelte', '')
+      .replace('+page.svx', '')
+      .replace('+page.md', '')
   })
   return sanitizedRoutes
 }

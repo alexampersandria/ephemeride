@@ -2,32 +2,32 @@
 import DocsColorRow from '$lib/components/utils/DocsColorRow.svelte'
 </script>
 
-## Color
+# Color
 
-### Base
+## Base
 
 <DocsColorRow color="base" />
 
-### Blue
+## Blue
 
 <DocsColorRow color="blue" />
 
-### Green
+## Green
 
 <DocsColorRow color="green" />
 
-### Yellow
+## Yellow
 
 <DocsColorRow color="yellow" />
 
-### Red
+## Red
 
 <DocsColorRow color="red" />
 
-### Purple
+## Purple
 
 <DocsColorRow color="purple" />
 
-### Pink
+## Pink
 
 <DocsColorRow color="pink" />

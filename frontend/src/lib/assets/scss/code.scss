@@ -86,19 +86,19 @@ pre[class*='language-'] {
 
 .docs-example {
   & + pre {
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    margin-top: 0;
-    border: var(--border-width) solid var(--border-color);
-    border-top: 0;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    margin-top: 0 !important;
+    border: var(--border-width) solid var(--border-color) !important;
+    border-top: 0 !important;
   }
 
   & + .docs-example {
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    margin-top: 0;
-    border: var(--border-width) solid var(--border-color);
-    border-top: 0;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    margin-top: 0 !important;
+    border: var(--border-width) solid var(--border-color) !important;
+    border-top: 0 !important;
   }
 
   &:has(+ pre),

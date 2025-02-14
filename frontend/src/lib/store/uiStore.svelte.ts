@@ -1,4 +1,5 @@
 import { browser } from '$app/environment'
+import { onMount } from 'svelte'
 
 export const themes = ['dark', 'light', 'system'] as const
 export type Theme = (typeof themes)[number]
@@ -22,7 +23,7 @@ let appliedTheme: Theme = $derived.by(() => {
 })
 
 export const useUiStore: () => UiState = () => {
-  $effect(() => {
+  onMount(() => {
     if (browser) {
       // wait min 300ms before setting loading to false, less if time difference between mountedAt and now is less
       // if preloader is shown for less than 300ms it may not register to the user
