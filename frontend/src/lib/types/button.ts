@@ -1,8 +1,6 @@
 import type { Snippet } from 'svelte'
 import type { Color } from './color'
-import type { Icon } from './icon'
-
-export type ButtonVariant = 'primary' | 'secondary' | 'invisible'
+import type { ButtonVariant } from './input'
 
 export type ButtonProps = {
   children: Snippet
@@ -10,5 +8,5 @@ export type ButtonProps = {
   color?: Color
   loading?: boolean
   disabled?: boolean
-  icon?: Icon
+  onclick?: () => void
 }

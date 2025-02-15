@@ -1,8 +1,16 @@
 <script lang="ts">
-const { children } = $props()
+import type { Snippet } from 'svelte'
+
+const {
+  children,
+  label,
+}: {
+  children: Snippet
+  label?: string
+} = $props()
 </script>
 
-<div class="docs-example">
+<div class="docs-example" class:label>
   {@render children()}
 </div>
 

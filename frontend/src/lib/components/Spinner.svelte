@@ -27,7 +27,7 @@
       width: 24%;
       height: 8%;
 
-      border-radius: var(--radius-s);
+      border-radius: var(--radius-xs);
 
       background-color: var(--spinner-color);
 

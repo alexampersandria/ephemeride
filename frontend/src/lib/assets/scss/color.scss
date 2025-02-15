@@ -10,7 +10,7 @@ $color-base-50: #3d444d;
 $color-base-60: #656c76;
 $color-base-70: #9198a1;
 $color-base-80: #c2c8d3;
-$color-base-90: #d1d7e0;
+$color-base-90: #e4ecf3;
 $color-base-95: #f0f6fc;
 $color-base-100: #ffffff;
 
@@ -35,20 +35,20 @@ $color-green-50: #238636;
 $color-green-60: #2ea043;
 $color-green-70: #3fb950;
 $color-green-80: #56d364;
-$color-green-90: #7ee787;
-$color-green-100: #aff5b4;
+$color-green-90: #8ff598;
+$color-green-100: #b9fcbd;
 
-$color-yellow-00: #1b0e00;
-$color-yellow-10: #341a00;
-$color-yellow-20: #4b2900;
-$color-yellow-30: #693e00;
-$color-yellow-40: #845306;
-$color-yellow-50: #9e6a03;
-$color-yellow-60: #bb8009;
-$color-yellow-70: #d29922;
-$color-yellow-80: #e3b341;
-$color-yellow-90: #f2cc60;
-$color-yellow-100: #f8e3a1;
+$color-yellow-00: #2c1c03;
+$color-yellow-10: #533308;
+$color-yellow-20: #7c4c0c;
+$color-yellow-30: #965c0f;
+$color-yellow-40: #ce7f18;
+$color-yellow-50: #db8411;
+$color-yellow-60: #f89f29;
+$color-yellow-70: #fdb04c;
+$color-yellow-80: #ffb759;
+$color-yellow-90: #ffd296;
+$color-yellow-100: #ffe0b8;
 
 $color-red-00: #270404;
 $color-red-10: #490202;
@@ -78,15 +78,17 @@ $color-pink-00: #200314;
 $color-pink-10: #42062a;
 $color-pink-20: #5e103e;
 $color-pink-30: #7d2457;
-$color-pink-40: #9e3670;
-$color-pink-50: #bf4b8a;
-$color-pink-60: #db61a2;
-$color-pink-70: #f778ba;
+$color-pink-40: #a83f79;
+$color-pink-50: #e264a7;
+$color-pink-60: #ec78b6;
+$color-pink-70: #f783bf;
 $color-pink-80: #ff9bce;
 $color-pink-90: #ffbedd;
 $color-pink-100: #ffdaec;
 
-:root {
+$colors: ('blue', 'green', 'yellow', 'red', 'purple', 'pink');
+
+#root {
   --color-base-00: #{$color-base-00};
   --color-base-05: #{$color-base-05};
   --color-base-10: #{$color-base-10};
@@ -212,9 +214,69 @@ $color-pink-100: #ffdaec;
 
   --selection-color: var(--color-blue-50);
   --selection-text-color: var(--color-base-100);
+
+  --input-background: var(--background-primary);
+  --input-border: var(--border-color);
+  --input-color: var(--text-primary);
+
+  --input-background-hover: var(--background-secondary);
+  --input-border-hover: var(--border-color);
+  --input-color-hover: var(--text-primary);
+
+  --input-disabled-background: var(--background-secondary);
+  --input-disabled-border: var(--border-color);
+  --input-disabled-color: var(--text-dimmed);
+
+  --select-background: var(--input-background);
+  --select-border: var(--input-border);
+  --select-color: var(--input-color);
+
+  --select-background-hover: var(--input-background-hover);
+  --select-border-hover: var(--input-border-hover);
+  --select-color-hover: var(--input-color-hover);
+
+  --button-background: var(--background-primary);
+  --button-border: var(--border-color);
+  --button-color: var(--text-primary);
+
+  --button-background-hover: var(--background-secondary);
+  --button-border-hover: var(--border-color);
+  --button-background-active: var(--background-accent);
+  --button-border-active: var(--border-color);
+
+  --button-primary-background: var(--color-base-00);
+  --button-primary-border: var(--color-base-00);
+  --button-primary-color: var(--color-base-100);
+
+  --button-primary-background-hover: var(--color-base-20);
+  --button-primary-border-hover: var(--color-base-20);
+  --button-primary-background-active: var(--color-base-40);
+  --button-primary-border-active: var(--color-base-40);
+
+  @each $color in $colors {
+    --button-#{$color}-background: var(--color-#{$color}-100);
+    --button-#{$color}-border: var(--color-#{$color}-50);
+    --button-#{$color}-color: var(--text-primary);
+
+    --button-#{$color}-background-hover: var(--color-#{$color}-90);
+    --button-#{$color}-border-hover: var(--color-#{$color}-50);
+    --button-#{$color}-background-active: var(--color-#{$color}-80);
+    --button-#{$color}-border-active: var(--color-#{$color}-50);
+
+    --button-#{$color}-primary-background: var(--color-#{$color}-50);
+    --button-#{$color}-primary-border: var(--color-#{$color}-50);
+    --button-#{$color}-primary-color: var(--background-primary);
+
+    --button-#{$color}-primary-background-hover: var(--color-#{$color}-40);
+    --button-#{$color}-primary-border-hover: var(--color-#{$color}-40);
+    --button-#{$color}-primary-background-active: var(--color-#{$color}-30);
+    --button-#{$color}-primary-border-active: var(--color-#{$color}-30);
+
+    --button-#{$color}-invisible-color: var(--color-#{$color}-50);
+  }
 }
 
-.theme-dark {
+#root.theme-dark {
   color-scheme: dark;
 
   --background-primary: var(--color-base-00);
@@ -242,18 +304,39 @@ $color-pink-100: #ffdaec;
   --color-link: var(--color-blue-50);
   --color-link-hover: var(--color-blue-40);
 
-  --color-focus: var(--color-link);
-  --color-valid: var(--color-success);
-  --color-invalid: var(--color-error);
-
-  --color-focus-bg: var(--color-info-bg);
-  --color-valid-bg: var(--color-success-bg);
-  --color-invalid-bg: var(--color-error-bg);
-
   --spinner-color: var(--color-base-70);
-
-  --hr-color: var(--border-color);
 
   --selection-color: var(--color-blue-50);
   --selection-text-color: var(--color-base-100);
+
+  --button-primary-background: var(--color-base-100);
+  --button-primary-border: var(--color-base-100);
+  --button-primary-color: var(--color-base-00);
+
+  --button-primary-background-hover: var(--color-base-80);
+  --button-primary-border-hover: var(--color-base-80);
+  --button-primary-background-active: var(--color-base-70);
+  --button-primary-border-active: var(--color-base-70);
+
+  @each $color in $colors {
+    --button-#{$color}-background: var(--color-#{$color}-00);
+    --button-#{$color}-border: var(--color-#{$color}-50);
+    --button-#{$color}-color: var(--text-primary);
+
+    --button-#{$color}-background-hover: var(--color-#{$color}-10);
+    --button-#{$color}-border-hover: var(--color-#{$color}-50);
+    --button-#{$color}-background-active: var(--color-#{$color}-20);
+    --button-#{$color}-border-active: var(--color-#{$color}-50);
+
+    --button-#{$color}-primary-background: var(--color-#{$color}-50);
+    --button-#{$color}-primary-border: var(--color-#{$color}-50);
+    --button-#{$color}-primary-color: var(--text-primary);
+
+    --button-#{$color}-primary-background-hover: var(--color-#{$color}-40);
+    --button-#{$color}-primary-border-hover: var(--color-#{$color}-40);
+    --button-#{$color}-primary-background-active: var(--color-#{$color}-30);
+    --button-#{$color}-primary-border-active: var(--color-#{$color}-30);
+
+    --button-#{$color}-invisible-color: var(--color-#{$color}-50);
+  }
 }

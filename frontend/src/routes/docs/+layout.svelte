@@ -144,7 +144,7 @@ $effect(() => {
     background-color: var(--background-primary);
     height: 100%;
     overflow: auto;
-    padding-bottom: 12vh;
+    padding-bottom: 25vh;
   }
 
   .docs-navigation {
@@ -161,7 +161,7 @@ $effect(() => {
       .docs-route-link a,
       .docs-route-title {
         display: block;
-        padding: var(--padding-s) var(--padding-m);
+        padding: var(--padding-xs) var(--padding-m);
       }
 
       .docs-route-title {

@@ -49,24 +49,22 @@ const onchange = (event: Event) => {
 
 <style lang="scss">
 .select {
-  padding: var(--button-padding);
-  border-radius: var(--button-radius);
-  background-color: var(--background-primary);
-  border: var(--border-width) solid var(--border-color);
+  padding: var(--select-padding);
+  border-radius: var(--select-radius);
+  background-color: var(--select-background);
+  border: var(--border-width) solid var(--select-border);
 
   &:not(:disabled) {
     cursor: pointer;
 
     &:hover {
-      background-color: var(--background-secondary);
+      background-color: var(--select-background-hover);
     }
   }
 
   &:disabled {
-    cursor: not-allowed;
-    opacity: 1;
-    color: var(--text-dimmed);
-    background-color: var(--background-secondary);
+    color: var(--input-disabled-color);
+    background-color: var(--input-disabled-background);
   }
 
   &.invalid {

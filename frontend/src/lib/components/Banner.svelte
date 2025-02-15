@@ -5,9 +5,6 @@ let { children, message, actions, variant = 'info' }: BannerProps = $props()
 </script>
 
 <div class="alert {variant}">
-  <div class="icon">
-    <div class="todo"></div>
-  </div>
   <div class="message">
     {#if children}
       {@render children()}

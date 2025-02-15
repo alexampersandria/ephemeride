@@ -1,39 +1,169 @@
 <script lang="ts">
 // #TODO: Implement the Button component properly, just demo for Banner
 import type { ButtonProps } from '$lib/types/button'
+import Spinner from './Spinner.svelte'
 
 let {
   children,
-  variant = 'primary',
+  variant = 'secondary',
   color = 'base',
   loading,
   disabled,
+  onclick,
 }: ButtonProps = $props()
+
+let clickHandler = () => {
+  if (disabled) return
+  if (loading) return
+  if (!onclick) return
+
+  onclick()
+}
 </script>
 
-<button class="button">
-  {@render children()}
+<button
+  class="button {variant} {color}"
+  class:loading
+  class:disabled
+  {disabled}
+  onclick={clickHandler}>
+  <div class="button-content">
+    {@render children()}
+  </div>
+  <div class="button-spinner">
+    <Spinner />
+  </div>
 </button>
 
 <style lang="scss">
+@use '../assets/scss/color';
+
 .button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: var(--button-padding);
   border-radius: var(--button-radius);
-  background-color: var(--background-primary);
-  border: var(--border-width) solid var(--border-color);
-  &:not(:disabled) {
+  color: var(--button-color);
+  border: none;
+  background-color: transparent;
+  border: var(--border-width) solid var(--button-border);
+  background-color: var(--button-background);
+
+  .button-spinner {
+    --spinner-size: 1rem;
+    position: absolute;
+    opacity: 0;
+  }
+
+  &.loading {
+    .button-content {
+      opacity: 0;
+    }
+    .button-spinner {
+      opacity: 1;
+    }
+  }
+
+  &:not(:disabled, .loading) {
     cursor: pointer;
 
     &:hover {
-      background-color: var(--background-secondary);
+      background-color: var(--button-background-hover);
+      border-color: var(--button-border-hover);
+    }
+
+    &:active {
+      background-color: var(--button-background-active);
+      border-color: var(--button-border-active);
+    }
+  }
+
+  &.primary {
+    color: var(--button-primary-color);
+    --spinner-color: var(--button-primary-color);
+    border-color: var(--button-primary-border);
+    background-color: var(--button-primary-background);
+
+    &:not(:disabled, .loading) {
+      &:hover {
+        background-color: var(--button-primary-background-hover);
+        border-color: var(--button-primary-border-hover);
+      }
+
+      &:active {
+        background-color: var(--button-primary-background-active);
+        border-color: var(--button-primary-border-active);
+      }
+    }
+  }
+
+  @each $color in color.$colors {
+    &.#{$color} {
+      color: var(--button-#{$color}-color);
+      --spinner-color: var(--button-#{$color}-color);
+      background-color: var(--button-#{$color}-background);
+      border-color: var(--button-#{$color}-border);
+
+      &:not(:disabled, .loading) {
+        &:hover {
+          background-color: var(--button-#{$color}-background-hover);
+          border-color: var(--button-#{$color}-border-hover);
+        }
+
+        &:active {
+          background-color: var(--button-#{$color}-background-active);
+          border-color: var(--button-#{$color}-border-active);
+        }
+      }
+
+      &.primary {
+        color: var(--button-#{$color}-primary-color);
+        --spinner-color: var(--button-#{$color}-primary-color);
+        background-color: var(--button-#{$color}-primary-background);
+        border-color: var(--button-#{$color}-primary-border);
+
+        &:not(:disabled, .loading) {
+          &:hover {
+            background-color: var(--button-#{$color}-primary-background-hover);
+            border-color: var(--button-#{$color}-primary-border-hover);
+          }
+
+          &:active {
+            background-color: var(--button-#{$color}-primary-background-active);
+            border-color: var(--button-#{$color}-primary-border-active);
+          }
+        }
+      }
+
+      &.invisible {
+        color: var(--button-#{$color}-invisible-color);
+      }
+    }
+  }
+
+  &.invisible {
+    background-color: transparent;
+    border-color: transparent;
+
+    &:not(:disabled, .loading) {
+      &:hover {
+        background-color: var(--button-background-hover);
+        border-color: transparent;
+      }
+
+      &:active {
+        background-color: var(--button-background-active);
+        border-color: transparent;
+      }
     }
   }
 
   &:disabled {
-    cursor: not-allowed;
-    opacity: 1;
-    color: var(--text-dimmed);
-    background-color: var(--background-secondary);
+    color: var(--input-disabled-color) !important;
+    background-color: var(--input-disabled-background) !important;
+    border-color: var(--input-disabled-border) !important;
   }
 }
 </style>

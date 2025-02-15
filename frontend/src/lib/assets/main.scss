@@ -120,3 +120,8 @@ hr {
   border-top: var(--border-width) solid var(--hr-color);
   margin: var(--padding-m) 0;
 }
+
+*:disabled {
+  opacity: 1;
+  cursor: not-allowed;
+}

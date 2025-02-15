@@ -1,11 +1,13 @@
 $container-width: calc(8ch * 12);
 
-$radius-s: 0.25rem;
+$radius-xs: 0.25rem;
+$radius-s: 0.375rem;
 $radius-m: 0.5rem;
 $radius-l: 1rem;
 $radius-xl: 2rem;
 
-$padding-s: 0.5rem;
+$padding-xs: 0.5rem;
+$padding-s: 0.75rem;
 $padding-m: 1rem;
 $padding-l: 2rem;
 $padding-xl: 4rem;
@@ -28,11 +30,13 @@ $code-size: 0.875rem;
 :root {
   --container-width: #{$container-width};
 
+  --radius-xs: #{$radius-xs};
   --radius-s: #{$radius-s};
   --radius-m: #{$radius-m};
   --radius-l: #{$radius-l};
   --radius-xl: #{$radius-xl};
 
+  --padding-xs: #{$padding-xs};
   --padding-s: #{$padding-s};
   --padding-m: #{$padding-m};
   --padding-l: #{$padding-l};
@@ -40,6 +44,12 @@ $code-size: 0.875rem;
 
   --button-padding: var(--padding-s);
   --button-radius: var(--radius-s);
+
+  --input-padding: var(--padding-xs);
+  --input-radius: var(--radius-s);
+
+  --select-padding: var(--input-padding);
+  --select-radius: var(--input-radius);
 
   --border-width: #{$border-width};
   --focus-shadow-width: #{$focus-shadow-width};

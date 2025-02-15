@@ -6,3 +6,4 @@ yarn.lock
 # SvelteKit
 .svelte-kit
 **/lib/paraglide
+**/+page.md
