@@ -53,6 +53,7 @@ $code-size: 0.875rem;
 
   --border-width: #{$border-width};
   --focus-shadow-width: #{$focus-shadow-width};
+  --focus-shadow-offset: var(--focus-shadow-width);
   --state-shadow-width: var(--focus-shadow-width);
 
   --spinner-size: #{$spinner-size};

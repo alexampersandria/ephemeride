@@ -1,5 +1,6 @@
-export type Color =
-  | 'base'
+export type Color = 'base' | SaturatedColor
+
+export type SaturatedColor =
   | 'blue'
   | 'green'
   | 'red'

@@ -46,13 +46,13 @@ let count = $state(0)
 <DocsExample>
   <Button variant='primary'>Primary</Button>
   <Button variant='secondary'>Secondary</Button>
-  <Button variant='invisible'>Invisible</Button>
+  <Button variant='ghost'>Ghost</Button>
 </DocsExample>
 
 ```svelte
 <Button variant="primary">Primary</Button>
 <Button variant="secondary">Secondary</Button>
-<Button variant="invisible">Invisible</Button>
+<Button variant="ghost">Ghost</Button>
 ```
 
 ### Disabled
@@ -62,13 +62,57 @@ Disabling buttons should generally be avoided. All disabled buttons are styled t
 <DocsExample>
   <Button disabled color='base' variant='primary'>Primary</Button>
   <Button disabled color='red' variant='secondary'>Secondary</Button>
-  <Button disabled color='pink' variant='invisible'>Invisible</Button>
+  <Button disabled color='pink' variant='ghost'>Ghost</Button>
 </DocsExample>
 
 ```svelte
 <Button disabled color="base" variant="primary">Primary</Button>
 <Button disabled color="red" variant="secondary">Secondary</Button>
-<Button disabled color="pink" variant="invisible">Invisible</Button>
+<Button disabled color="pink" variant="ghost">Ghost</Button>
+```
+
+### Loading
+
+<DocsExample>
+  <Button loading>Loading</Button>
+</DocsExample>
+
+```svelte
+<Button loading>Loading</Button>
+```
+
+#### Loading interactivity
+
+If a button is loading the onclick event will not be triggered.
+
+<DocsExample>
+  <Button variant='primary' onclick={incrementSlowCount} loading={slowCountLoading}>Click me</Button>
+</DocsExample>
+<DocsExample>
+  <p>Slow count: <code>{slowCount}</code></p>
+</DocsExample>
+
+```svelte
+<script>
+let slowCount = $state(0)
+let slowCountLoading = $state(false)
+let incrementSlowCount = () => {
+  slowCountLoading = true
+  setTimeout(() => {
+    slowCount++
+    slowCountLoading = false
+  }, 1000)
+}
+</script>
+
+<Button
+  color="green"
+  variant="primary"
+  onclick={incrementSlowCount}
+  loading={slowCountLoading}>
+    Click me
+</Button>
+<p>Slow count: <code>{slowCount}</code></p>
 ```
 
 ### Color
@@ -121,70 +165,26 @@ Colored buttons should be used sparingly for important actions, such as destruct
 <Button variant="secondary" color="pink">Pink</Button>
 ```
 
-#### Invisible
+#### Ghost
 
 <DocsExample>
-  <Button variant='invisible' color='base'>Base</Button>
-  <Button variant='invisible' color='blue'>Blue</Button>
-  <Button variant='invisible' color='green'>Green</Button>
-  <Button variant='invisible' color='red'>Red</Button>
-  <Button variant='invisible' color='yellow'>Yellow</Button>
-  <Button variant='invisible' color='purple'>Purple</Button>
-  <Button variant='invisible' color='pink'>Pink</Button>
+  <Button variant='ghost' color='base'>Base</Button>
+  <Button variant='ghost' color='blue'>Blue</Button>
+  <Button variant='ghost' color='green'>Green</Button>
+  <Button variant='ghost' color='red'>Red</Button>
+  <Button variant='ghost' color='yellow'>Yellow</Button>
+  <Button variant='ghost' color='purple'>Purple</Button>
+  <Button variant='ghost' color='pink'>Pink</Button>
 </DocsExample>
 
 ```svelte
-<Button variant="invisible" color="base">Base</Button>
-<Button variant="invisible" color="blue">Blue</Button>
-<Button variant="invisible" color="green">Green</Button>
-<Button variant="invisible" color="red">Red</Button>
-<Button variant="invisible" color="yellow">Yellow</Button>
-<Button variant="invisible" color="purple">Purple</Button>
-<Button variant="invisible" color="pink">Pink</Button>
-```
-
-### Loading
-
-<DocsExample>
-  <Button loading>Loading</Button>
-</DocsExample>
-
-```svelte
-<Button loading>Loading</Button>
-```
-
-#### Loading interactivity
-
-If a button is loading the onclick event will not be triggered.
-
-<DocsExample>
-  <Button color='green' variant='primary' onclick={incrementSlowCount} loading={slowCountLoading}>Click me</Button>
-</DocsExample>
-<DocsExample>
-  <p>Slow count: <code>{slowCount}</code></p>
-</DocsExample>
-
-```svelte
-<script>
-let slowCount = $state(0)
-let slowCountLoading = $state(false)
-let incrementSlowCount = () => {
-  slowCountLoading = true
-  setTimeout(() => {
-    slowCount++
-    slowCountLoading = false
-  }, 1000)
-}
-</script>
-
-<Button
-  color="green"
-  variant="primary"
-  onclick={incrementSlowCount}
-  loading={slowCountLoading}>
-    Click me
-</Button>
-<p>Slow count: <code>{slowCount}</code></p>
+<Button variant="ghost" color="base">Base</Button>
+<Button variant="ghost" color="blue">Blue</Button>
+<Button variant="ghost" color="green">Green</Button>
+<Button variant="ghost" color="red">Red</Button>
+<Button variant="ghost" color="yellow">Yellow</Button>
+<Button variant="ghost" color="purple">Purple</Button>
+<Button variant="ghost" color="pink">Pink</Button>
 ```
 
 ## Types

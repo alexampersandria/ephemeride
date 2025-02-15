@@ -25,6 +25,12 @@
       "options": {
         "printWidth": 1000
       }
+    },
+    {
+      "files": "*.scss",
+      "options": {
+        "printWidth": 1000
+      }
     }
   ]
 }

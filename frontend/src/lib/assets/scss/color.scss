@@ -1,4 +1,5 @@
 @use 'sass:color';
+@use 'sass:list';
 
 $color-base-00: #05070a;
 $color-base-05: #0d0f13;
@@ -86,7 +87,8 @@ $color-pink-80: #ff9bce;
 $color-pink-90: #ffbedd;
 $color-pink-100: #ffdaec;
 
-$colors: ('blue', 'green', 'yellow', 'red', 'purple', 'pink');
+$saturatedColors: ('blue', 'green', 'yellow', 'red', 'purple', 'pink');
+$colors: list.append($saturatedColors, 'base');
 
 #root {
   --color-base-00: #{$color-base-00};
@@ -201,10 +203,10 @@ $colors: ('blue', 'green', 'yellow', 'red', 'purple', 'pink');
   --color-link-hover: var(--color-blue-60);
 
   --color-focus: var(--color-link);
+
   --color-valid: var(--color-success);
   --color-invalid: var(--color-error);
 
-  --color-focus-bg: var(--color-info-bg);
   --color-valid-bg: var(--color-success-bg);
   --color-invalid-bg: var(--color-error-bg);
 
@@ -240,39 +242,47 @@ $colors: ('blue', 'green', 'yellow', 'red', 'purple', 'pink');
   --button-color: var(--text-primary);
 
   --button-background-hover: var(--background-secondary);
-  --button-border-hover: var(--border-color);
+  --button-border-hover: var(--button-border);
+  --button-color-hover: var(--button-color);
   --button-background-active: var(--background-accent);
-  --button-border-active: var(--border-color);
+  --button-border-active: var(--button-border);
+  --button-color-active: var(--button-color);
 
   --button-primary-background: var(--color-base-00);
   --button-primary-border: var(--color-base-00);
   --button-primary-color: var(--color-base-100);
 
   --button-primary-background-hover: var(--color-base-20);
-  --button-primary-border-hover: var(--color-base-20);
+  --button-primary-border-hover: var(--button-primary-background-hover);
+  --button-primary-color-hover: var(--button-primary-color);
   --button-primary-background-active: var(--color-base-40);
-  --button-primary-border-active: var(--color-base-40);
+  --button-primary-border-active: var(--button-primary-background-active);
+  --button-primary-color-active: var(--button-primary-color);
 
-  @each $color in $colors {
-    --button-#{$color}-background: var(--color-#{$color}-100);
-    --button-#{$color}-border: var(--color-#{$color}-50);
-    --button-#{$color}-color: var(--text-primary);
+  @each $color in $saturatedColors {
+    --button-#{$color}-background: var(--button-#{$color}-primary-background);
+    --button-#{$color}-border: var(--color-#{$color}-60);
+    --button-#{$color}-color: var(--button-#{$color}-primary-color);
 
-    --button-#{$color}-background-hover: var(--color-#{$color}-90);
-    --button-#{$color}-border-hover: var(--color-#{$color}-50);
-    --button-#{$color}-background-active: var(--color-#{$color}-80);
-    --button-#{$color}-border-active: var(--color-#{$color}-50);
+    --button-#{$color}-background-hover: var(--button-#{$color}-primary-background-hover);
+    --button-#{$color}-border-hover: var(--button-#{$color}-border);
+    --button-#{$color}-color-hover: var(--button-#{$color}-primary-color-hover);
+    --button-#{$color}-background-active: var(--button-#{$color}-primary-background-active);
+    --button-#{$color}-border-active: var(--button-#{$color}-border);
+    --button-#{$color}-color-active: var(--button-#{$color}-primary-color-active);
 
-    --button-#{$color}-primary-background: var(--color-#{$color}-50);
-    --button-#{$color}-primary-border: var(--color-#{$color}-50);
-    --button-#{$color}-primary-color: var(--background-primary);
+    --button-#{$color}-primary-background: var(--color-#{$color}-90);
+    --button-#{$color}-primary-border: var(--button-#{$color}-primary-background);
+    --button-#{$color}-primary-color: var(--color-#{$color}-30);
 
-    --button-#{$color}-primary-background-hover: var(--color-#{$color}-40);
-    --button-#{$color}-primary-border-hover: var(--color-#{$color}-40);
-    --button-#{$color}-primary-background-active: var(--color-#{$color}-30);
-    --button-#{$color}-primary-border-active: var(--color-#{$color}-30);
+    --button-#{$color}-primary-background-hover: var(--color-#{$color}-80);
+    --button-#{$color}-primary-border-hover: var(--button-#{$color}-primary-background-hover);
+    --button-#{$color}-primary-color-hover: var(--color-#{$color}-20);
+    --button-#{$color}-primary-background-active: var(--color-#{$color}-70);
+    --button-#{$color}-primary-border-active: var(--button-#{$color}-primary-background-active);
+    --button-#{$color}-primary-color-active: var(--color-#{$color}-10);
 
-    --button-#{$color}-invisible-color: var(--color-#{$color}-50);
+    --button-#{$color}-ghost-color: var(--color-#{$color}-50);
   }
 }
 
@@ -315,28 +325,34 @@ $colors: ('blue', 'green', 'yellow', 'red', 'purple', 'pink');
 
   --button-primary-background-hover: var(--color-base-80);
   --button-primary-border-hover: var(--color-base-80);
+  --button-primary-color-hover: var(--color-base-00);
   --button-primary-background-active: var(--color-base-70);
   --button-primary-border-active: var(--color-base-70);
+  --button-primary-color-active: var(--button-primary-color);
 
-  @each $color in $colors {
-    --button-#{$color}-background: var(--color-#{$color}-00);
-    --button-#{$color}-border: var(--color-#{$color}-50);
-    --button-#{$color}-color: var(--text-primary);
+  @each $color in $saturatedColors {
+    --button-#{$color}-background: var(--button-#{$color}-primary-background);
+    --button-#{$color}-border: var(--color-#{$color}-40);
+    --button-#{$color}-color: var(--button-#{$color}-primary-color);
 
-    --button-#{$color}-background-hover: var(--color-#{$color}-10);
-    --button-#{$color}-border-hover: var(--color-#{$color}-50);
-    --button-#{$color}-background-active: var(--color-#{$color}-20);
-    --button-#{$color}-border-active: var(--color-#{$color}-50);
+    --button-#{$color}-background-hover: var(--button-#{$color}-primary-background-hover);
+    --button-#{$color}-border-hover: var(--button-#{$color}-border);
+    --button-#{$color}-color-hover: var(--button-#{$color}-primary-color-hover);
+    --button-#{$color}-background-active: var(--button-#{$color}-primary-background-active);
+    --button-#{$color}-border-active: var(--button-#{$color}-border);
+    --button-#{$color}-color-active: var(--button-#{$color}-primary-color-active);
 
-    --button-#{$color}-primary-background: var(--color-#{$color}-50);
-    --button-#{$color}-primary-border: var(--color-#{$color}-50);
-    --button-#{$color}-primary-color: var(--text-primary);
+    --button-#{$color}-primary-background: var(--color-#{$color}-10);
+    --button-#{$color}-primary-border: var(--button-#{$color}-primary-background);
+    --button-#{$color}-primary-color: var(--color-#{$color}-70);
 
-    --button-#{$color}-primary-background-hover: var(--color-#{$color}-40);
-    --button-#{$color}-primary-border-hover: var(--color-#{$color}-40);
+    --button-#{$color}-primary-background-hover: var(--color-#{$color}-20);
+    --button-#{$color}-primary-border-hover: var(--button-#{$color}-primary-background-hover);
+    --button-#{$color}-primary-color-hover: var(--color-#{$color}-80);
     --button-#{$color}-primary-background-active: var(--color-#{$color}-30);
-    --button-#{$color}-primary-border-active: var(--color-#{$color}-30);
+    --button-#{$color}-primary-border-active: var(--button-#{$color}-primary-background-active);
+    --button-#{$color}-primary-color-active: var(--color-#{$color}-90);
 
-    --button-#{$color}-invisible-color: var(--color-#{$color}-50);
+    --button-#{$color}-ghost-color: var(--color-#{$color}-50);
   }
 }

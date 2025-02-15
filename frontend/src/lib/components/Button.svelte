@@ -25,14 +25,17 @@ let clickHandler = () => {
   class="button {variant} {color}"
   class:loading
   class:disabled
+  aria-busy={loading}
   {disabled}
   onclick={clickHandler}>
   <div class="button-content">
     {@render children()}
   </div>
-  <div class="button-spinner">
-    <Spinner />
-  </div>
+  {#if loading}
+    <div class="button-spinner">
+      <Spinner />
+    </div>
+  {/if}
 </button>
 
 <style lang="scss">
@@ -54,7 +57,6 @@ let clickHandler = () => {
   .button-spinner {
     --spinner-size: 1rem;
     position: absolute;
-    opacity: 0;
   }
 
   &.loading {
@@ -66,15 +68,19 @@ let clickHandler = () => {
     }
   }
 
-  &:not(:disabled, .loading) {
+  &:not(.disabled, .loading) {
     cursor: pointer;
+  }
 
+  &:not(:disabled, .loading, .ghost) {
     &:hover {
+      color: var(--button-color-hover);
       background-color: var(--button-background-hover);
       border-color: var(--button-border-hover);
     }
 
     &:active {
+      color: var(--button-color-active);
       background-color: var(--button-background-active);
       border-color: var(--button-border-active);
     }
@@ -86,33 +92,37 @@ let clickHandler = () => {
     border-color: var(--button-primary-border);
     background-color: var(--button-primary-background);
 
-    &:not(:disabled, .loading) {
+    &:not(:disabled, .loading, .ghost) {
       &:hover {
+        color: var(--button-primary-color-hover);
         background-color: var(--button-primary-background-hover);
         border-color: var(--button-primary-border-hover);
       }
 
       &:active {
+        color: var(--button-primary-color-active);
         background-color: var(--button-primary-background-active);
         border-color: var(--button-primary-border-active);
       }
     }
   }
 
-  @each $color in color.$colors {
+  @each $color in color.$saturatedColors {
     &.#{$color} {
       color: var(--button-#{$color}-color);
       --spinner-color: var(--button-#{$color}-color);
       background-color: var(--button-#{$color}-background);
       border-color: var(--button-#{$color}-border);
 
-      &:not(:disabled, .loading) {
+      &:not(:disabled, .loading, .ghost) {
         &:hover {
+          color: var(--button-#{$color}-color-hover);
           background-color: var(--button-#{$color}-background-hover);
           border-color: var(--button-#{$color}-border-hover);
         }
 
         &:active {
+          color: var(--button-#{$color}-color-active);
           background-color: var(--button-#{$color}-background-active);
           border-color: var(--button-#{$color}-border-active);
         }
@@ -126,36 +136,36 @@ let clickHandler = () => {
 
         &:not(:disabled, .loading) {
           &:hover {
+            color: var(--button-#{$color}-primary-color-hover);
             background-color: var(--button-#{$color}-primary-background-hover);
             border-color: var(--button-#{$color}-primary-border-hover);
           }
 
           &:active {
+            color: var(--button-#{$color}-primary-color-active);
             background-color: var(--button-#{$color}-primary-background-active);
             border-color: var(--button-#{$color}-primary-border-active);
           }
         }
       }
 
-      &.invisible {
-        color: var(--button-#{$color}-invisible-color);
+      &.ghost {
+        color: var(--button-#{$color}-ghost-color);
       }
     }
   }
 
-  &.invisible {
+  &.ghost {
     background-color: transparent;
     border-color: transparent;
 
     &:not(:disabled, .loading) {
       &:hover {
         background-color: var(--button-background-hover);
-        border-color: transparent;
       }
 
       &:active {
         background-color: var(--button-background-active);
-        border-color: transparent;
       }
     }
   }

@@ -28,7 +28,7 @@ pre[class*='language-'] {
 
 /* Inline code */
 :not(pre) > code {
-  color: var(--text-muted);
+  color: var(--color-blue-70);
 }
 
 .token.comment,
