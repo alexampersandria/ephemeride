@@ -6,6 +6,7 @@ $radius-m: 0.5rem;
 $radius-l: 1rem;
 $radius-xl: 2rem;
 
+$padding-xxs: 0.25rem;
 $padding-xs: 0.5rem;
 $padding-s: 0.75rem;
 $padding-m: 1rem;
@@ -36,6 +37,7 @@ $code-size: 0.875rem;
   --radius-l: #{$radius-l};
   --radius-xl: #{$radius-xl};
 
+  --padding-xxs: #{$padding-xxs};
   --padding-xs: #{$padding-xs};
   --padding-s: #{$padding-s};
   --padding-m: #{$padding-m};
@@ -47,6 +49,9 @@ $code-size: 0.875rem;
 
   --input-padding: var(--padding-xs);
   --input-radius: var(--radius-s);
+
+  --alert-padding: var(--padding-s);
+  --alert-radius: var(--radius-s);
 
   --select-padding: var(--input-padding);
   --select-radius: var(--input-radius);

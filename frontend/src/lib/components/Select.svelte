@@ -68,12 +68,12 @@ const onchange = (event: Event) => {
   }
 
   &.invalid {
-    box-shadow: 0 0 0 var(--state-shadow-width) var(--color-invalid-bg);
+    box-shadow: 0 0 0 var(--state-shadow-width) var(--color-invalid-background);
     border-color: var(--color-invalid);
   }
 
   &.valid {
-    box-shadow: 0 0 0 var(--state-shadow-width) var(--color-valid-bg);
+    box-shadow: 0 0 0 var(--state-shadow-width) var(--color-valid-background);
     border-color: var(--color-valid);
   }
 }

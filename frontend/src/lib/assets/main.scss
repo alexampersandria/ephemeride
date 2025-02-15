@@ -124,3 +124,18 @@ hr {
   opacity: 1;
   cursor: not-allowed;
 }
+
+ul,
+ol,
+dl {
+  margin: 0;
+  margin-top: var(--padding-xxs) ;
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.text-dimmed {
+  color: var(--text-dimmed);
+}

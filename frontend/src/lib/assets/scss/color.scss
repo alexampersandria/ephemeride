@@ -186,18 +186,20 @@ $colors: list.append($saturatedColors, 'base');
   --border-color: var(--color-base-80);
 
   --text-primary: var(--color-base-00);
-  --text-muted: var(--color-base-30);
-  --text-dimmed: var(--color-base-60);
+  --text-muted: var(--color-base-50);
+  --text-dimmed: var(--color-base-70);
 
-  --color-success: var(--color-green-50);
-  --color-warning: var(--color-yellow-50);
-  --color-error: var(--color-red-50);
-  --color-info: var(--color-blue-50);
+  --color-success: var(--color-green-70);
+  --color-success-background: var(--color-green-90);
 
-  --color-success-bg: var(--color-green-100);
-  --color-warning-bg: var(--color-yellow-100);
-  --color-error-bg: var(--color-red-100);
-  --color-info-bg: var(--color-blue-100);
+  --color-warning: var(--color-yellow-70);
+  --color-warning-background: var(--color-yellow-90);
+
+  --color-error: var(--color-red-70);
+  --color-error-background: var(--color-red-90);
+
+  --color-info: var(--color-blue-70);
+  --color-info-background: var(--color-blue-90);
 
   --color-link: var(--color-blue-50);
   --color-link-hover: var(--color-blue-60);
@@ -207,8 +209,8 @@ $colors: list.append($saturatedColors, 'base');
   --color-valid: var(--color-success);
   --color-invalid: var(--color-error);
 
-  --color-valid-bg: var(--color-success-bg);
-  --color-invalid-bg: var(--color-error-bg);
+  --color-valid-background: var(--color-success-background);
+  --color-invalid-background: var(--color-error-background);
 
   --spinner-color: var(--color-base-30);
 
@@ -259,31 +261,20 @@ $colors: list.append($saturatedColors, 'base');
   --button-primary-border-active: var(--button-primary-background-active);
   --button-primary-color-active: var(--button-primary-color);
 
-  @each $color in $saturatedColors {
-    --button-#{$color}-background: var(--button-#{$color}-primary-background);
-    --button-#{$color}-border: var(--color-#{$color}-60);
-    --button-#{$color}-color: var(--button-#{$color}-primary-color);
+  --button-destructive-background: var(--color-red-50);
+  --button-destructive-border: var(--color-red-30);
+  --button-destructive-color: var(--button-primary-color);
 
-    --button-#{$color}-background-hover: var(--button-#{$color}-primary-background-hover);
-    --button-#{$color}-border-hover: var(--button-#{$color}-border);
-    --button-#{$color}-color-hover: var(--button-#{$color}-primary-color-hover);
-    --button-#{$color}-background-active: var(--button-#{$color}-primary-background-active);
-    --button-#{$color}-border-active: var(--button-#{$color}-border);
-    --button-#{$color}-color-active: var(--button-#{$color}-primary-color-active);
+  --button-destructive-background-hover: var(--color-red-40);
+  --button-destructive-border-hover: var(--button-destructive-border);
+  --button-destructive-color-hover: var(--button-destructive-color);
+  --button-destructive-background-active: var(--color-red-30);
+  --button-destructive-border-active: var(--button-destructive-border);
+  --button-destructive-color-active: var(--button-destructive-color);
 
-    --button-#{$color}-primary-background: var(--color-#{$color}-90);
-    --button-#{$color}-primary-border: var(--button-#{$color}-primary-background);
-    --button-#{$color}-primary-color: var(--color-#{$color}-30);
-
-    --button-#{$color}-primary-background-hover: var(--color-#{$color}-80);
-    --button-#{$color}-primary-border-hover: var(--button-#{$color}-primary-background-hover);
-    --button-#{$color}-primary-color-hover: var(--color-#{$color}-20);
-    --button-#{$color}-primary-background-active: var(--color-#{$color}-70);
-    --button-#{$color}-primary-border-active: var(--button-#{$color}-primary-background-active);
-    --button-#{$color}-primary-color-active: var(--color-#{$color}-10);
-
-    --button-#{$color}-ghost-color: var(--color-#{$color}-50);
-  }
+  --alert-background: var(--background-primary);
+  --alert-border: var(--border-color);
+  --alert-color: var(--text-primary);
 }
 
 #root.theme-dark {
@@ -306,10 +297,17 @@ $colors: list.append($saturatedColors, 'base');
   --color-error: var(--color-red-50);
   --color-info: var(--color-blue-50);
 
-  --color-success-bg: var(--color-green-00);
-  --color-warning-bg: var(--color-yellow-00);
-  --color-error-bg: var(--color-red-00);
-  --color-info-bg: var(--color-blue-00);
+  --color-success: var(--color-green-50);
+  --color-success-background: var(--color-green-10);
+
+  --color-warning: var(--color-yellow-50);
+  --color-warning-background: var(--color-yellow-10);
+
+  --color-error: var(--color-red-50);
+  --color-error-background: var(--color-red-10);
+
+  --color-info: var(--color-blue-50);
+  --color-info-background: var(--color-blue-10);
 
   --color-link: var(--color-blue-50);
   --color-link-hover: var(--color-blue-40);
@@ -329,30 +327,4 @@ $colors: list.append($saturatedColors, 'base');
   --button-primary-background-active: var(--color-base-70);
   --button-primary-border-active: var(--color-base-70);
   --button-primary-color-active: var(--button-primary-color);
-
-  @each $color in $saturatedColors {
-    --button-#{$color}-background: var(--button-#{$color}-primary-background);
-    --button-#{$color}-border: var(--color-#{$color}-40);
-    --button-#{$color}-color: var(--button-#{$color}-primary-color);
-
-    --button-#{$color}-background-hover: var(--button-#{$color}-primary-background-hover);
-    --button-#{$color}-border-hover: var(--button-#{$color}-border);
-    --button-#{$color}-color-hover: var(--button-#{$color}-primary-color-hover);
-    --button-#{$color}-background-active: var(--button-#{$color}-primary-background-active);
-    --button-#{$color}-border-active: var(--button-#{$color}-border);
-    --button-#{$color}-color-active: var(--button-#{$color}-primary-color-active);
-
-    --button-#{$color}-primary-background: var(--color-#{$color}-10);
-    --button-#{$color}-primary-border: var(--button-#{$color}-primary-background);
-    --button-#{$color}-primary-color: var(--color-#{$color}-70);
-
-    --button-#{$color}-primary-background-hover: var(--color-#{$color}-20);
-    --button-#{$color}-primary-border-hover: var(--button-#{$color}-primary-background-hover);
-    --button-#{$color}-primary-color-hover: var(--color-#{$color}-80);
-    --button-#{$color}-primary-background-active: var(--color-#{$color}-30);
-    --button-#{$color}-primary-border-active: var(--button-#{$color}-primary-background-active);
-    --button-#{$color}-primary-color-active: var(--color-#{$color}-90);
-
-    --button-#{$color}-ghost-color: var(--color-#{$color}-50);
-  }
 }

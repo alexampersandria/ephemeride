@@ -1,12 +1,10 @@
 <script lang="ts">
-// #TODO: Implement the Button component properly, just demo for Banner
 import type { ButtonProps } from '$lib/types/button'
 import Spinner from './Spinner.svelte'
 
 let {
   children,
   variant = 'secondary',
-  color = 'base',
   loading,
   disabled,
   onclick,
@@ -22,7 +20,7 @@ let clickHandler = () => {
 </script>
 
 <button
-  class="button {variant} {color}"
+  class="button {variant}"
   class:loading
   class:disabled
   aria-busy={loading}
@@ -68,11 +66,9 @@ let clickHandler = () => {
     }
   }
 
-  &:not(.disabled, .loading) {
+  &:not(:disabled, .loading) {
     cursor: pointer;
-  }
 
-  &:not(:disabled, .loading, .ghost) {
     &:hover {
       color: var(--button-color-hover);
       background-color: var(--button-background-hover);
@@ -92,7 +88,7 @@ let clickHandler = () => {
     border-color: var(--button-primary-border);
     background-color: var(--button-primary-background);
 
-    &:not(:disabled, .loading, .ghost) {
+    &:not(:disabled, .loading) {
       &:hover {
         color: var(--button-primary-color-hover);
         background-color: var(--button-primary-background-hover);
@@ -107,50 +103,23 @@ let clickHandler = () => {
     }
   }
 
-  @each $color in color.$saturatedColors {
-    &.#{$color} {
-      color: var(--button-#{$color}-color);
-      --spinner-color: var(--button-#{$color}-color);
-      background-color: var(--button-#{$color}-background);
-      border-color: var(--button-#{$color}-border);
+  &.destructive {
+    color: var(--button-destructive-color);
+    --spinner-color: var(--button-destructive-color);
+    border-color: var(--button-destructive-border);
+    background-color: var(--button-destructive-background);
 
-      &:not(:disabled, .loading, .ghost) {
-        &:hover {
-          color: var(--button-#{$color}-color-hover);
-          background-color: var(--button-#{$color}-background-hover);
-          border-color: var(--button-#{$color}-border-hover);
-        }
-
-        &:active {
-          color: var(--button-#{$color}-color-active);
-          background-color: var(--button-#{$color}-background-active);
-          border-color: var(--button-#{$color}-border-active);
-        }
+    &:not(:disabled, .loading) {
+      &:hover {
+        color: var(--button-destructive-color-hover);
+        background-color: var(--button-destructive-background-hover);
+        border-color: var(--button-destructive-border-hover);
       }
 
-      &.primary {
-        color: var(--button-#{$color}-primary-color);
-        --spinner-color: var(--button-#{$color}-primary-color);
-        background-color: var(--button-#{$color}-primary-background);
-        border-color: var(--button-#{$color}-primary-border);
-
-        &:not(:disabled, .loading) {
-          &:hover {
-            color: var(--button-#{$color}-primary-color-hover);
-            background-color: var(--button-#{$color}-primary-background-hover);
-            border-color: var(--button-#{$color}-primary-border-hover);
-          }
-
-          &:active {
-            color: var(--button-#{$color}-primary-color-active);
-            background-color: var(--button-#{$color}-primary-background-active);
-            border-color: var(--button-#{$color}-primary-border-active);
-          }
-        }
-      }
-
-      &.ghost {
-        color: var(--button-#{$color}-ghost-color);
+      &:active {
+        color: var(--button-destructive-color-active);
+        background-color: var(--button-destructive-background-active);
+        border-color: var(--button-destructive-border-active);
       }
     }
   }
@@ -162,10 +131,12 @@ let clickHandler = () => {
     &:not(:disabled, .loading) {
       &:hover {
         background-color: var(--button-background-hover);
+        border-color: transparent;
       }
 
       &:active {
         background-color: var(--button-background-active);
+        border-color: transparent;
       }
     }
   }

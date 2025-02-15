@@ -28,7 +28,12 @@ pre[class*='language-'] {
 
 /* Inline code */
 :not(pre) > code {
-  color: var(--color-blue-70);
+  vertical-align: middle;
+  color: var(--color-pink-50);
+  padding: var(--padding-xxs) var(--padding-xs);
+  border-radius: var(--radius-xs);
+  background-color: var(--background-accent);
+  font-weight: 700;
 }
 
 .token.comment,

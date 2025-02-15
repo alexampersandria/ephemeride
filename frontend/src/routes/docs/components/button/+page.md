@@ -47,12 +47,14 @@ let count = $state(0)
   <Button variant='primary'>Primary</Button>
   <Button variant='secondary'>Secondary</Button>
   <Button variant='ghost'>Ghost</Button>
+  <Button variant='destructive'>Destructive</Button>
 </DocsExample>
 
 ```svelte
 <Button variant="primary">Primary</Button>
 <Button variant="secondary">Secondary</Button>
 <Button variant="ghost">Ghost</Button>
+<Button variant='destructive'>Destructive</Button>
 ```
 
 ### Disabled
@@ -60,15 +62,17 @@ let count = $state(0)
 Disabling buttons should generally be avoided. All disabled buttons are styled the same regardless of variant and color.
 
 <DocsExample>
-  <Button disabled color='base' variant='primary'>Primary</Button>
-  <Button disabled color='red' variant='secondary'>Secondary</Button>
-  <Button disabled color='pink' variant='ghost'>Ghost</Button>
+  <Button disabled variant='primary'>Primary</Button>
+  <Button disabled variant='secondary'>Secondary</Button>
+  <Button disabled variant='ghost'>Ghost</Button>
+  <Button disabled variant='destructive'>Destructive</Button>
 </DocsExample>
 
 ```svelte
-<Button disabled color="base" variant="primary">Primary</Button>
-<Button disabled color="red" variant="secondary">Secondary</Button>
-<Button disabled color="pink" variant="ghost">Ghost</Button>
+<Button disabled variant="primary">Primary</Button>
+<Button disabled variant="secondary">Secondary</Button>
+<Button disabled variant="ghost">Ghost</Button>
+<Button disabled variant='destructive'>Destructive</Button>
 ```
 
 ### Loading
@@ -106,85 +110,12 @@ let incrementSlowCount = () => {
 </script>
 
 <Button
-  color="green"
   variant="primary"
   onclick={incrementSlowCount}
   loading={slowCountLoading}>
     Click me
 </Button>
 <p>Slow count: <code>{slowCount}</code></p>
-```
-
-### Color
-
-Default color is `base`.
-
-Colored buttons should be used sparingly for important actions, such as destructive actions or to indicate a confirmation at a glance.
-
-#### Primary
-
-<DocsExample>
-  <Button variant='primary' color='base'>Base</Button>
-  <Button variant='primary' color='blue'>Blue</Button>
-  <Button variant='primary' color='green'>Green</Button>
-  <Button variant='primary' color='red'>Red</Button>
-  <Button variant='primary' color='yellow'>Yellow</Button>
-  <Button variant='primary' color='purple'>Purple</Button>
-  <Button variant='primary' color='pink'>Pink</Button>
-</DocsExample>
-
-```svelte
-<Button variant="primary" color="base">Base</Button>
-<Button variant="primary" color="blue">Blue</Button>
-<Button variant="primary" color="green">Green</Button>
-<Button variant="primary" color="red">Red</Button>
-<Button variant="primary" color="yellow">Yellow</Button>
-<Button variant="primary" color="purple">Purple</Button>
-<Button variant="primary" color="pink">Pink</Button>
-```
-
-#### Secondary
-
-<DocsExample>
-  <Button variant='secondary' color='base'>Base</Button>
-  <Button variant='secondary' color='blue'>Blue</Button>
-  <Button variant='secondary' color='green'>Green</Button>
-  <Button variant='secondary' color='red'>Red</Button>
-  <Button variant='secondary' color='yellow'>Yellow</Button>
-  <Button variant='secondary' color='purple'>Purple</Button>
-  <Button variant='secondary' color='pink'>Pink</Button>
-</DocsExample>
-
-```svelte
-<Button variant="secondary" color="base">Base</Button>
-<Button variant="secondary" color="blue">Blue</Button>
-<Button variant="secondary" color="green">Green</Button>
-<Button variant="secondary" color="red">Red</Button>
-<Button variant="secondary" color="yellow">Yellow</Button>
-<Button variant="secondary" color="purple">Purple</Button>
-<Button variant="secondary" color="pink">Pink</Button>
-```
-
-#### Ghost
-
-<DocsExample>
-  <Button variant='ghost' color='base'>Base</Button>
-  <Button variant='ghost' color='blue'>Blue</Button>
-  <Button variant='ghost' color='green'>Green</Button>
-  <Button variant='ghost' color='red'>Red</Button>
-  <Button variant='ghost' color='yellow'>Yellow</Button>
-  <Button variant='ghost' color='purple'>Purple</Button>
-  <Button variant='ghost' color='pink'>Pink</Button>
-</DocsExample>
-
-```svelte
-<Button variant="ghost" color="base">Base</Button>
-<Button variant="ghost" color="blue">Blue</Button>
-<Button variant="ghost" color="green">Green</Button>
-<Button variant="ghost" color="red">Red</Button>
-<Button variant="ghost" color="yellow">Yellow</Button>
-<Button variant="ghost" color="purple">Purple</Button>
-<Button variant="ghost" color="pink">Pink</Button>
 ```
 
 ## Types
@@ -194,12 +125,10 @@ Colored buttons should be used sparingly for important actions, such as destruct
 | Name     | Type            | Required | Default       | Description                                      |
 | -------- | --------------- | :------: | ------------- | ------------------------------------------------ |
 | variant  | `ButtonVariant` |          | `'secondary'` | Button variant.                                  |
-| color    | `Color`         |          | `'base'`      | Button color.                                    |
 | disabled | `boolean`       |          | `false`       | Disables the button.                             |
 | loading  | `boolean`       |          | `false`       | Shows a loading spinner and disables the button. |
 | onclick  | `() => void`    |          |               | Click event handler.                             |
 
 ## References
 
-- [Colors](/docs/design/color)
 - [ButtonVariant](/docs/types/input#buttonvariant)

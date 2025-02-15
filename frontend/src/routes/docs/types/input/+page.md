@@ -7,7 +7,7 @@ The type or variant of the button. Default should always be `'secondary'`.
 #### Definition
 
 ```ts
-type ButtonVariant = 'primary' | 'secondary' | 'ghost'
+type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'destructive'
 ```
 
 ## InputState

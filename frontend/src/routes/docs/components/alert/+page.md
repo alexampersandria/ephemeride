@@ -1,85 +1,95 @@
 <script lang="ts">
-import Banner from '$lib/components/Banner.svelte'
+import Alert from '$lib/components/Alert.svelte'
 import Button from '$lib/components/Button.svelte'
 import DocsExample from '$lib/components/utils/DocsExample.svelte'
 </script>
 
-# Banner
+# Alert
 
 ## Usage
 
 ### Default
 
 <DocsExample>
-  <Banner>
-    Your account has been created. View your profile <a href="#profile">here</a>.
-  </Banner>
+  <Alert>
+    Heads up! This is an alert.
+  </Alert>
 </DocsExample>
 
 ```svelte
-<Banner>
-  Your account has been created. View your profile <a href="#profile">here</a>.
-</Banner>
+<Alert>
+  Heads up! This is an alert.
+</Alert>
 ```
 
 ### Message & Actions
 
 <DocsExample>
-  <Banner>
+  <Alert variant="success">
     {#snippet message()}
-      Your account has been created. View your profile <a href="#profile">here</a>.
+      Your account has been created. View your profile
     {/snippet}
     {#snippet actions()}
+      <Button variant="ghost">View Profile</Button>
       <Button>Dismiss</Button>
-      <Button>View Profile</Button>
     {/snippet}
-  </Banner>
+  </Alert>
 </DocsExample>
 
 ```svelte
-<Banner>
+<Alert variant="success">
   {#snippet message()}
-    Your account has been created. View your profile <a href="#profile">here</a>.
+    Your account has been created. View your profile
   {/snippet}
   {#snippet actions()}
+    <Button variant="ghost">View Profile</Button>
     <Button>Dismiss</Button>
-    <Button>View Profile</Button>
   {/snippet}
-</Banner>
+</Alert>
 ```
 
-### Variants
+### Variant
+
+#### Error
 
 <DocsExample>
-  <Banner variant="error">
+  <Alert variant="error">
+    <b>Password does not meet requirements:</b>
+    <ul class="text-muted">
+      <li>Minimum 8 characters</li>
+      <li>At least one uppercase letter</li>
+    </ul>
+  </Alert>
+</DocsExample>
+
+<DocsExample>
+  <Alert variant="error">
+    An error occurred. Please try again.
+  </Alert>
+  <Alert variant="warning">
     Email address is already in use. Try <a href="#forgot-password">forgot password</a>.
-  </Banner>
-
-  <Banner variant="warning">
-    This action cannot be undone. Are you sure you want to proceed?
-  </Banner>
-
-  <Banner variant="success">
+  </Alert>
+  <Alert variant="success">
     Successfully updated your profile.
-  </Banner>
-
-  <Banner variant="info">
-    Your account has been created. View your profile <a href="#profile">here</a>.
-  </Banner>
+  </Alert>
+  <Alert variant="info">
+    You've got mail! Check your inbox.
+  </Alert>
 </DocsExample>
 
 ```svelte
-<Banner variant="error">
+<Alert variant="error">
+  An error occurred. Please try again.
+</Alert>
+<Alert variant="warning">
   Email address is already in use. Try <a href="#forgot-password">forgot password</a>.
-</Banner>
-
-<Banner variant="warning">This action cannot be undone. Are you sure you want to proceed?</Banner>
-
-<Banner variant="success">Successfully updated your profile.</Banner>
-
-<Banner variant="info">
-  Your account has been created. View your profile <a href="#profile">here</a>.
-</Banner>
+</Alert>
+<Alert variant="success">
+  Successfully updated your profile.
+</Alert>
+<Alert variant="info">
+  You've got mail! Check your inbox.
+</Alert>
 ```
 
 ## Types
