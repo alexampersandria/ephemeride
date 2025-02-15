@@ -1,11 +1,7 @@
 <script lang="ts">
 import type { CssVariable } from '$lib/utils/cssVariables'
 
-let {
-  color,
-}: {
-  color: CssVariable
-} = $props()
+let { color }: { color: CssVariable } = $props()
 </script>
 
 <div class="docs-color" style="background-color: var({color.name}"></div>

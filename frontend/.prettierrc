@@ -4,8 +4,11 @@
   "singleQuote": true,
   "trailingComma": "all",
   "tabWidth": 2,
-  "printWidth": 100,
+  "printWidth": 80,
   "semi": false,
+  "bracketSameLine": true,
+  "bracketSpacing": true,
+  "objectWrap": "preserve",
   "svelteSortOrder": "options-scripts-markup-styles",
   "svelteStrictMode": false,
   "svelteIndentScriptAndStyle": false,
@@ -15,6 +18,12 @@
       "files": "*.svelte",
       "options": {
         "parser": "svelte"
+      }
+    },
+    {
+      "files": "+page.md",
+      "options": {
+        "printWidth": 1000
       }
     }
   ]

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { browser } from '$app/environment'
 import { onMount } from 'svelte'
 
@@ -25,7 +27,9 @@ export const registerStore = (name: string, store: any) => {
           if (store[key] !== storedObject[key]) {
             try {
               store[key] = storedObject[key]
-            } catch (e) {}
+            } catch (_error) {
+              // key is read-only
+            }
           }
         })
       }

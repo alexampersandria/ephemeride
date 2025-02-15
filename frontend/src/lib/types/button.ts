@@ -1,5 +1,5 @@
 import type { Snippet } from 'svelte'
-import type { PrimaryColor } from './color'
+import type { Color } from './color'
 import type { Icon } from './icon'
 
 export type ButtonVariant = 'primary' | 'secondary' | 'invisible'
@@ -7,7 +7,7 @@ export type ButtonVariant = 'primary' | 'secondary' | 'invisible'
 export type ButtonProps = {
   children: Snippet
   variant?: ButtonVariant
-  color?: PrimaryColor
+  color?: Color
   loading?: boolean
   disabled?: boolean
   icon?: Icon

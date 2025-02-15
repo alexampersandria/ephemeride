@@ -2,7 +2,13 @@
 // #TODO: Implement the Button component properly, just demo for Banner
 import type { ButtonProps } from '$lib/types/button'
 
-let { children, variant = 'primary' }: ButtonProps = $props()
+let {
+  children,
+  variant = 'primary',
+  color = 'base',
+  loading,
+  disabled,
+}: ButtonProps = $props()
 </script>
 
 <button class="button">

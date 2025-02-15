@@ -24,12 +24,15 @@ const onchange = (event: Event) => {
   class:valid={state === 'valid'}
   class:invalid={state === 'invalid'}
   {disabled}
-  aria-disabled={disabled}
   aria-invalid={state === 'invalid'}
-  {onchange}
->
+  {onchange}>
   {#if placeholder}
-    <option class="select-option" value="" disabled aria-disabled="true" selected={!value}>
+    <option
+      class="select-option"
+      value=""
+      disabled
+      aria-disabled="true"
+      selected={!value}>
       {placeholder}
     </option>
   {/if}
@@ -38,8 +41,7 @@ const onchange = (event: Event) => {
       class="select-option"
       value={option.value}
       selected={option.value === value}
-      disabled={option.disabled}
-    >
+      disabled={option.disabled}>
       {option.label}
     </option>
   {/each}

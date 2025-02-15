@@ -17,7 +17,9 @@ let loading = $state(true)
 
 const appliedTheme: Theme = $derived.by(() => {
   if (theme === 'system' && browser) {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    return window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light'
   }
   return theme
 })

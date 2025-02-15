@@ -2,8 +2,12 @@ import { browser } from '$app/environment'
 import { page } from '$app/state'
 
 export const getRoutes = (filter?: RegExp) => {
-  const routes = Object.keys(import.meta.glob('/src/routes/**/+page.*', { eager: true }))
-  const filteredRoutes = filter ? routes.filter(route => filter.test(route)) : routes
+  const routes = Object.keys(
+    import.meta.glob('/src/routes/**/+page.*', { eager: true }),
+  )
+  const filteredRoutes = filter
+    ? routes.filter(route => filter.test(route))
+    : routes
 
   // remove the /src/routes/ and +page.svelte from the route
   const sanitizedRoutes = filteredRoutes.map(route => {
@@ -41,7 +45,10 @@ export const componentNameFromRoute = (route: string) => {
   const tail = routeTail(route)
   const segments = tail.split('-')
   return segments
-    .map(segment => segment.charAt(0).toUpperCase() + segment.slice(1).toLowerCase())
+    .map(
+      segment =>
+        segment.charAt(0).toUpperCase() + segment.slice(1).toLowerCase(),
+    )
     .join('')
 }
 

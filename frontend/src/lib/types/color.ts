@@ -1,1 +1,8 @@
-export type PrimaryColor = 'blue' | 'green' | 'red' | 'yellow' | 'purple' | 'pink'
+export type Color =
+  | 'base'
+  | 'blue'
+  | 'green'
+  | 'red'
+  | 'yellow'
+  | 'purple'
+  | 'pink'

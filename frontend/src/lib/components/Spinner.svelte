@@ -1,6 +1,6 @@
 <div class="spinner">
   <div class="spinner-container">
-    {#each { length: 12 } as _, i}
+    {#each { length: 12 } as _}
       <div class="spinner-element"></div>
     {/each}
   </div>
@@ -35,7 +35,9 @@
 
       @for $i from 1 through 12 {
         &:nth-child(#{$i}) {
-          animation-delay: variables.$spinner-animation-duration * calc($i / 12) - 2;
+          animation-delay: variables.$spinner-animation-duration *
+            calc($i / 12) -
+            2;
           transform: rotate(#{$i * 30deg}) translate(150%);
         }
       }

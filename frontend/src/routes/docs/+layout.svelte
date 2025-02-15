@@ -5,16 +5,15 @@ import Select from '$lib/components/Select.svelte'
 import { themes, useUiStore } from '$lib/store/uiStore.svelte'
 import {
   getRoutes,
-  routeTail,
   componentNameFromRoute,
   titleFromRoute,
 } from '$lib/utils/routes.svelte'
 
 let uiStore = useUiStore()
 
-const design = getRoutes(/\/docs\/design\/[^\/]+\//)
-const components = getRoutes(/\/docs\/components\/[^\/]+\//)
-const types = getRoutes(/\/docs\/types\/[^\/]+\//)
+const design = getRoutes(/\/docs\/design\/[^/]+\//)
+const components = getRoutes(/\/docs\/components\/[^/]+\//)
+const types = getRoutes(/\/docs\/types\/[^/]+\//)
 
 let { children } = $props()
 let themeObjects = themes.map(theme => ({
@@ -36,8 +35,7 @@ $effect(() => {
       <button
         onclick={() => {
           sidebarOpen = !sidebarOpen
-        }}
-      >
+        }}>
         ⚙️
       </button>
     </div>
