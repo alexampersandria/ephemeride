@@ -3,7 +3,12 @@ import { page } from '$app/state'
 import { active } from '$lib/actions/active.svelte'
 import Select from '$lib/components/Select.svelte'
 import { themes, useUiStore } from '$lib/store/uiStore.svelte'
-import { getRoutes, routeTail } from '$lib/utils/routes.svelte'
+import {
+  getRoutes,
+  routeTail,
+  componentNameFromRoute,
+  titleFromRoute,
+} from '$lib/utils/routes.svelte'
 
 let uiStore = useUiStore()
 
@@ -53,7 +58,7 @@ $effect(() => {
       {#each design as route}
         <div class="docs-route-link">
           <a href={route} use:active>
-            {routeTail(route)}
+            {titleFromRoute(route)}
           </a>
         </div>
       {/each}
@@ -63,7 +68,7 @@ $effect(() => {
       {#each components as route}
         <div class="docs-route-link">
           <a href={route} use:active>
-            {routeTail(route)}
+            {componentNameFromRoute(route)}
           </a>
         </div>
       {/each}
@@ -73,7 +78,7 @@ $effect(() => {
       {#each types as route}
         <div class="docs-route-link">
           <a href={route} use:active>
-            {routeTail(route)}
+            {componentNameFromRoute(route)}
           </a>
         </div>
       {/each}

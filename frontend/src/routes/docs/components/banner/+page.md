@@ -73,13 +73,9 @@ import DocsExample from '$lib/components/utils/DocsExample.svelte'
   Email address is already in use. Try <a href="#forgot-password">forgot password</a>.
 </Banner>
 
-<Banner variant="warning">
-  This action cannot be undone. Are you sure you want to proceed?
-</Banner>
+<Banner variant="warning">This action cannot be undone. Are you sure you want to proceed?</Banner>
 
-<Banner variant="success">
-  Successfully updated your profile.
-</Banner>
+<Banner variant="success">Successfully updated your profile.</Banner>
 
 <Banner variant="info">
   Your account has been created. View your profile <a href="#profile">here</a>.

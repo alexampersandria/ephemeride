@@ -15,7 +15,7 @@ const mountedAt: number = new Date().getTime()
 let theme: Theme = $state('system')
 let loading = $state(true)
 
-let appliedTheme: Theme = $derived.by(() => {
+const appliedTheme: Theme = $derived.by(() => {
   if (theme === 'system' && browser) {
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
   }

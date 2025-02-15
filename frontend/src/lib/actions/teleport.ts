@@ -1,5 +1,5 @@
 export const teleport = (element: HTMLElement, query: string) => {
-  let teleportContainer = document.querySelector(query)
+  const teleportContainer = document.querySelector(query)
   if (teleportContainer) {
     teleportContainer.appendChild(element)
 

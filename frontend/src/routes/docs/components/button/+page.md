@@ -12,4 +12,3 @@ import DocsExample from '$lib/components/utils/DocsExample.svelte'
 <DocsExample>
   <Button>Click me</Button>
 </DocsExample>
-

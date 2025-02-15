@@ -32,3 +32,24 @@ export const isActiveRoute = (route: string) => {
     return compareRoutes(route, page.route.id || '')
   }
 }
+
+/**
+ * Formats a route into the svelte component name
+ * Takes in a lowercase dash separated string and returns pascal case
+ */
+export const componentNameFromRoute = (route: string) => {
+  const tail = routeTail(route)
+  const segments = tail.split('-')
+  return segments
+    .map(segment => segment.charAt(0).toUpperCase() + segment.slice(1).toLowerCase())
+    .join('')
+}
+
+/**
+ * Formats a route into a human readable string
+ * Takes in a lowercase dash separated string and returns a capotalized space separated string
+ */
+export const titleFromRoute = (route: string) => {
+  const tail = routeTail(route)
+  return tail.replace(/-|_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+}

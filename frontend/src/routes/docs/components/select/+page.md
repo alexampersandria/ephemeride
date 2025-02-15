@@ -49,8 +49,7 @@ let options = $state([
 let value = $state('null')
 </script>
 
-<Select bind:value {options} placeholder="Select an option" />
-<p>value: <code>{value}</code></p>
+<Select bind:value {options} placeholder="Select an option" /><p>value: <code>{value}</code></p>
 ```
 
 ### Placeholder
@@ -97,8 +96,7 @@ See [Input Types](/docs/types/Input) for more information on states.
 let state = $state('untouched')
 </script>
 
-<Select {options} bind:state />
-<p>state: <code>{state}</code></p>
+<Select {options} bind:state /><p>state: <code>{state}</code></p>
 ```
 
 States can be set to `valid` or `invalid`.
@@ -109,8 +107,8 @@ States can be set to `valid` or `invalid`.
 </DocsExample>
 
 ```svelte
-<Select {options} state='valid' />
-<Select {options} state='invalid' />
+<Select {options} state="valid" />
+<Select {options} state="invalid" />
 ```
 
 ### Disabled
@@ -130,8 +128,6 @@ Indivial options can also be disabled.
 </DocsExample>
 
 ```svelte
-<Select options={optionsWithDisabled} />
-
 <script>
 let optionsWithDisabled = $state([
   { value: '1', label: 'Option 1' },
@@ -139,6 +135,8 @@ let optionsWithDisabled = $state([
   { value: '3', label: 'Option 3' },
 ])
 </script>
+
+<Select options={optionsWithDisabled} />
 ```
 
 ## Types
@@ -147,7 +145,7 @@ let optionsWithDisabled = $state([
 
 | Name        | Type                    | Required | Default     | Description                                           |
 | ----------- | ----------------------- | :------: | ----------- | ----------------------------------------------------- |
-| options     | `SelectOption`          |    ✅     |             | Array of objects with `value` and `label` properties. |
+| options     | `SelectOption`          |    ✅    |             | Array of objects with `value` and `label` properties. |
 | value       | `SelectOption['value']` |          |             | Value of the selected option.                         |
 | placeholder | `string`                |          |             | Placeholder text.                                     |
 | disabled    | `boolean`               |          |             | Disables the select.                                  |
@@ -157,8 +155,8 @@ let optionsWithDisabled = $state([
 
 | Name     | Type      | Required | Default | Description          |
 | -------- | --------- | :------: | ------- | -------------------- |
-| value    | `string`  |    ✅     |         | Value of the option. |
-| label    | `string`  |    ✅     |         | Label of the option. |
+| value    | `string`  |    ✅    |         | Value of the option. |
+| label    | `string`  |    ✅    |         | Label of the option. |
 | disabled | `boolean` |          | `false` | Disables the option. |
 
 ## References

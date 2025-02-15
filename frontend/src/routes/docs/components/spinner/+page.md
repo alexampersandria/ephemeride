@@ -30,4 +30,3 @@ Generally custom size should not be specified unless used in a specific context 
 ```svelte
 <Spinner --spinner-size="1rem" />
 ```
-
