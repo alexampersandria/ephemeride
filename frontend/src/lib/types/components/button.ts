@@ -1,9 +1,9 @@
 import type { Snippet } from 'svelte'
-import type { ButtonVariant } from './input'
+import type { ButtonType } from '../input'
 
 export type ButtonProps = {
   children: Snippet
-  variant?: ButtonVariant
+  type?: ButtonType
   loading?: boolean
   disabled?: boolean
   onclick?: () => void

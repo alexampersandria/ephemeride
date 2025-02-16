@@ -25,61 +25,61 @@ import DocsExample from '$lib/components/utils/DocsExample.svelte'
 ### Message & Actions
 
 <DocsExample>
-  <Alert variant="success">
+  <Alert type="success">
     {#snippet message()}
       Your account has been created. View your profile
     {/snippet}
     {#snippet actions()}
-      <Button variant="ghost">View Profile</Button>
+      <Button type="ghost">View Profile</Button>
       <Button>Dismiss</Button>
     {/snippet}
   </Alert>
 </DocsExample>
 
 ```svelte
-<Alert variant="success">
+<Alert type="success">
   {#snippet message()}
     Your account has been created. View your profile
   {/snippet}
   {#snippet actions()}
-    <Button variant="ghost">View Profile</Button>
+    <Button type="ghost">View Profile</Button>
     <Button>Dismiss</Button>
   {/snippet}
 </Alert>
 ```
 
-### Variant
+### Types
 
-The alerts variant determines the icon used and the color of the icon displayed to the left of the message.
+The alerts type determines the icon used and the color of the icon displayed to the left of the message.
 
-#### All Variants
+#### All Types
 
 <DocsExample>
-  <Alert variant="error">
+  <Alert type="error">
     An error occurred. Please try again.
   </Alert>
-  <Alert variant="warning">
+  <Alert type="warning">
     Email address is already in use. Try <a href="#forgot-password">forgot password</a>.
   </Alert>
-  <Alert variant="success">
+  <Alert type="success">
     Successfully updated your profile.
   </Alert>
-  <Alert variant="info">
+  <Alert type="info">
     You've got mail! Check your inbox.
   </Alert>
 </DocsExample>
 
 ```svelte
-<Alert variant="error">
+<Alert type="error">
   An error occurred. Please try again.
 </Alert>
-<Alert variant="warning">
+<Alert type="warning">
   Email address is already in use. Try <a href="#forgot-password">forgot password</a>.
 </Alert>
-<Alert variant="success">
+<Alert type="success">
   Successfully updated your profile.
 </Alert>
-<Alert variant="info">
+<Alert type="info">
   You've got mail! Check your inbox.
 </Alert>
 ```
@@ -89,7 +89,7 @@ The alerts variant determines the icon used and the color of the icon displayed 
 An alert can render anything in its message content, including lists which can be used to provide more information.
 
 <DocsExample>
-  <Alert variant="error">
+  <Alert type="error">
     <b>Password does not meet requirements:</b>
     <ul class="text-muted">
       <li>Minimum 8 characters</li>
@@ -99,7 +99,7 @@ An alert can render anything in its message content, including lists which can b
 </DocsExample>
 
 ```svelte
-<Alert variant="error">
+<Alert type="error">
   <b>Password does not meet requirements:</b>
   <ul class="text-muted">
     <li>Minimum 8 characters</li>
@@ -112,16 +112,16 @@ An alert can render anything in its message content, including lists which can b
 
 ### Props
 
-| Name    | Type                | Required | Default | Description                                                                     |
-| ------- | ------------------- | -------- | ------- | ------------------------------------------------------------------------------- |
-| variant | `NotificationState` |          | `info`  | The variant or type of banner. Either `error`, `warning`, `success`, or `info`. |
+| Name | Type          | Required | Default | Description                                                         |
+| ---- | ------------- | -------- | ------- | ------------------------------------------------------------------- |
+| type | `MessageType` |          | `info`  | The type of alert. Either `error`, `warning`, `success`, or `info`. |
 
 ### Snippets
 
-- `message()` / `children()`: The message content of the banner.
+- `message()` / `children()`: The message content of the alert.
 - `actions()`: The actions that can be performed.
 
 ## References
 
 - [Icons](/docs/design/icons)
-- [NotificationState](/docs/types/notification#notificationstate)
+- [MessageType](/docs/types/message#messagetype)

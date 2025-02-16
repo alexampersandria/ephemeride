@@ -23,7 +23,7 @@ Buttons are used to trigger actions or events.
 
 ### Default
 
-By default buttons are variant `secondary`. `primary` buttons should be used for high priority actions or calls to action.
+By default buttons are type `secondary`. `primary` buttons should be used for high priority actions or calls to action.
 
 <DocsExample>
   <Button onclick={() => {count++}}>Click me</Button>
@@ -41,38 +41,38 @@ let count = $state(0)
 <p>Clicked <code>{count}</code> times</p>
 ```
 
-### Variants
+### Types
 
 <DocsExample>
-  <Button variant='primary'>Primary</Button>
-  <Button variant='secondary'>Secondary</Button>
-  <Button variant='ghost'>Ghost</Button>
-  <Button variant='destructive'>Destructive</Button>
+  <Button type='primary'>Primary</Button>
+  <Button type='secondary'>Secondary</Button>
+  <Button type='ghost'>Ghost</Button>
+  <Button type='destructive'>Destructive</Button>
 </DocsExample>
 
 ```svelte
-<Button variant="primary">Primary</Button>
-<Button variant="secondary">Secondary</Button>
-<Button variant="ghost">Ghost</Button>
-<Button variant='destructive'>Destructive</Button>
+<Button type="primary">Primary</Button>
+<Button type="secondary">Secondary</Button>
+<Button type="ghost">Ghost</Button>
+<Button type='destructive'>Destructive</Button>
 ```
 
 ### Disabled
 
-Disabling buttons should generally be avoided. All disabled buttons are styled the same regardless of variant and color.
+Disabling buttons should generally be avoided. All disabled buttons are styled the same regardless of type and color.
 
 <DocsExample>
-  <Button disabled variant='primary'>Primary</Button>
-  <Button disabled variant='secondary'>Secondary</Button>
-  <Button disabled variant='ghost'>Ghost</Button>
-  <Button disabled variant='destructive'>Destructive</Button>
+  <Button disabled type='primary'>Primary</Button>
+  <Button disabled type='secondary'>Secondary</Button>
+  <Button disabled type='ghost'>Ghost</Button>
+  <Button disabled type='destructive'>Destructive</Button>
 </DocsExample>
 
 ```svelte
-<Button disabled variant="primary">Primary</Button>
-<Button disabled variant="secondary">Secondary</Button>
-<Button disabled variant="ghost">Ghost</Button>
-<Button disabled variant='destructive'>Destructive</Button>
+<Button disabled type="primary">Primary</Button>
+<Button disabled type="secondary">Secondary</Button>
+<Button disabled type="ghost">Ghost</Button>
+<Button disabled type='destructive'>Destructive</Button>
 ```
 
 ### Loading
@@ -90,7 +90,7 @@ Disabling buttons should generally be avoided. All disabled buttons are styled t
 If a button is loading the onclick event will not be triggered.
 
 <DocsExample>
-  <Button variant='primary' onclick={incrementSlowCount} loading={slowCountLoading}>Click me</Button>
+  <Button type='primary' onclick={incrementSlowCount} loading={slowCountLoading}>Click me</Button>
 </DocsExample>
 <DocsExample>
   <p>Slow count: <code>{slowCount}</code></p>
@@ -110,7 +110,7 @@ let incrementSlowCount = () => {
 </script>
 
 <Button
-  variant="primary"
+  type="primary"
   onclick={incrementSlowCount}
   loading={slowCountLoading}>
     Click me
@@ -122,13 +122,13 @@ let incrementSlowCount = () => {
 
 ### Props
 
-| Name     | Type            | Required | Default       | Description                                      |
-| -------- | --------------- | :------: | ------------- | ------------------------------------------------ |
-| variant  | `ButtonVariant` |          | `'secondary'` | Button variant.                                  |
-| disabled | `boolean`       |          | `false`       | Disables the button.                             |
-| loading  | `boolean`       |          | `false`       | Shows a loading spinner and disables the button. |
-| onclick  | `() => void`    |          |               | Click event handler.                             |
+| Name     | Type         | Required | Default       | Description                                      |
+| -------- | ------------ | :------: | ------------- | ------------------------------------------------ |
+| type     | `ButtonType` |          | `'secondary'` | Button type.                                     |
+| disabled | `boolean`    |          | `false`       | Disables the button.                             |
+| loading  | `boolean`    |          | `false`       | Shows a loading spinner and disables the button. |
+| onclick  | `() => void` |          |               | Click event handler.                             |
 
 ## References
 
-- [ButtonVariant](/docs/types/input#buttonvariant)
+- [ButtonType](/docs/types/input#buttontype)

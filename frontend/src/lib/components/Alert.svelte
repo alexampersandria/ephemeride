@@ -8,10 +8,10 @@ import {
   TriangleAlert,
 } from 'lucide-svelte'
 
-let { children, message, actions, variant = 'info' }: AlertProps = $props()
+let { children, message, actions, type = 'info' }: AlertProps = $props()
 
 let AlertIcon = $derived.by(() => {
-  switch (variant) {
+  switch (type) {
     case 'error':
       return CircleAlert
     case 'warning':
@@ -26,7 +26,7 @@ let AlertIcon = $derived.by(() => {
 })
 </script>
 
-<div class="alert {variant}">
+<div class="alert {type}">
   <div class="message">
     <div class="icon lucide-icon-alignment"><AlertIcon /></div>
     <div class="message-content">

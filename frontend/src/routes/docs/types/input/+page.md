@@ -1,13 +1,13 @@
 # Input Types
 
-## ButtonVariant
+## ButtonType
 
-The type or variant of the button. Default should always be `'secondary'`.
+The type of the button. Default should always be `'secondary'`.
 
 ### Definition
 
 ```ts
-type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'destructive'
+type ButtonType = 'primary' | 'secondary' | 'ghost' | 'destructive'
 ```
 
 ## InputState

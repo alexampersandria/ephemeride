@@ -1,9 +1,9 @@
 import type { Snippet } from 'svelte'
-import type { NotificationState } from '../notification'
+import type { MessageType } from '../message'
 
 export type AlertProps = {
   children?: Snippet
   message?: Snippet
   actions?: Snippet
-  variant?: NotificationState
+  type?: MessageType
 }

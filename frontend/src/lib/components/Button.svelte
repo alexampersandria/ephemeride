@@ -4,7 +4,7 @@ import Spinner from './Spinner.svelte'
 
 let {
   children,
-  variant = 'secondary',
+  type = 'secondary',
   loading,
   disabled,
   onclick,
@@ -20,7 +20,7 @@ let clickHandler = () => {
 </script>
 
 <button
-  class="button {variant}"
+  class="button {type}"
   class:loading
   class:disabled
   aria-busy={loading}
