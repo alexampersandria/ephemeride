@@ -2052,6 +2052,7 @@ __metadata:
     globals: "npm:^15.14.0"
     jiti: "npm:^2.4.2"
     jsdom: "npm:^25.0.1"
+    lucide-svelte: "npm:^0.475.0"
     mdsvex: "npm:^0.12.3"
     prettier: "npm:^3.5.1"
     prettier-plugin-svelte: "npm:^3.3.3"
@@ -2563,6 +2564,15 @@ __metadata:
   version: 10.4.3
   resolution: "lru-cache@npm:10.4.3"
   checksum: 10c0/ebd04fbca961e6c1d6c0af3799adcc966a1babe798f685bb84e6599266599cd95d94630b10262f5424539bc4640107e8a33aa28585374abf561d30d16f4b39fb
+  languageName: node
+  linkType: hard
+
+"lucide-svelte@npm:^0.475.0":
+  version: 0.475.0
+  resolution: "lucide-svelte@npm:0.475.0"
+  peerDependencies:
+    svelte: ^3 || ^4 || ^5.0.0-next.42
+  checksum: 10c0/455f1444b84f9b57060bbecca401fcda03aff47c66aff475b806901fa6af9ee580cd558afa8ca7ca298f6d61ae9e5794570eb45bc3bbf598b98d476edb9ca759
   languageName: node
   linkType: hard
 

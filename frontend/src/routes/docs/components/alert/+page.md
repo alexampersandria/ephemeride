@@ -50,17 +50,9 @@ import DocsExample from '$lib/components/utils/DocsExample.svelte'
 
 ### Variant
 
-#### Error
+The alerts variant determines the icon used and the color of the icon displayed to the left of the message.
 
-<DocsExample>
-  <Alert variant="error">
-    <b>Password does not meet requirements:</b>
-    <ul class="text-muted">
-      <li>Minimum 8 characters</li>
-      <li>At least one uppercase letter</li>
-    </ul>
-  </Alert>
-</DocsExample>
+#### All Variants
 
 <DocsExample>
   <Alert variant="error">
@@ -92,6 +84,30 @@ import DocsExample from '$lib/components/utils/DocsExample.svelte'
 </Alert>
 ```
 
+#### Error with more info
+
+An alert can render anything in its message content, including lists which can be used to provide more information.
+
+<DocsExample>
+  <Alert variant="error">
+    <b>Password does not meet requirements:</b>
+    <ul class="text-muted">
+      <li>Minimum 8 characters</li>
+      <li>At least one uppercase letter</li>
+    </ul>
+  </Alert>
+</DocsExample>
+
+```svelte
+<Alert variant="error">
+  <b>Password does not meet requirements:</b>
+  <ul class="text-muted">
+    <li>Minimum 8 characters</li>
+    <li>At least one uppercase letter</li>
+  </ul>
+</Alert>
+```
+
 ## Types
 
 ### Props
@@ -107,4 +123,5 @@ import DocsExample from '$lib/components/utils/DocsExample.svelte'
 
 ## References
 
+- [Icons](/docs/design/icons)
 - [NotificationState](/docs/types/notification#notificationstate)

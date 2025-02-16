@@ -1,12 +1,34 @@
 <script lang="ts">
 import type { AlertProps } from '$lib/types/alert'
+import {
+  Bell,
+  CircleAlert,
+  CircleCheck,
+  InfoIcon,
+  TriangleAlert,
+} from 'lucide-svelte'
 
 let { children, message, actions, variant = 'info' }: AlertProps = $props()
+
+let AlertIcon = $derived.by(() => {
+  switch (variant) {
+    case 'error':
+      return CircleAlert
+    case 'warning':
+      return TriangleAlert
+    case 'success':
+      return CircleCheck
+    case 'info':
+      return InfoIcon
+    default:
+      return Bell
+  }
+})
 </script>
 
 <div class="alert {variant}">
   <div class="message">
-    <div class="icon #TODO">#</div>
+    <div class="icon lucide-icon-alignment"><AlertIcon /></div>
     <div class="message-content">
       {#if children}
         {@render children()}
@@ -28,6 +50,7 @@ let { children, message, actions, variant = 'info' }: AlertProps = $props()
   display: flex;
   align-items: center;
   width: 100%;
+
   padding: var(--alert-padding);
   gap: var(--alert-padding);
   border-radius: var(--radius-m);
@@ -39,8 +62,13 @@ let { children, message, actions, variant = 'info' }: AlertProps = $props()
   .message {
     display: flex;
     align-items: flex-start;
-    gap: var(--padding-m);
-    padding-left: var(--padding-xs);
+    gap: var(--alert-padding);
+  }
+
+  &:has(.actions) {
+    .message {
+      padding: 0 var(--padding-xs);
+    }
   }
 
   &.error {
@@ -69,7 +97,7 @@ let { children, message, actions, variant = 'info' }: AlertProps = $props()
 
   .actions {
     display: flex;
-    gap: var(--padding-m);
+    gap: var(--alert-padding);
     margin-left: auto;
   }
 }
