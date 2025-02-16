@@ -65,7 +65,9 @@ $code-size: 0.875rem;
   --alert-padding: var(--padding-s);
   --alert-radius: var(--radius-s);
 
-  --message-gap: var(--alert-padding);
+  --message-gap-s: var(--padding-xs);
+  --message-gap-m: var(--padding-s);
+  --message-gap-l: var(--padding-m);
 
   --select-padding: var(--input-padding);
   --select-radius: var(--input-radius);

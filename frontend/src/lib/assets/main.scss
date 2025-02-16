@@ -152,8 +152,16 @@ dl {
 }
 
 /* lucide icon alignment fix */
-.lucide-icon-alignment {
+.lucide-icon-wrapper {
   position: relative;
   top: 1px;
-  font-size: 0;
+  font-size: inherit;
+
+  height: 0;
+
+  .lucide-icon {
+    font-size: inherit;
+    width: 1.5em;
+    height: 1.5em;
+  }
 }

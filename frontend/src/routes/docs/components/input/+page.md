@@ -1,6 +1,7 @@
 <script>
 import DocsExample from '$lib/components/utils/DocsExample.svelte'
 import Input from '$lib/components/Input.svelte'
+import Message from '$lib/components/Message.svelte'
 
 let value = $state('')
 let liveValue = $state('')
@@ -130,6 +131,20 @@ State can be set to `valid` or `invalid`.
 ```svelte
 <Input value='claire@example.com' state='valid' />
 <Input value='Joe Smith <email@example.com>' state='invalid' />
+```
+
+#### Invalid With Feedback Message
+
+An invalid input should have a message to explain the error. This can be done by using the Message component in combination with Input.
+
+<DocsExample left gap="var(--padding-xs)">
+  <Input fullwidth value='Joe Smith <email@example.com>' state='invalid' />
+  <Message colortext size='small' type='error'>Please enter a valid email address.</Message>
+</DocsExample>
+
+```svelte
+<Input fullwidth value='Joe Smith <email@example.com>' state='invalid' />
+<Message colortext size='small' type='error'>Please enter a valid email address.</Message>
 ```
 
 ### Required

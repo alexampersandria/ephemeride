@@ -3,14 +3,16 @@ import type { Snippet } from 'svelte'
 
 const {
   children,
-  label,
+  gap,
+  left,
 }: {
   children: Snippet
-  label?: string
+  gap?: string
+  left?: boolean
 } = $props()
 </script>
 
-<div class="docs-example" class:label>
+<div class="docs-example" class:left style:gap>
   {@render children()}
 </div>
 
@@ -24,5 +26,9 @@ const {
   gap: var(--padding-m);
   border-radius: var(--radius-s);
   border: var(--border-width) solid var(--border-color);
+
+  &.left {
+    justify-content: flex-start;
+  }
 }
 </style>

@@ -56,7 +56,7 @@ const oninput = (event: Event) => {
   border: var(--border-width) solid var(--input-border);
 
   &.fullwidth {
-    width: calc(100% - var(--input-padding) * 2);
+    width: 100%;
   }
 
   &:not(:disabled) {
