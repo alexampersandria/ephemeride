@@ -2,6 +2,7 @@
 import DocsExample from '$lib/components/utils/DocsExample.svelte'
 import Input from '$lib/components/Input.svelte'
 import Message from '$lib/components/Message.svelte'
+import Alert from '$lib/components/Alert.svelte'
 
 let value = $state('')
 let liveValue = $state('')
@@ -13,6 +14,48 @@ let validationRegexStateOther = $state('untouched')
 
 let fValue = $state('')
 let fState = $state('untouched')
+
+let cValue = $state({
+  email: '',
+  password: ''
+})
+let cState = $state({
+  email: 'untouched',
+  password: 'untouched'
+})
+let cMessages = $state({
+  email: '',
+  password: []
+})
+let cValidation = {
+  email: (value) => {
+    if (!value) {
+      cMessages.email = 'This field is required'
+      return 'invalid'
+    }
+    cMessages.email = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? 'Invalid email address' : ''
+    return cMessages.email ? 'invalid' : 'touched'
+  },
+  password: (value) => {
+    cMessages.password = []
+    if (value.length < 8) {
+      cMessages.password.push('Must be at least 8 characters long')
+    }
+    if (!/[a-z]/.test(value)) {
+      cMessages.password.push('Must contain at least one lowercase letter')
+    }
+    if (!/[A-Z]/.test(value)) {
+      cMessages.password.push('Must contain at least one uppercase letter')
+    }
+    if (!/[0-9]/.test(value)) {
+      cMessages.password.push('Must contain at least one number')
+    }
+    if (!/[!@#$%^&*]/.test(value)) {
+      cMessages.password.push('Must contain at least one special character')
+    }
+    return cMessages.password.length === 0 ? 'touched' : 'invalid'
+  }
+}
 </script>
 
 # Input
@@ -290,6 +333,112 @@ Example of a more complete implementation of an input with live validation and f
   {:else}
     <Message colortext size='small' type='error'>Please enter a valid name.</Message>
   {/if}
+{/if}
+```
+
+#### Specific Validation Feedback Messages
+
+Example of a complete login form with specific validation feedback messages. Password validation will check for at least 8 characters, one lowercase letter, one uppercase letter, one number, and one special character, and provide feedback for each requirement dynamically.
+
+<DocsExample left column>
+  <Input
+    required
+    fullwidth
+    bind:value={cValue.email}
+    bind:state={cState.email}
+    validation={cValidation.email}
+    placeholder="Email..." />
+  {#if cMessages.email}
+    <Message type='error'>{cMessages.email}</Message>
+  {/if}
+  <Input
+    required
+    fullwidth
+    type="password"
+    bind:value={cValue.password}
+    bind:state={cState.password}
+    validation={cValidation.password}
+    placeholder="Password..." />
+  {#if cState.password === 'invalid'}
+    <Alert type='error'>
+      <b>Password does not meet the requirements:</b>
+      <ul>
+        {#each cMessages.password as message}
+          <li>{message}</li>
+        {/each}
+      </ul>
+    </Alert>
+  {/if}
+</DocsExample>
+
+```svelte
+<script>
+let cValue = $state({
+  email: '',
+  password: ''
+})
+let cState = $state({
+  email: 'untouched',
+  password: 'untouched'
+})
+let cMessages = $state({
+  email: '',
+  password: []
+})
+let cValidation = {
+  email: (value) => {
+    cMessages.email = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? 'Invalid email address' : ''
+    return cMessages.email ? 'touched' : 'invalid'
+  },
+  password: (value) => {
+    cMessages.password = []
+    if (value.length < 8) {
+      cMessages.password.push('Must be at least 8 characters long')
+    }
+    if (!/[a-z]/.test(value)) {
+      cMessages.password.push('Must contain at least one lowercase letter')
+    }
+    if (!/[A-Z]/.test(value)) {
+      cMessages.password.push('Must contain at least one uppercase letter')
+    }
+    if (!/[0-9]/.test(value)) {
+      cMessages.password.push('Must contain at least one number')
+    }
+    if (!/[!@#$%^&*]/.test(value)) {
+      cMessages.password.push('Must contain at least one special character')
+    }
+    return cMessages.password.length === 0 ? 'touched' : 'invalid'
+  }
+}
+</script>
+
+<Input
+  required
+  fullwidth
+  bind:value={cValue.email}
+  bind:state={cState.email}
+  validation={cValidation.email}
+  placeholder="Email..." />
+{#if cMessages.email}
+  <Message type='error'>{cMessages.email}</Message>
+{/if}
+<Input
+  required
+  fullwidth
+  type="password"
+  bind:value={cValue.password}
+  bind:state={cState.password}
+  validation={cValidation.password}
+  placeholder="Password..." />
+{#if cState.password === 'invalid'}
+  <Alert type='error'>
+    <b>Password does not meet the requirements:</b>
+    <ul>
+      {#each cMessages.password as message}
+        <li>{message}</li>
+      {/each}
+    </ul>
+  </Alert>
 {/if}
 ```
 

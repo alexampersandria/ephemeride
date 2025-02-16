@@ -5,14 +5,16 @@ const {
   children,
   gap,
   left,
+  column,
 }: {
   children: Snippet
   gap?: string
   left?: boolean
+  column?: boolean
 } = $props()
 </script>
 
-<div class="docs-example" class:left style:gap>
+<div class="docs-example" class:left style:gap class:column>
   {@render children()}
 </div>
 
@@ -29,6 +31,11 @@ const {
 
   &.left {
     justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  &.column {
+    flex-direction: column;
   }
 }
 </style>
