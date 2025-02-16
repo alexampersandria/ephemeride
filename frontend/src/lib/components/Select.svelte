@@ -60,6 +60,10 @@ const onchange = (event: Event) => {
     &:hover {
       background-color: var(--select-background-hover);
     }
+
+    &:focus {
+      background-color: var(--select-background);
+    }
   }
 
   &:disabled {
