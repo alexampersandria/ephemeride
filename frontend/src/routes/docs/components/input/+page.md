@@ -7,6 +7,12 @@ let value = $state('')
 let liveValue = $state('')
 let definedValue = $state('Predefined value')
 let state = $state('untouched')
+let validationRegexState = $state('untouched')
+let validationFunctionState = $state('untouched')
+let validationRegexStateOther = $state('untouched')
+
+let fValue = $state('')
+let fState = $state('untouched')
 </script>
 
 # Input
@@ -145,6 +151,96 @@ An invalid input should have a message to explain the error. This can be done by
 ```svelte
 <Input fullwidth value='Joe Smith <email@example.com>' state='invalid' />
 <Message colortext size='small' type='error'>Please enter a valid email address.</Message>
+```
+
+#### Validation
+
+The input can validate the value using the `validation` prop. The `validation` prop can either be a function that takes in `value` and optionally `state` that returns `InputState`, or a regex that will be tested against the value and return `InputState` based on the result. `invalid` for false and `touched` for true if the value is not empty and the input is not `untouched`.
+
+To return `valid` input state use a custom function as the regex will only return `touched`, `untouched` or `invalid`.
+
+<DocsExample>
+  <Input
+    validation={/^[a-zA-Z]+$/}
+    bind:state={validationRegexState}
+    placeholder="Only letters..." />
+</DocsExample>
+<DocsExample>
+  <p>state: <code>{validationRegexState}</code></p>
+</DocsExample>
+
+```svelte
+<script>
+let validationRegexState = $state('untouched')
+</script>
+
+<Input
+  validation={/^[a-zA-Z]+$/}
+  bind:state={validationRegexState}
+  placeholder="Only letters..." />
+<p>state: <code>{validationRegexState}</code></p>
+```
+
+#### Validation and Required
+
+Validation and required can be used together. The input will be required and return `invalid` if the value is empty and state is not `untouched`, otherwise, it will return the result of the validation.
+
+<DocsExample>
+  <Input
+    required
+    validation={/^[a-zA-Z]+$/}
+    bind:state={validationRegexStateOther}
+    placeholder="Only letters..." />
+</DocsExample>
+<DocsExample>
+  <p>state: <code>{validationRegexStateOther}</code></p>
+</DocsExample>
+
+```svelte
+<Input
+  required
+  validation={/^[a-zA-Z]+$/}
+  bind:state={validationRegexState}
+  placeholder="Only letters..." />
+<p>state: <code>{validationRegexState}</code></p>
+```
+
+#### Live Validation With Feedback Message
+
+<DocsExample left gap="var(--padding-s)">
+  <Input
+    bind:value={fValue}
+    live
+    bind:state={fState}
+    required
+    fullwidth
+    validation={/^[a-zA-Z\- ]+$/}
+    placeholder="Your name..." />
+  {#if fState === 'invalid'}
+    {#if !fValue}
+      <Message colortext size='small' type='error'>This field is required.</Message>
+    {:else}
+      <Message colortext size='small' type='error'>Please enter a valid name.</Message>
+    {/if}
+  {/if}
+</DocsExample>
+
+```svelte
+<Input
+  bind:value
+  live
+  bind:state
+  required
+  fullwidth
+  validation={/^[a-zA-Z\- ]+$/}
+  placeholder="Your name..." />
+{#if fState === 'invalid'}
+  {#if !fValue}
+    <Message colortext size='small' type='error'>This field is required.</Message>
+  {:else}
+    <Message colortext size='small' type='error'>Please enter a valid name.</Message>
+  {/if}
+{/if}
 ```
 
 ### Required

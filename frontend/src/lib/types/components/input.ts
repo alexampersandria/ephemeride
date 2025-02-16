@@ -1,3 +1,4 @@
+import type { InputValidationRule } from '$lib/utils/validate'
 import type { FormElementProps, InputType } from '../input'
 
 export type InputProps = {
@@ -6,4 +7,5 @@ export type InputProps = {
   placeholder?: string
   fullwidth?: boolean
   live?: boolean
+  validation?: InputValidationRule
 } & FormElementProps

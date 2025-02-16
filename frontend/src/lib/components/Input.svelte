@@ -1,5 +1,6 @@
 <script lang="ts">
 import type { InputProps } from '$lib/types/components/input'
+import { validateInput } from '$lib/utils/validate'
 
 let {
   type = 'text',
@@ -9,6 +10,7 @@ let {
   state = $bindable('untouched'),
   fullwidth,
   live,
+  validation,
   name,
   id,
   required,
@@ -18,11 +20,12 @@ const onchange = (event: Event) => {
   const target = event.target as HTMLSelectElement
   value = target.value
 
-  if (state === 'untouched') {
-    state = 'touched'
-  } else if (!value && required) {
-    state = 'invalid'
-  }
+  state = validateInput({
+    value,
+    state,
+    validation,
+    required,
+  })
 }
 
 const oninput = (event: Event) => {
