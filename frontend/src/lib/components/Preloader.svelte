@@ -19,6 +19,6 @@ import Spinner from './Spinner.svelte'
   justify-content: center;
   align-items: center;
 
-  background-color: var(--color-base-05);
+  background-color: var(--color-base-00);
 }
 </style>

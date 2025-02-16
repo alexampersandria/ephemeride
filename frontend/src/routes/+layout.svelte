@@ -14,8 +14,8 @@ let { children } = $props()
 
 <div id="root" class="theme-{uiStore.appliedTheme}">
   {@render children()}
-</div>
 
-{#if uiStore.loading}
-  <Preloader />
-{/if}
+  {#if uiStore.loading}
+    <Preloader />
+  {/if}
+</div>
