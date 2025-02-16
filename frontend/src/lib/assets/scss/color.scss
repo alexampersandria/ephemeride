@@ -338,4 +338,6 @@ $colors: list.append($saturatedColors, 'base');
   --button-primary-background-active: var(--color-base-70);
   --button-primary-border-active: var(--color-base-70);
   --button-primary-color-active: var(--button-primary-color);
+
+  --button-destructive-color: var(--button-color);
 }
