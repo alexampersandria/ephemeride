@@ -16,6 +16,17 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+input,
+select,
+textarea,
+button {
+  font-family: inherit;
+}
+
+::placeholder {
+  color: var(--input-placeholder-color);
+}
+
 body {
   margin: 0;
 }

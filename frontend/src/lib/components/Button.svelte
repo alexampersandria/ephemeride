@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { ButtonProps } from '$lib/types/button'
+import type { ButtonProps } from '$lib/types/components/button'
 import Spinner from './Spinner.svelte'
 
 let {

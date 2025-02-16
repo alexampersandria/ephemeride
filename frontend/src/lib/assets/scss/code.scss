@@ -34,6 +34,12 @@ pre[class*='language-'] {
   border-radius: var(--radius-xs);
   background-color: var(--background-secondary);
   font-weight: 700;
+
+  /* force empty inline code blocks to be rendered properly */
+  &::after {
+    content: '';
+    display: inline-block;
+  }
 }
 
 .token.comment,

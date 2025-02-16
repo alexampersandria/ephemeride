@@ -1,4 +1,4 @@
-import type { InputState } from './input'
+import type { FormElementProps, InputState } from '../input'
 
 export type SelectOption = {
   label: string
@@ -8,8 +8,7 @@ export type SelectOption = {
 
 export type SelectProps = {
   options: SelectOption[]
-  value?: SelectOption['value']
+  value?: string
   placeholder?: string
-  disabled?: boolean
-  state?: InputState
-}
+  fullwidth?: boolean
+} & FormElementProps

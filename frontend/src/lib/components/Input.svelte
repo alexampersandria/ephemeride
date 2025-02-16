@@ -1,17 +1,18 @@
 <script lang="ts">
-import type { SelectProps } from '$lib/types/components/select'
+import type { InputProps } from '$lib/types/components/input'
 
 let {
-  options,
+  type = 'text',
   value = $bindable(),
   placeholder,
   disabled,
   state = $bindable('untouched'),
+  fullwidth,
+  live,
   name,
   id,
   required,
-  fullwidth,
-}: SelectProps = $props()
+}: InputProps = $props()
 
 const onchange = (event: Event) => {
   const target = event.target as HTMLSelectElement
@@ -19,12 +20,23 @@ const onchange = (event: Event) => {
 
   if (state === 'untouched') {
     state = 'touched'
+  } else if (!value && required) {
+    state = 'invalid'
+  }
+}
+
+const oninput = (event: Event) => {
+  if (live) {
+    onchange(event)
   }
 }
 </script>
 
-<select
-  class="select"
+<input
+  class="input"
+  {type}
+  {value}
+  {placeholder}
   {disabled}
   {name}
   {id}
@@ -33,43 +45,27 @@ const onchange = (event: Event) => {
   class:valid={state === 'valid'}
   class:invalid={state === 'invalid'}
   aria-invalid={state === 'invalid'}
-  {onchange}>
-  {#if placeholder}
-    <option class="select-option" value="" disabled selected={!value}>
-      {placeholder}
-    </option>
-  {/if}
-  {#each options as option}
-    <option
-      class="select-option"
-      value={option.value}
-      selected={option.value === value}
-      disabled={option.disabled}>
-      {option.label}
-    </option>
-  {/each}
-</select>
+  {onchange}
+  {oninput} />
 
 <style lang="scss">
-.select {
-  padding: var(--select-padding);
-  border-radius: var(--select-radius);
-  background-color: var(--select-background);
-  border: var(--border-width) solid var(--select-border);
+.input {
+  padding: var(--input-padding);
+  border-radius: var(--input-radius);
+  background-color: var(--input-background);
+  border: var(--border-width) solid var(--input-border);
 
   &.fullwidth {
     width: calc(100% - var(--input-padding) * 2);
   }
 
   &:not(:disabled) {
-    cursor: pointer;
-
     &:hover {
-      background-color: var(--select-background-hover);
+      background-color: var(--input-background-hover);
     }
 
     &:focus {
-      background-color: var(--select-background);
+      background-color: var(--input-background);
     }
   }
 

@@ -14,7 +14,7 @@ let optionsWithDisabled = $state([
   { value: '3', label: 'Option 3' },
 ])
 
-let value = $state('null')
+let value = $state('')
 let otherValue = $state('2')
 let state = $state('untouched')
 </script>
@@ -46,7 +46,7 @@ let options = $state([
   { value: '3', label: 'Option 3' },
 ])
 
-let value = $state('null')
+let value = $state('')
 </script>
 
 <Select bind:value {options} placeholder="Select an option" />
@@ -101,7 +101,7 @@ let state = $state('untouched')
 <p>state: <code>{state}</code></p>
 ```
 
-States can be set to `valid` or `invalid`.
+State can be set to `valid` or `invalid`.
 
 <DocsExample>
   <Select {options} state='valid' />
@@ -141,17 +141,47 @@ let optionsWithDisabled = $state([
 <Select options={optionsWithDisabled} />
 ```
 
+### Name and ID
+
+The `name` and `id` attributes can be set to identify the select in a form.
+
+<DocsExample>
+  <Select {options} name="select" id="select" />
+</DocsExample>
+
+```svelte
+<Select {options} name="select" id="select" />
+```
+
+### Full Width
+
+The select can be set to full width of parent using the `fullwidth` prop.
+
+<DocsExample>
+  <Select {options} fullwidth />
+</DocsExample>
+
+```svelte
+<Select {options} fullwidth />
+```
+
 ## Types
 
 ### Props
 
-| Name        | Type                    | Required | Default     | Description                                           |
-| ----------- | ----------------------- | :------: | ----------- | ----------------------------------------------------- |
-| options     | `SelectOption`          |    ✅     |             | Array of objects with `value` and `label` properties. |
-| value       | `SelectOption['value']` |          |             | Value of the selected option.                         |
-| placeholder | `string`                |          |             | Placeholder text.                                     |
-| disabled    | `boolean`               |          |             | Disables the select.                                  |
-| state       | `InputState`            |          | `untouched` | State of the select.                                  |
+Inherits `FormElementProps`.
+
+| Name        | Type           | Required | Default     | Description                                             |
+| ----------- | -------------- | :------: | ----------- | ------------------------------------------------------- |
+| options     | `SelectOption` |    ✅     |             | Array of objects with `value` and `label` properties.   |
+| value       | `string`       |          |             | Value of the selected option.                           |
+| placeholder | `string`       |          |             | Placeholder text.                                       |
+| fullwidth   | `boolean`      |          | `false`     | Full width select.                                      |
+| disabled    | `boolean`      |          | `false`     | Disables the select. Inherited from `FormElementProps`. |
+| state       | `InputState`   |          | `untouched` | State of the select. Inherited from `FormElementProps`. |
+| name        | `string`       |          |             | Name of the select. Inherited from `FormElementProps`.  |
+| id          | `string`       |          |             | ID of the select. Inherited from `FormElementProps`.    |
+| required    | `boolean`      |          | `false`     | Required attribute. Inherited from `FormElementProps`.  |
 
 ### SelectOption
 
@@ -164,3 +194,4 @@ let optionsWithDisabled = $state([
 ## References
 
 - [InputState](/docs/types/input#inputstate)
+- [FormElementProps](/docs/types/input#formelementprops)

@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { AlertProps } from '$lib/types/alert'
+import type { AlertProps } from '$lib/types/components/alert'
 import {
   Bell,
   CircleAlert,

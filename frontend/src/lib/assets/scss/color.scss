@@ -228,6 +228,7 @@ $colors: list.append($saturatedColors, 'base');
   --input-background: var(--background-primary);
   --input-border: var(--border-color);
   --input-color: var(--text-primary);
+  --input-placeholder-color: var(--text-dimmed);
 
   --input-background-hover: var(--background-secondary);
   --input-border-hover: var(--border-color);
