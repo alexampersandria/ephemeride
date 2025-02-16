@@ -29,10 +29,9 @@ export default [
   },
   {
     rules: {
-      'css-unused-selector': 'off',
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': [
-        'warn', // or "error"
+        'error',
         {
           argsIgnorePattern: '^_',
           varsIgnorePattern: '^_',

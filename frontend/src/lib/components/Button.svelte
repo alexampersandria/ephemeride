@@ -37,8 +37,6 @@ let clickHandler = () => {
 </button>
 
 <style lang="scss">
-@use '../assets/scss/color';
-
 .button {
   position: relative;
   display: inline-flex;
