@@ -305,19 +305,19 @@ $colors: list.append($saturatedColors, 'base');
   --color-info: var(--color-blue-50);
 
   --color-success: var(--color-green-50);
-  --color-success-border: var(--color-green-70);
+  --color-success-border: var(--color-green-50);
   --color-success-background: var(--color-green-10);
 
   --color-warning: var(--color-yellow-60);
-  --color-warning-border: var(--color-yellow-70);
+  --color-warning-border: var(--color-yellow-60);
   --color-warning-background: var(--color-yellow-10);
 
   --color-error: var(--color-red-50);
-  --color-error-border: var(--color-red-70);
+  --color-error-border: var(--color-red-50);
   --color-error-background: var(--color-red-10);
 
   --color-info: var(--color-blue-50);
-  --color-info-border: var(--color-blue-70);
+  --color-info-border: var(--color-blue-50);
   --color-info-background: var(--color-blue-10);
 
   --color-link: var(--color-blue-50);
