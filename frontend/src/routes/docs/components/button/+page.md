@@ -17,13 +17,14 @@ let incrementSlowCount = () => {
 
 # Button
 
+HTML `<button>` element.
+
 ## Usage
 
 Buttons are used to trigger actions or events.
 
-### Default
+### On Click
 
-By default buttons are type `secondary`. `primary` buttons should be used for high priority actions or calls to action.
 
 <DocsExample>
   <Button onclick={() => {count++}}>Click me</Button>
@@ -42,6 +43,8 @@ let count = $state(0)
 ```
 
 ### Types
+  
+By default buttons are type `secondary`. `primary` buttons should be used for high priority actions or calls to action.
 
 <DocsExample>
   <Button type='primary'>Primary</Button>

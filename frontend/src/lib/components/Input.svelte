@@ -1,6 +1,6 @@
 <script lang="ts">
 import type { InputProps } from '$lib/types/components/input'
-import { validateInput } from '$lib/utils/validate'
+import { evaluateInputState } from '$lib/utils/input'
 
 let {
   type = 'text',
@@ -20,7 +20,7 @@ const onchange = (event: Event) => {
   const target = event.target as HTMLSelectElement
   value = target.value
 
-  state = validateInput({
+  state = evaluateInputState({
     value,
     state,
     validation,

@@ -1,15 +1,9 @@
-import type { InputState } from '$lib/types/input'
+import type { InputState, ValidationRule } from '$lib/types/input'
 
-export type ValidationFunction = (
-  value: string,
-  state?: InputState,
-) => InputState
-export type InputValidationRule = ValidationFunction | RegExp
-
-export const validateInput = (args: {
+export const evaluateInputState = (args: {
   value: string
   state: InputState
-  validation?: InputValidationRule
+  validation?: ValidationRule
   required?: boolean
 }): InputState => {
   console.log('args', args)
@@ -33,7 +27,6 @@ export const validateInput = (args: {
       }
     }
   } else {
-    console.log(args)
     if (!args.value) {
       if (args.required) {
         return 'invalid'

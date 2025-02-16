@@ -1,9 +1,9 @@
 import { expect, it, describe } from 'vitest'
-import { validateInput } from './validate'
+import { evaluateInputState } from './input'
 
 describe('validateInput', () => {
   it('should return "untouched" if value is empty and state is untouched', () => {
-    const result = validateInput({
+    const result = evaluateInputState({
       value: '',
       state: 'untouched',
     })
@@ -11,7 +11,7 @@ describe('validateInput', () => {
   })
 
   it('should return "touched" if value is empty and state is touched', () => {
-    const result = validateInput({
+    const result = evaluateInputState({
       value: '',
       state: 'touched',
     })
@@ -19,7 +19,7 @@ describe('validateInput', () => {
   })
 
   it('should return "touched" if value is not empty', () => {
-    const result = validateInput({
+    const result = evaluateInputState({
       value: 'test',
       state: 'untouched',
     })
@@ -27,7 +27,7 @@ describe('validateInput', () => {
   })
 
   it('should return "invalid" if value is empty and required is true', () => {
-    const result = validateInput({
+    const result = evaluateInputState({
       value: '',
       state: 'untouched',
       required: true,
@@ -38,7 +38,7 @@ describe('validateInput', () => {
 
 describe('validateInput with regex', () => {
   it('should return "untouched" if value is empty and state is untouched', () => {
-    const result = validateInput({
+    const result = evaluateInputState({
       value: '',
       state: 'untouched',
       validation: /test/,
@@ -47,7 +47,7 @@ describe('validateInput with regex', () => {
   })
 
   it('should return "touched" if value is empty and state is touched', () => {
-    const result = validateInput({
+    const result = evaluateInputState({
       value: '',
       state: 'touched',
       validation: /test/,
@@ -56,7 +56,7 @@ describe('validateInput with regex', () => {
   })
 
   it('should return "touched" if value matches regex', () => {
-    const result = validateInput({
+    const result = evaluateInputState({
       value: 'test',
       state: 'untouched',
       validation: /test/,
@@ -65,7 +65,7 @@ describe('validateInput with regex', () => {
   })
 
   it('should return "invalid" if value does not match regex', () => {
-    const result = validateInput({
+    const result = evaluateInputState({
       value: 'test',
       state: 'untouched',
       validation: /invalid/,
@@ -80,12 +80,12 @@ describe('validateInput with function', () => {
       return value === 'test' ? 'valid' : 'invalid'
     }
 
-    const resultInvalid = validateInput({
+    const resultInvalid = evaluateInputState({
       value: '',
       state: 'untouched',
       validation,
     })
-    const resultValid = validateInput({
+    const resultValid = evaluateInputState({
       value: 'test',
       state: 'untouched',
       validation,

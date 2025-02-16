@@ -1,4 +1,4 @@
-import type { InputValidationRule } from '$lib/utils/validate'
+import type { InputValidationRule } from '$lib/utils/input'
 import type { FormElementProps, InputType } from '../input'
 
 export type InputProps = {

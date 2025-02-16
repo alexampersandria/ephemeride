@@ -21,7 +21,7 @@ let state = $state('untouched')
 
 # Select
 
-Default HTML `<select>` element with `<option>`'s.
+HTML `<select>` element with `<option>`'s.
 
 ## Usage
 

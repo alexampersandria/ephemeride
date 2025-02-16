@@ -10,3 +10,10 @@ export type FormElementProps = {
   required?: boolean
   id?: string
 }
+
+export type ValidationFunction = (
+  value: string,
+  state?: InputState,
+) => InputState
+
+export type ValidationRule = ValidationFunction | RegExp

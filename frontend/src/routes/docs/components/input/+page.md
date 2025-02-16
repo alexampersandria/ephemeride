@@ -17,7 +17,7 @@ let fState = $state('untouched')
 
 # Input
 
-Default HTML `<input>` element.
+HTML `<input>` element.
 
 ## Usage
 
@@ -139,7 +139,55 @@ State can be set to `valid` or `invalid`.
 <Input value='Joe Smith <email@example.com>' state='invalid' />
 ```
 
-#### Invalid With Feedback Message
+### Required
+
+The input can be set to required using the HTML `required` attribute. Required elements will change state to `invalid` if empty on change.
+
+<DocsExample>
+  <Input required placeholder="Your name..." />
+</DocsExample>
+
+```svelte
+<Input required placeholder="Your name..." />
+```
+
+### Name and ID
+
+The input can be set to required using the HTML `name` and `id` attributes, this can be used for labels and form submission.
+
+<DocsExample>
+  <Input name="name" id="name" placeholder="Your name..." />
+</DocsExample>
+
+```svelte
+<Input name="name" id="name" placeholder="Your name..." />
+```
+
+### Type
+
+The input type can be set using the HTML `type` attribute. The default type is `text`.
+
+<DocsExample>
+  <Input type="password" placeholder="Password..." />
+</DocsExample>
+
+```svelte
+<Input type="password" placeholder="Password..." />
+```
+
+### Full Width
+
+The input can be set to full width of parent using the `fullwidth` prop.
+
+<DocsExample>
+  <Input fullwidth placeholder="Full width input..." />
+</DocsExample>
+
+```svelte
+<Input fullwidth placeholder="Full width input..." />
+```
+
+### Invalid With Feedback Message
 
 An invalid input should have a message to explain the error. This can be done by using the Message component in combination with Input.
 
@@ -153,7 +201,7 @@ An invalid input should have a message to explain the error. This can be done by
 <Message colortext size='small' type='error'>Please enter a valid email address.</Message>
 ```
 
-#### Validation
+### Validation
 
 The input can validate the value using the `validation` prop. The `validation` prop can either be a function that takes in `value` and optionally `state` that returns `InputState`, or a regex that will be tested against the value and return `InputState` based on the result. `invalid` for false and `touched` for true if the value is not empty and the input is not `untouched`.
 
@@ -207,6 +255,8 @@ Validation and required can be used together. The input will be required and ret
 
 #### Live Validation With Feedback Message
 
+Example of a more complete implementation of an input with live validation and feedback message.
+
 <DocsExample left gap="var(--padding-s)">
   <Input
     bind:value={fValue}
@@ -241,54 +291,6 @@ Validation and required can be used together. The input will be required and ret
     <Message colortext size='small' type='error'>Please enter a valid name.</Message>
   {/if}
 {/if}
-```
-
-### Required
-
-The input can be set to required using the HTML `required` attribute. Required elements will change state to `invalid` if empty on change.
-
-<DocsExample>
-  <Input required placeholder="Your name..." />
-</DocsExample>
-
-```svelte
-<Input required placeholder="Your name..." />
-```
-
-### Name and ID
-
-The input can be set to required using the HTML `name` and `id` attributes, this can be used for labels and form submission.
-
-<DocsExample>
-  <Input name="name" id="name" placeholder="Your name..." />
-</DocsExample>
-
-```svelte
-<Input name="name" id="name" placeholder="Your name..." />
-```
-
-### Type
-
-The input type can be set using the HTML `type` attribute. The default type is `text`.
-
-<DocsExample>
-  <Input type="password" placeholder="Password..." />
-</DocsExample>
-
-```svelte
-<Input type="password" placeholder="Password..." />
-```
-
-### Full Width
-
-The input can be set to full width of parent using the `fullwidth` prop.
-
-<DocsExample>
-  <Input fullwidth placeholder="Full width input..." />
-</DocsExample>
-
-```svelte
-<Input fullwidth placeholder="Full width input..." />
 ```
 
 ## Types
