@@ -1,5 +1,11 @@
 $container-width: calc(8ch * 12);
 
+$font-size-xs: 0.75rem;
+$font-size-s: 0.875rem;
+$font-size-m: 1rem;
+$font-size-l: 1.125rem;
+$font-size-xl: 1.25rem;
+
 $radius-xs: 0.25rem;
 $radius-s: 0.375rem;
 $radius-m: 0.5rem;
@@ -44,7 +50,13 @@ $code-size: 0.875rem;
   --padding-l: #{$padding-l};
   --padding-xl: #{$padding-xl};
 
-  --button-padding: var(--padding-s);
+  --font-size-xs: #{$font-size-xs};
+  --font-size-s: #{$font-size-s};
+  --font-size-m: #{$font-size-m};
+  --font-size-l: #{$font-size-l};
+  --font-size-xl: #{$font-size-xl};
+
+  --button-padding: var(--padding-s) var(--padding-m);
   --button-radius: var(--radius-s);
 
   --input-padding: var(--padding-xs);

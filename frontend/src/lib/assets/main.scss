@@ -16,18 +16,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-input,
-select,
-textarea,
-button {
-  font-family: inherit;
-  font-size: 0.875rem;
-}
-
-::placeholder {
-  color: var(--input-placeholder-color);
-}
-
 body {
   margin: 0;
 }
@@ -44,6 +32,18 @@ body {
   color: var(--text-primary);
   height: 100vh;
   overflow: auto;
+}
+
+input,
+select,
+textarea,
+button {
+  font-family: inherit;
+  font-size: var(--font-size-s);
+}
+
+::placeholder {
+  color: var(--input-placeholder-color);
 }
 
 a {
