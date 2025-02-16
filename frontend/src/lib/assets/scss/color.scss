@@ -194,15 +194,15 @@ $colors: list.append($saturatedColors, 'base');
   --color-success-background: var(--color-green-90);
 
   --color-warning: var(--color-yellow-70);
-  --color-warning-bordder: var(--color-yellow-70);
+  --color-warning-border: var(--color-yellow-70);
   --color-warning-background: var(--color-yellow-90);
 
   --color-error: var(--color-red-60);
-  --color-error-bordder: var(--color-red-70);
+  --color-error-border: var(--color-red-70);
   --color-error-background: var(--color-red-90);
 
   --color-info: var(--color-blue-60);
-  --color-info-bordder: var(--color-blue-70);
+  --color-info-border: var(--color-blue-70);
   --color-info-background: var(--color-blue-90);
 
   --color-link: var(--color-blue-50);
@@ -211,9 +211,11 @@ $colors: list.append($saturatedColors, 'base');
   --color-focus: var(--color-link);
 
   --color-valid: var(--color-success);
-  --color-invalid: var(--color-error);
-
+  --color-valid-border: var(--color-success-border);
   --color-valid-background: var(--color-success-background);
+
+  --color-invalid: var(--color-error);
+  --color-invalid-border: var(--color-error-border);
   --color-invalid-background: var(--color-error-background);
 
   --spinner-color: var(--color-base-30);
@@ -306,15 +308,15 @@ $colors: list.append($saturatedColors, 'base');
   --color-success-background: var(--color-green-10);
 
   --color-warning: var(--color-yellow-60);
-  --color-warning-bordder: var(--color-yellow-70);
+  --color-warning-border: var(--color-yellow-70);
   --color-warning-background: var(--color-yellow-10);
 
   --color-error: var(--color-red-50);
-  --color-error-bordder: var(--color-red-70);
+  --color-error-border: var(--color-red-70);
   --color-error-background: var(--color-red-10);
 
   --color-info: var(--color-blue-50);
-  --color-info-bordder: var(--color-blue-70);
+  --color-info-border: var(--color-blue-70);
   --color-info-background: var(--color-blue-10);
 
   --color-link: var(--color-blue-50);
