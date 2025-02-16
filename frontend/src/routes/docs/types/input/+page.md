@@ -4,6 +4,11 @@
 
 The type of the button. Default should always be `'secondary'`.
 
+- `primary` should be used for highlighted actions, such as confirmation in a dialogue or submitting a form.
+- `secondary` should be used for most other actions.
+- `ghost` should be used the same as `secondary` for aesthetic purposes where it fits better.
+- `destructive` should be used for actions that will delete or remove data and should be used sparingly.
+
 ### Definition
 
 ```ts
@@ -13,6 +18,8 @@ type ButtonType = 'primary' | 'secondary' | 'ghost' | 'destructive'
 ## InputState
 
 The state of the input, default should usually be `untouched`, components should automatically set to `touched` if `untouched` when interacted with via `$bindable`.
+
+`touched` state is prefered over `valid` and should be a `touched` input value should be considered valid. `valid` should only be used for highlighting valid input values if specifically required, but should be avoided if possible.
 
 ### Defition
 

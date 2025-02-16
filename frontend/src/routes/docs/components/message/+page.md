@@ -69,13 +69,63 @@ The message type determines the icon used and the color of the icon displayed to
 </Message>
 ```
 
+### Color Text
+
+By default, the text of the message will be the same color as the page text. You can color the text of the message by setting the `colortext` prop to `true`.
+
+<DocsExample>
+  <Message type="error" colortext>
+    An error occurred. Please try again.
+  </Message>
+</DocsExample>
+
+```svelte
+<Message type="error" colortext>
+  An error occurred. Please try again.
+</Message>
+```
+
+### Sizes
+
+The size of the message can be adjusted using the `size` prop. The size includes the icon and the text.
+
+<DocsExample>
+  <Message size="small">
+    Heads up! This is a small message.
+  </Message>
+</DocsExample>
+<DocsExample>
+  <Message size="medium">
+    Heads up! This is a medium message.
+  </Message>
+</DocsExample>
+<DocsExample>
+  <Message size="large">
+    Heads up! This is a large message.
+  </Message>
+</DocsExample>
+
+```svelte
+<Message size="small">
+  Heads up! This is a small message.
+</Message>
+<Message size="medium">
+  Heads up! This is a medium message.
+</Message>
+<Message size="large">
+  Heads up! This is a large message.
+</Message>
+```
+
 ## Types
 
 ### Props
 
-| Name | Type          | Required | Default | Description                                                         |
-| ---- | ------------- | -------- | ------- | ------------------------------------------------------------------- |
-| type | `MessageType` |          | `info`  | The type of alert. Either `error`, `warning`, `success`, or `info`. |
+| Name      | Type                             | Required | Default  | Description                                 |
+| --------- | -------------------------------- | -------- | -------- | ------------------------------------------- |
+| type      | `MessageType`                    |          | `info`   | The type of alert.                          |
+| colortext | `boolean`                        |          | `false`  | Whether to color the text of the message.   |
+| size      | `'small' \| 'medium' \| 'large'` |          | `medium` | The size of the message including the icon. |
 
 ### Snippets
 
