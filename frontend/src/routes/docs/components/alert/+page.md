@@ -6,9 +6,17 @@ import DocsExample from '$lib/components/utils/DocsExample.svelte'
 
 # Alert
 
+An alert is a message to the user that provides information or feedback. Alerts can be used to inform users of errors, warnings, successes, or general information.
+
+Alerts use the [Message](/docs/components/message) component to display the message content, and can additionally include actions.
+
 ## Usage
 
+The alert component is used to display a message to the user. The message can be any content, including text, links, or lists.
+
 ### Default
+
+By default, the alert will be of type `info`.
 
 <DocsExample>
   <Alert>
@@ -23,6 +31,8 @@ import DocsExample from '$lib/components/utils/DocsExample.svelte'
 ```
 
 ### Message & Actions
+
+Alerts can include actions in addition to the message using Snippets. Actions are aligned to the right of the alert.
 
 <DocsExample>
   <Alert type="success">
@@ -123,5 +133,6 @@ An alert can render anything in its message content, including lists which can b
 
 ## References
 
+- [Message](/docs/components/message)
 - [Icons](/docs/design/icons)
 - [MessageType](/docs/types/message#messagetype)

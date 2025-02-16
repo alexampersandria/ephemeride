@@ -1,4 +1,4 @@
-import type { FormElementProps, InputState } from '../input'
+import type { FormElementProps } from '../input'
 
 export type SelectOption = {
   label: string
