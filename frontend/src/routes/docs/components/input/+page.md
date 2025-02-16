@@ -349,7 +349,7 @@ Example of a complete login form with specific validation feedback messages. Pas
     validation={cValidation.email}
     placeholder="Email..." />
   {#if cMessages.email}
-    <Message type='error'>{cMessages.email}</Message>
+    <Message size='small' type='error'>{cMessages.email}</Message>
   {/if}
   <Input
     required
@@ -360,9 +360,9 @@ Example of a complete login form with specific validation feedback messages. Pas
     validation={cValidation.password}
     placeholder="Password..." />
   {#if cState.password === 'invalid'}
-    <Alert type='error'>
+    <Alert size='small' type='error'>
       <b>Password does not meet the requirements:</b>
-      <ul>
+      <ul class="text-muted">
         {#each cMessages.password as message}
           <li>{message}</li>
         {/each}

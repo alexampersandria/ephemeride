@@ -118,13 +118,31 @@ An alert can render anything in its message content, including lists which can b
 </Alert>
 ```
 
+### Size
+
+The size of the alert can be adjusted using the `size` prop. The default size is `medium`.
+
+<DocsExample>
+  <Alert size="small">
+    Heads up! This is a small alert.
+  </Alert>
+</DocsExample>
+
+```svelte
+<Alert size="small">
+  Heads up! This is a small alert.
+</Alert>
+```
+
 ## Types
 
 ### Props
 
-| Name | Type          | Required | Default | Description                                                         |
-| ---- | ------------- | -------- | ------- | ------------------------------------------------------------------- |
-| type | `MessageType` |          | `info`  | The type of alert. Either `error`, `warning`, `success`, or `info`. |
+| Name      | Type          | Required | Default  | Description                                                         |
+| --------- | ------------- | -------- | -------- | ------------------------------------------------------------------- |
+| type      | `MessageType` |          | `info`   | The type of alert. Either `error`, `warning`, `success`, or `info`. |
+| colortext | `boolean`     |          | `false`  | Whether to color the text of the message.                           |
+| size      | `MessageSize` |          | `medium` | The size of the alert. Either `small`, `medium`, or `large`.        |
 
 ### Snippets
 
@@ -136,3 +154,4 @@ An alert can render anything in its message content, including lists which can b
 - [Message](/docs/components/message)
 - [Icons](/docs/design/icons)
 - [MessageType](/docs/types/message#messagetype)
+- [MessageSize](/docs/types/message#messagesize)

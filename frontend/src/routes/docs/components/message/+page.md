@@ -121,11 +121,11 @@ The size of the message can be adjusted using the `size` prop. The size includes
 
 ### Props
 
-| Name      | Type                             | Required | Default  | Description                                 |
-| --------- | -------------------------------- | -------- | -------- | ------------------------------------------- |
-| type      | `MessageType`                    |          | `info`   | The type of alert.                          |
-| colortext | `boolean`                        |          | `false`  | Whether to color the text of the message.   |
-| size      | `'small' \| 'medium' \| 'large'` |          | `medium` | The size of the message including the icon. |
+| Name      | Type          | Required | Default  | Description                                 |
+| --------- | ------------- | -------- | -------- | ------------------------------------------- |
+| type      | `MessageType` |          | `info`   | The type of alert.                          |
+| colortext | `boolean`     |          | `false`  | Whether to color the text of the message.   |
+| size      | `MessageSize` |          | `medium` | The size of the message including the icon. |
 
 ### Snippets
 
@@ -134,3 +134,4 @@ The size of the message can be adjusted using the `size` prop. The size includes
 ## References
 
 - [MessageType](/docs/types/message#messagetype)
+- [MessageSize](/docs/types/message#messagesize)

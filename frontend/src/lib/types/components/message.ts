@@ -1,9 +1,9 @@
 import type { Snippet } from 'svelte'
-import type { MessageType } from '../message'
+import type { MessageSize, MessageType } from '../message'
 
 export type MessageProps = {
   children: Snippet
   type?: MessageType
   colortext?: boolean
-  size?: 'small' | 'medium' | 'large'
+  size?: MessageSize
 }

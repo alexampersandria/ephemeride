@@ -2,12 +2,19 @@
 import type { AlertProps } from '$lib/types/components/alert'
 import Message from './Message.svelte'
 
-let { children, message, actions, type = 'info' }: AlertProps = $props()
+let {
+  children,
+  message,
+  actions,
+  type = 'info',
+  colortext,
+  size,
+}: AlertProps = $props()
 </script>
 
 <div class="alert {type}">
   <div class="alert-message">
-    <Message {type}>
+    <Message {type} {colortext} {size}>
       {#if children}
         {@render children()}
       {:else if message}
