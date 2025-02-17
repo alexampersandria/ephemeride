@@ -21,10 +21,13 @@ let themeObjects = themes.map(theme => ({
   label: `${theme.charAt(0).toUpperCase()}${theme.slice(1).toLowerCase()}`,
 }))
 let sidebarOpen = $state(false)
+let content: HTMLElement
 
 $effect(() => {
   if (page.route.id) {
+    // close sidebar and scroll to top when navigating to a new page
     sidebarOpen = false
+    content.scrollTop = 0
   }
 })
 </script>
@@ -82,7 +85,7 @@ $effect(() => {
       {/each}
     </div>
   </div>
-  <div class="docs-content">
+  <div class="docs-content" bind:this={content}>
     <div class="container">
       {@render children()}
     </div>
