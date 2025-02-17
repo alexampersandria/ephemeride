@@ -1,0 +1,42 @@
+name: frontend
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: enable corepack
+        run: corepack enable
+
+      - name: node version
+        uses: actions/setup-node@v4
+        with:
+          node-version: 23.7.0
+          cache: 'yarn'
+          cache-dependency-path: ./frontend/yarn.lock
+
+      - name: install
+        run: yarn install
+      - name: lint
+        run: yarn lint
+      - name: check
+        run: yarn check
+      - name: build
+        run: yarn build
+      - name: test
+        run: yarn test

@@ -9,13 +9,13 @@
     "preview": "vite preview",
     "prepare": "svelte-kit sync || echo ''",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:*": "yarn lint && yarn check && yarn build && yarn test",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "format": "prettier --write .",
     "lint": "prettier --check . && eslint .",
     "lint:fix": "prettier --write . && eslint . --fix",
     "test:unit": "vitest",
-    "test": "yarn test:unit run",
-    "precommit": "yarn lint && yarn check && yarn build && yarn test"
+    "test": "yarn test:unit run"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.5",
