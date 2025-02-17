@@ -16,12 +16,15 @@ let theme: Theme = $state('system')
 let loading = $state(true)
 
 const appliedTheme: Theme = $derived.by(() => {
-  if (theme === 'system' && browser) {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : 'light'
+  if (browser) {
+    if (theme === 'system') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light'
+    }
+    return theme
   }
-  return theme
+  return 'dark'
 })
 
 export const useUiStore: () => UiState = () => {

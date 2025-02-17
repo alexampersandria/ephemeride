@@ -135,3 +135,4 @@ The size of the message can be adjusted using the `size` prop. The size includes
 
 - [MessageType](/docs/types/message#messagetype)
 - [MessageSize](/docs/types/message#messagesize)
+- [Icons](/docs/design/icons)
