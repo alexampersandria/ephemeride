@@ -34,6 +34,8 @@ $h6-size: 1rem;
 
 $code-size: 0.875rem;
 
+$logo-size: 1.5em;
+
 :root {
   --container-width: #{$container-width};
 
@@ -89,4 +91,6 @@ $code-size: 0.875rem;
   --h6-size: #{$h6-size};
 
   --code-size: #{$code-size};
+
+  --logo-size: #{$logo-size};
 }

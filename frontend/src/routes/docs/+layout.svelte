@@ -1,6 +1,7 @@
 <script lang="ts">
 import { page } from '$app/state'
 import { active } from '$lib/actions/active.svelte'
+import Logo from '$lib/components/Logo.svelte'
 import Select from '$lib/components/Select.svelte'
 import { themes, useUiStore } from '$lib/store/uiStore.svelte'
 import {
@@ -44,7 +45,9 @@ $effect(() => {
     </div>
     <div class="docs-home">
       <div class="docs-route-link">
-        <a href="/docs">📆 Ephemeride Documentation</a>
+        <a href="/docs">
+          <Logo />
+        </a>
       </div>
     </div>
     <div class="docs-theme-changer">

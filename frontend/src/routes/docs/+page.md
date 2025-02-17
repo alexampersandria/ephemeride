@@ -1,5 +1,13 @@
-## Docs
+<script>
+import Logo from "$lib/components/Logo.svelte"
+</script>
 
-Lorem, ipsum dolor sit amet consectetur adipisicing elit. Magni alias, vero fugiat quos velit
-aperiam odit mollitia doloremque soluta numquam ratione similique facere, non quas at totam.
-Voluptatem, hic iure?
+<h1 style='padding: var(--padding-m) 0;'>
+  <Logo --logo-size='3rem' />
+</h1>
+
+---
+
+## Ephemeride Frontend
+
+Development documentation for the frontend implementation of ephemeride. Contains information about the frontend architecture, components, design system, types, utilities, etc.
