@@ -2054,6 +2054,7 @@ __metadata:
     jsdom: "npm:^25.0.1"
     lucide-svelte: "npm:^0.475.0"
     mdsvex: "npm:^0.12.3"
+    modern-normalize: "npm:^3.0.1"
     prettier: "npm:^3.5.1"
     prettier-plugin-svelte: "npm:^3.3.3"
     rehype-slug: "npm:^6.0.0"
@@ -2798,6 +2799,13 @@ __metadata:
   bin:
     mkdirp: dist/cjs/src/bin.js
   checksum: 10c0/9f2b975e9246351f5e3a40dcfac99fcd0baa31fbfab615fe059fb11e51f10e4803c63de1f384c54d656e4db31d000e4767e9ef076a22e12a641357602e31d57d
+  languageName: node
+  linkType: hard
+
+"modern-normalize@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "modern-normalize@npm:3.0.1"
+  checksum: 10c0/2c19be1618178b85006e354337d7dda6758640d138be5f3e247c9ebb5dd5d7845edb0b8753cec659e789bb30e1fafe73e91eaa056a332d89055cbb107d9fecec
   languageName: node
   linkType: hard
 

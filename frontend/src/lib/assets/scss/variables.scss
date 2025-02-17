@@ -32,8 +32,6 @@ $h4-size: 1.5rem;
 $h5-size: 1.25rem;
 $h6-size: 1rem;
 
-$code-size: 0.875rem;
-
 $logo-size: 1.5em;
 
 :root {
@@ -58,12 +56,12 @@ $logo-size: 1.5em;
   --font-size-l: #{$font-size-l};
   --font-size-xl: #{$font-size-xl};
 
-  --button-padding: var(--padding-s) var(--padding-m);
-  --button-content-gap: var(--padding-xs);
-  --button-radius: var(--radius-s);
+  --input-padding: var(--padding-s) var(--padding-m);
+  --input-radius: var(--radius-xs);
 
-  --input-padding: var(--padding-xs);
-  --input-radius: var(--radius-s);
+  --button-padding: var(--input-padding);
+  --button-content-gap: var(--padding-xs);
+  --button-radius: var(--input-radius);
 
   --alert-padding: var(--padding-s);
   --alert-radius: var(--radius-s);
@@ -90,7 +88,10 @@ $logo-size: 1.5em;
   --h5-size: #{$h5-size};
   --h6-size: #{$h6-size};
 
-  --code-size: #{$code-size};
+  --code-size: var(--font-size-s);
+
+  --input-size: var(--font-size-s);
+  --button-size: var(--input-size);
 
   --logo-size: #{$logo-size};
 }

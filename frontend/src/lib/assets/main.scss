@@ -36,10 +36,12 @@ body {
 
 input,
 select,
-textarea,
+textarea {
+  font-size: var(--input-size);
+}
+
 button {
-  font-family: inherit;
-  font-size: var(--font-size-s);
+  font-size: var(--button-size);
 }
 
 ::placeholder {

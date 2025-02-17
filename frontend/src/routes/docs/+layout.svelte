@@ -1,14 +1,14 @@
 <script lang="ts">
 import { page } from '$app/state'
 import { active } from '$lib/actions/active.svelte'
-import Logo from '$lib/components/Logo.svelte'
-import Select from '$lib/components/Select.svelte'
 import { themes, useUiStore } from '$lib/store/uiStore.svelte'
 import {
   getRoutes,
   componentNameFromRoute,
   titleFromRoute,
 } from '$lib/utils/routes.svelte'
+import Logo from '$lib/components/Logo.svelte'
+import { Menu, Moon, Sun, X } from 'lucide-svelte'
 
 let uiStore = useUiStore()
 
@@ -31,16 +31,41 @@ $effect(() => {
     content.scrollTop = 0
   }
 })
+
+const sidebarToggle = () => {
+  sidebarOpen = !sidebarOpen
+}
+
+const SidebarIcon = $derived.by(() => {
+  if (sidebarOpen) {
+    return X
+  } else {
+    return Menu
+  }
+})
+
+const themeToggle = () => {
+  if (uiStore.appliedTheme === 'dark') {
+    uiStore.theme = 'light'
+  } else {
+    uiStore.theme = 'dark'
+  }
+}
+
+const ThemeToggleIcon = $derived.by(() => {
+  if (uiStore.appliedTheme === 'dark') {
+    return Sun
+  } else {
+    return Moon
+  }
+})
 </script>
 
 <div class="docs">
   <div class="docs-menu">
     <div class="docs-sidebar-toggle">
-      <button
-        onclick={() => {
-          sidebarOpen = !sidebarOpen
-        }}>
-        ⚙️
+      <button onclick={sidebarToggle}>
+        <SidebarIcon />
       </button>
     </div>
     <div class="docs-home">
@@ -51,7 +76,9 @@ $effect(() => {
       </div>
     </div>
     <div class="docs-theme-changer">
-      <Select options={themeObjects} bind:value={uiStore.theme} />
+      <button onclick={themeToggle}>
+        <ThemeToggleIcon />
+      </button>
     </div>
   </div>
 
@@ -133,6 +160,18 @@ $effect(() => {
     .docs-home {
       a {
         color: var(--text-primary);
+      }
+    }
+
+    .docs-theme-changer,
+    .docs-sidebar-toggle {
+      button {
+        background-color: transparent;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+
+        color: var(--text-muted);
       }
     }
 
@@ -226,16 +265,14 @@ $effect(() => {
     }
 
     .docs-menu {
+      justify-content: space-between;
+
+      .docs-home {
+        flex: 1;
+      }
+
       .docs-sidebar-toggle {
         display: block;
-
-        button {
-          background-color: transparent;
-          border: none;
-          font-size: 1.5rem;
-          cursor: pointer;
-          margin-right: var(--padding-m);
-        }
       }
     }
   }

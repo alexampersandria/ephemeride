@@ -1,4 +1,6 @@
 <script lang="ts">
+import 'modern-normalize/modern-normalize.css'
+
 import '$lib/assets/main.scss'
 
 import Preloader from '$lib/components/Preloader.svelte'

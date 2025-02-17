@@ -177,11 +177,15 @@ $colors: list.append($saturatedColors, 'base');
   --color-pink-90: #{$color-pink-90};
   --color-pink-100: #{$color-pink-100};
 
+  --logo-neutral: var(--color-base-00);
+  --logo-upper: var(--color-pink-60);
+  --logo-lower: var(--color-blue-70);
+
   --background-primary: var(--color-base-100);
   --background-secondary: var(--color-base-95);
   --background-accent: var(--color-base-90);
 
-  --background-overlay: #{color.adjust($color-base-100, $alpha: -0.33)};
+  --background-overlay: #{color.adjust($color-base-80, $alpha: -0.33)};
 
   --border-color: var(--color-base-80);
 
@@ -282,6 +286,10 @@ $colors: list.append($saturatedColors, 'base');
 
 #root.theme-dark {
   color-scheme: dark;
+
+  --logo-neutral: var(--color-base-100);
+  --logo-upper: var(--color-blue-70);
+  --logo-lower: var(--color-pink-60);
 
   --background-primary: var(--color-base-00);
   --background-secondary: var(--color-base-05);
