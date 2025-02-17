@@ -1,5 +1,4 @@
-import type { InputValidationRule } from '$lib/utils/input'
-import type { FormElementProps, InputType } from '../input'
+import type { FormElementProps, InputType, ValidationRule } from '../input'
 
 export type InputProps = {
   type?: InputType
@@ -7,5 +6,5 @@ export type InputProps = {
   placeholder?: string
   fullwidth?: boolean
   live?: boolean
-  validation?: InputValidationRule
+  validation?: ValidationRule
 } & FormElementProps

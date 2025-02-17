@@ -14,7 +14,8 @@
     "lint": "prettier --check . && eslint .",
     "lint:fix": "prettier --write . && eslint . --fix",
     "test:unit": "vitest",
-    "test": "npm run test:unit -- --run"
+    "test": "yarn test:unit run",
+    "precommit": "yarn lint && yarn check && yarn build && yarn test"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.5",

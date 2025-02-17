@@ -6,8 +6,6 @@ export const evaluateInputState = (args: {
   validation?: ValidationRule
   required?: boolean
 }): InputState => {
-  console.log('args', args)
-
   if (args.validation) {
     if (typeof args.validation === 'function') {
       return args.validation(args.value, args.state)
