@@ -151,7 +151,14 @@ dl {
   color: var(--text-dimmed);
 }
 
-/* lucide icon alignment fix */
+/* lucide icon same size as text */
+.lucide-icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.1em;
+}
+
+/* lucide icon alignment fix, use wrapper for default 1.5rem lucide icon size */
 .lucide-icon-wrapper {
   position: relative;
   top: 1px;
@@ -163,5 +170,6 @@ dl {
     font-size: inherit;
     width: 1.5em;
     height: 1.5em;
+    vertical-align: -0.15em;
   }
 }

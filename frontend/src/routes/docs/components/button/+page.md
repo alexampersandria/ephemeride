@@ -1,6 +1,7 @@
 <script lang="ts">
 import Button from '$lib/components/Button.svelte'
 import DocsExample from '$lib/components/utils/DocsExample.svelte'
+import { Download } from "lucide-svelte"
 
 let count = $state(0)
 
@@ -40,6 +41,28 @@ let count = $state(0)
 
 <Button onclick={() => {count++}}>Click me</Button>
 <p>Clicked <code>{count}</code> times</p>
+```
+
+### Icon
+
+An icon can be added to the button using lucide icons, see [Icons](/docs/design/icons) for more information.
+
+<DocsExample>
+  <Button>
+    Download
+    <Download />
+  </Button>
+</DocsExample>
+
+```svelte
+<script>
+import { Download } from "lucide-svelte"
+</script>
+
+<Button>
+  Download
+  <Download />
+</Button>
 ```
 
 ### Types
@@ -135,3 +158,4 @@ let incrementSlowCount = () => {
 ## References
 
 - [ButtonType](/docs/types/input#buttontype)
+- [Icons](/docs/design/icons)

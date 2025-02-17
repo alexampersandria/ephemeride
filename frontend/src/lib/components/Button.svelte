@@ -50,6 +50,18 @@ let clickHandler = () => {
   border: var(--border-width) solid var(--button-border);
   background-color: var(--button-background);
 
+  .button-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--button-content-gap);
+  }
+
+  :global(.lucide-icon) {
+    width: 1em;
+    height: 1em;
+  }
+
   .button-spinner {
     --spinner-size: 1rem;
     position: absolute;
