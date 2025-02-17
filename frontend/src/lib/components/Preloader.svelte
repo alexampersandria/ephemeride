@@ -4,7 +4,7 @@ import Spinner from './Spinner.svelte'
 </script>
 
 <div class="preloader" transition:fade>
-  <Spinner --spinner-size="2rem" --spinner-color="var(--color-base-60)" />
+  <Spinner --spinner-color="var(--color-base-60)" />
 </div>
 
 <style lang="scss">
