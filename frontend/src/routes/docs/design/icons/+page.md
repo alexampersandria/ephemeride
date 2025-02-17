@@ -1,6 +1,6 @@
 <script>
 import DocsExample from "$lib/components/utils/DocsExample.svelte"
-import { Rocket } from "lucide-svelte"
+import { Transgender } from "lucide-svelte"
 </script>
 
 # Icons
@@ -13,16 +13,16 @@ Icons can be imported and used as Svelte components, for example:
 
 <DocsExample>
   <p>
-    <Rocket /> Blast off!
+    <Transgender /> Trans Rights!
   </p>
 </DocsExample>
 
 ```svelte
 <script>
-import { Rocket } from "lucide-svelte"
+import { Transgender } from "lucide-svelte"
 </script>
 
-<Rocket /> Blast off!
+<Transgender /> Trans Rights!
 ```
 
 ### Wrapper
