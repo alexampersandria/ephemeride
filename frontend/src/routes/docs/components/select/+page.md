@@ -53,35 +53,9 @@ let value = $state('')
 <p>value: <code>{value}</code></p>
 ```
 
-### Placeholder
-
-Placeholder text can be set to display when no option is selected. The placeholder is rendered as a disabled option at the top of the list which is selected if no value is set.
-
-<DocsExample>
-  <Select {options} placeholder="Select an option" />
-</DocsExample>
-
-```svelte
-<Select {options} placeholder="Select an option" />
-```
-
-Placeholder can also be included even when a value is set.
-
-<DocsExample>
-  <Select bind:value={otherValue} {options} placeholder="Select an option" />
-</DocsExample>
-
-```svelte
-<script>
-let value = $state('2')
-</script>
-
-<Select bind:value {options} placeholder="Select an option" />
-```
-
 ### State
 
-State can be set to `touched`, `untouched`, `valid`, or `invalid`. If not set, the default state is `untouched`. State uses `$bindable` to modify the state prop, on change will set state to `touched` if state is `untouched`.
+State can be set to `touched`, `untouched`, or `invalid`. If not set, the default state is `untouched`. State uses `$bindable` to modify the state prop, on change will set state to `touched` if state is `untouched`.
 
 See [Input Types](/docs/types/Input) for more information on states.
 
@@ -101,19 +75,19 @@ let state = $state('untouched')
 <p>state: <code>{state}</code></p>
 ```
 
-State can be set to `valid` or `invalid`.
+State can be set to `invalid`.
 
 <DocsExample>
-  <Select {options} state='valid' />
   <Select {options} state='invalid' />
 </DocsExample>
 
 ```svelte
-<Select {options} state="valid" />
 <Select {options} state="invalid" />
 ```
 
 ### Disabled
+
+The select can be disabled using the HTML `disabled` attribute. Disabled input elements such as select should generally be avoided if at all possible as they can be confusing to users, and only used when the select can be re-enabled by a user action in the same context.
 
 <DocsExample>
   <Select {options} disabled />
@@ -139,30 +113,6 @@ let optionsWithDisabled = $state([
 </script>
 
 <Select options={optionsWithDisabled} />
-```
-
-### Name and ID
-
-The `name` and `id` attributes can be set to identify the select in a form.
-
-<DocsExample>
-  <Select {options} name="select" id="select" />
-</DocsExample>
-
-```svelte
-<Select {options} name="select" id="select" />
-```
-
-### Full Width
-
-The select can be set to full width of parent using the `fullwidth` prop.
-
-<DocsExample>
-  <Select {options} fullwidth />
-</DocsExample>
-
-```svelte
-<Select {options} fullwidth />
 ```
 
 ## Types

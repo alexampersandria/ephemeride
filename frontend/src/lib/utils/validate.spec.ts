@@ -77,7 +77,7 @@ describe('validateInput with regex', () => {
 describe('validateInput with function', () => {
   it('should return the expected result', () => {
     const validation = (value: string) => {
-      return value === 'test' ? 'valid' : 'invalid'
+      return value === 'test' ? 'touched' : 'invalid'
     }
 
     const resultInvalid = evaluateInputState({
@@ -92,6 +92,6 @@ describe('validateInput with function', () => {
     })
 
     expect(resultInvalid).toBe('invalid')
-    expect(resultValid).toBe('valid')
+    expect(resultValid).toBe('touched')
   })
 })

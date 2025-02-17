@@ -17,14 +17,12 @@ type ButtonType = 'primary' | 'secondary' | 'ghost' | 'destructive'
 
 ## InputState
 
-The state of the input, default should usually be `untouched`, components should automatically set to `touched` if `untouched` when interacted with via `$bindable`.
-
-`touched` state is prefered over `valid` and should be a `touched` input value should be considered valid. `valid` should only be used for highlighting valid input values if specifically required, but should be avoided if possible.
+The state of the input, default should usually be `untouched`, components should automatically set to `touched` if `untouched` when interacted with via `$bindable`. `touched` state is equats to a valid input state.
 
 ### Defition
 
 ```ts
-type InputState = 'untouched' | 'touched' | 'valid' | 'invalid'
+type InputState = 'untouched' | 'touched' | 'invalid'
 ```
 
 ## FormElementProps

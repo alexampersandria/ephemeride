@@ -1,4 +1,4 @@
-export type InputState = 'untouched' | 'touched' | 'valid' | 'invalid'
+export type InputState = 'untouched' | 'touched' | 'invalid'
 export type InputType = 'text' | 'password' | 'email' | 'number' | 'tel' | 'url'
 
 export type ButtonType = 'primary' | 'secondary' | 'ghost' | 'destructive'

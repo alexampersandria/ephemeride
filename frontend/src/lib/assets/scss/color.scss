@@ -210,10 +210,6 @@ $colors: list.append($saturatedColors, 'base');
 
   --color-focus: var(--color-link);
 
-  --color-valid: var(--color-success);
-  --color-valid-border: var(--color-success-border);
-  --color-valid-background: var(--color-success-background);
-
   --color-invalid: var(--color-error);
   --color-invalid-border: var(--color-error-border);
   --color-invalid-background: var(--color-error-background);

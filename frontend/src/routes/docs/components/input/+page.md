@@ -71,7 +71,7 @@ Used in forms to collect user input. Modifies the value prop via `$bindable`.
 The value of the input is bound to the `value` prop. The value will be modified on change.
 
 <DocsExample>
-  <Input bind:value />
+  <Input placeholder="Your name..." bind:value />
 </DocsExample>
 <DocsExample>
   <p>value: <code>{value}</code></p>
@@ -82,63 +82,13 @@ The value of the input is bound to the `value` prop. The value will be modified 
 let value = $state('')
 </script>
 
-<Input bind:value />
+<Input placeholder="Your name..." bind:value />
 <p>value: <code>{value}</code></p>
-```
-
-It is possible to set a predefined value.
-
-<DocsExample>
-  <Input bind:value={definedValue} />
-</DocsExample>
-<DocsExample>
-  <p>value: <code>{definedValue}</code></p>
-</DocsExample>
-
-```svelte
-<script>
-let definedValue = $state('Predefined value')
-</script>
-
-<Input bind:value={definedValue} />
-<p>value: <code>{definedValue}</code></p>
-```
-
-### Live
-
-The value of the input can be set to update live using the `live` prop. The value will be modified on input instead of change.
-
-<DocsExample>
-  <Input bind:value={liveValue} live />
-</DocsExample>
-<DocsExample>
-  <p>value: <code>{liveValue}</code></p>
-</DocsExample>
-
-```svelte
-<script>
-let liveValue = $state('')
-</script>
-
-<Input bind:value={liveValue} live />
-<p>value: <code>{liveValue}</code></p>
-```
-
-### Placeholder
-
-Placeholder text can be set to display when no value is set using the HTML `placeholder` attribute.
-
-<DocsExample>
-  <Input placeholder="Your name..." />
-</DocsExample>
-
-```svelte
-<Input placeholder="Your name..." />
 ```
 
 ### Disabled
 
-The input can be disabled using the HTML `disabled` attribute.
+The input can be disabled using the HTML `disabled` attribute. Disabled inputs should generally be avoided if at all possible as they can be confusing to users, and only used when the input can be re-enabled by a user action in the same context.
 
 <DocsExample>
   <Input disabled placeholder="Your name..." />
@@ -150,7 +100,7 @@ The input can be disabled using the HTML `disabled` attribute.
 
 ### State
 
-State can be set to `touched`, `untouched`, `valid`, or `invalid`. If not set, the default state is `untouched`. State uses `$bindable` to modify the state prop, on change will set state to `touched` if state is `untouched`.
+State can be set to `touched`, `untouched`, or `invalid`. If not set, the default state is `untouched`. State uses `$bindable` to modify the state prop, on change will set state to `touched` if state is `untouched`.
 
 See [Input Types](/docs/types/Input) for more information on states.
 
@@ -170,15 +120,13 @@ let state = $state('untouched')
 <p>state: <code>{state}</code></p>
 ```
 
-State can be set to `valid` or `invalid`.
+State can be set to `invalid` to indicate an error in the input.
 
 <DocsExample>
-  <Input value='claire@example.com' state='valid' />
   <Input value='Joe Smith <email@example.com>' state='invalid' />
 </DocsExample>
 
 ```svelte
-<Input value='claire@example.com' state='valid' />
 <Input value='Joe Smith <email@example.com>' state='invalid' />
 ```
 
@@ -194,61 +142,9 @@ The input can be set to required using the HTML `required` attribute. Required e
 <Input required placeholder="Your name..." />
 ```
 
-### Name and ID
-
-The input can be set to required using the HTML `name` and `id` attributes, this can be used for labels and form submission.
-
-<DocsExample>
-  <Input name="name" id="name" placeholder="Your name..." />
-</DocsExample>
-
-```svelte
-<Input name="name" id="name" placeholder="Your name..." />
-```
-
-### Type
-
-The input type can be set using the HTML `type` attribute. The default type is `text`.
-
-<DocsExample>
-  <Input type="password" placeholder="Password..." />
-</DocsExample>
-
-```svelte
-<Input type="password" placeholder="Password..." />
-```
-
-### Full Width
-
-The input can be set to full width of parent using the `fullwidth` prop.
-
-<DocsExample>
-  <Input fullwidth placeholder="Full width input..." />
-</DocsExample>
-
-```svelte
-<Input fullwidth placeholder="Full width input..." />
-```
-
-### Invalid With Feedback Message
-
-An invalid input should have a message to explain the error. This can be done by using the Message component in combination with Input.
-
-<DocsExample left gap="var(--padding-xs)">
-  <Input fullwidth value='Joe Smith <email@example.com>' state='invalid' />
-  <Message colortext size='small' type='error'>Please enter a valid email address.</Message>
-</DocsExample>
-
-```svelte
-<Input fullwidth value='Joe Smith <email@example.com>' state='invalid' />
-<Message colortext size='small' type='error'>Please enter a valid email address.</Message>
-```
-
 ### Validation
 
 The input can validate the value using the `validation` prop. The `validation` prop can either be a function that takes in `value` and optionally `state` that returns `InputState`, or a regex that will be tested against the value and return `InputState` based on the result. `invalid` for false and `touched` for true if the value is not empty and the input is not `untouched`.
-
-To return `valid` input state use a custom function as the regex will only return `touched`, `untouched` or `invalid`.
 
 <DocsExample>
   <Input
@@ -272,8 +168,6 @@ let validationRegexState = $state('untouched')
 <p>state: <code>{validationRegexState}</code></p>
 ```
 
-#### Validation and Required
-
 Validation and required can be used together. The input will be required and return `invalid` if the value is empty and state is not `untouched`, otherwise, it will return the result of the validation.
 
 <DocsExample>
@@ -281,7 +175,7 @@ Validation and required can be used together. The input will be required and ret
     required
     validation={/^[a-zA-Z]+$/}
     bind:state={validationRegexStateOther}
-    placeholder="Only letters..." />
+    placeholder="Only letters and required..." />
 </DocsExample>
 <DocsExample>
   <p>state: <code>{validationRegexStateOther}</code></p>
@@ -292,51 +186,35 @@ Validation and required can be used together. The input will be required and ret
   required
   validation={/^[a-zA-Z]+$/}
   bind:state={validationRegexState}
-  placeholder="Only letters..." />
+  placeholder="Only letters and required..." />
 <p>state: <code>{validationRegexState}</code></p>
 ```
 
-#### Live Validation With Feedback Message
+#### Feedback Messages
 
-Example of a more complete implementation of an input with live validation and feedback message.
+An invalid input should have a message to explain the error. This can be done by using the Message component in combination with Input.
 
-<DocsExample left gap="var(--padding-s)">
+<DocsExample left gap="var(--padding-xs)">
   <Input
-    bind:value={fValue}
-    live
-    bind:state={fState}
-    required
     fullwidth
-    validation={/^[a-zA-Z\- ]+$/}
-    placeholder="Your name..." />
-  {#if fState === 'invalid'}
-    {#if !fValue}
-      <Message colortext size='small' type='error'>This field is required.</Message>
-    {:else}
-      <Message colortext size='small' type='error'>Please enter a valid name.</Message>
-    {/if}
-  {/if}
+    value='Joe Smith <email@example.com>'
+    state='invalid' />
+  <Message size='small' type='error'>
+    Please enter a valid email address.
+  </Message>
 </DocsExample>
 
 ```svelte
 <Input
-  bind:value
-  live
-  bind:state
-  required
   fullwidth
-  validation={/^[a-zA-Z\- ]+$/}
-  placeholder="Your name..." />
-{#if fState === 'invalid'}
-  {#if !fValue}
-    <Message colortext size='small' type='error'>This field is required.</Message>
-  {:else}
-    <Message colortext size='small' type='error'>Please enter a valid name.</Message>
-  {/if}
-{/if}
+  value='Joe Smith <email@example.com>'
+  state='invalid' />
+<Message size='small' type='error'>
+  Please enter a valid email address.
+</Message>
 ```
 
-#### Specific Validation Feedback Messages
+#### Custom Validation Rules And Feedback Messages
 
 Example of a complete login form with specific validation feedback messages. Password validation will check for at least 8 characters, one lowercase letter, one uppercase letter, one number, and one special character, and provide feedback for each requirement dynamically.
 

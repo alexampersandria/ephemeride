@@ -30,7 +30,6 @@ const onchange = (event: Event) => {
   {id}
   {required}
   class:fullwidth
-  class:valid={state === 'valid'}
   class:invalid={state === 'invalid'}
   aria-invalid={state === 'invalid'}
   {onchange}>
@@ -81,11 +80,6 @@ const onchange = (event: Event) => {
   &.invalid {
     box-shadow: 0 0 0 var(--state-shadow-width) var(--color-invalid-background);
     border-color: var(--color-invalid-border);
-  }
-
-  &.valid {
-    box-shadow: 0 0 0 var(--state-shadow-width) var(--color-valid-background);
-    border-color: var(--color-valid-border);
   }
 }
 </style>
