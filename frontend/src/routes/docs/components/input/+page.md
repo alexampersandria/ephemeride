@@ -326,20 +326,22 @@ let cValidation = {
 
 Inherits `FormElementProps`.
 
-| Name        | Type         | Required | Default     | Description                                            |
-| ----------- | ------------ | :------: | ----------- | ------------------------------------------------------ |
-| type        | `string`     |          | `'text'`    | HTML input type.                                       |
-| value       | `string`     |          |             | Value of the input.                                    |
-| placeholder | `string`     |          |             | Placeholder text.                                      |
-| fullwidth   | `boolean`    |          | `false`     | Full width input.                                      |
-| live        | `boolean`    |          | `false`     | Live input update.                                     |
-| disabled    | `boolean`    |          | `false`     | Disables the input. Inherited from `FormElementProps`. |
-| state       | `InputState` |          | `untouched` | State of the input. Inherited from `FormElementProps`. |
-| name        | `string`     |          |             | Name of the input. Inherited from `FormElementProps`.  |
-| id          | `string`     |          |             | ID of the input. Inherited from `FormElementProps`.    |
-| required    | `boolean`    |          | `false`     | Required attribute. Inherited from `FormElementProps`. |
+| Name        | Type             | Required | Default     | Description                                            |
+| ----------- | ---------------- | :------: | ----------- | ------------------------------------------------------ |
+| type        | `string`         |          | `'text'`    | HTML input type.                                       |
+| value       | `string`         |          |             | Value of the input.                                    |
+| placeholder | `string`         |          |             | Placeholder text.                                      |
+| fullwidth   | `boolean`        |          | `false`     | Full width input.                                      |
+| live        | `boolean`        |          | `false`     | Live input update.                                     |
+| disabled    | `boolean`        |          | `false`     | Disables the input. Inherited from `FormElementProps`. |
+| state       | `InputState`     |          | `untouched` | State of the input. Inherited from `FormElementProps`. |
+| validation  | `ValidationRule` |          |             | Validation rule for the input.                         |
+| name        | `string`         |          |             | Name of the input. Inherited from `FormElementProps`.  |
+| id          | `string`         |          |             | ID of the input. Inherited from `FormElementProps`.    |
+| required    | `boolean`        |          | `false`     | Required attribute. Inherited from `FormElementProps`. |
 
 ## References
 
 - [InputState](/docs/types/input#inputstate)
+- [ValidationRule](/docs/types/input#validationrule)
 - [FormElementProps](/docs/types/input#formelementprops)

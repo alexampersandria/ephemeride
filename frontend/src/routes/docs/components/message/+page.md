@@ -127,10 +127,6 @@ The size of the message can be adjusted using the `size` prop. The size includes
 | colortext | `boolean`     |          | `false`  | Whether to color the text of the message.   |
 | size      | `MessageSize` |          | `medium` | The size of the message including the icon. |
 
-### Snippets
-
-- `children()`: The message to display.
-
 ## References
 
 - [MessageType](/docs/types/message#messagetype)

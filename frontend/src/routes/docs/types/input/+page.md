@@ -36,3 +36,28 @@ Shared props for form elements such as inputs, selects, and textareas.
 | name     | `string`     |          |             | Name of the input.  |
 | required | `boolean`    |          |             | Required attribute. |
 | id       | `string`     |          |             | ID of the input.    |
+
+## ValidationRule
+
+A rule that can be used to validate an input. Either a `RegExp` or a `ValidationFunction`.
+
+### Definition
+
+```ts
+type ValidationRule = ValidationFunction | RegExp
+```
+
+### ValidationFunction
+
+A function that returns `InputState` based on input value and optionally state.
+
+#### Definition
+
+```ts
+type ValidationFunction = (
+  value: string,
+  state?: InputState,
+) => InputState
+```
+
+See [Input Validation](/docs/components/input#validation) for more information.
