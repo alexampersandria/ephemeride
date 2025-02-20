@@ -202,7 +202,7 @@ Using [Validation Rules](#TODO) to validate the input.
     }}
     placeholder="Email..." />
   {#each messages.email as message}
-    <Message type='error'>{message}</Message>
+    <Message size='small' type='error'>{message}</Message>
   {/each}
   <Input
     required
@@ -215,7 +215,7 @@ Using [Validation Rules](#TODO) to validate the input.
     }}
     placeholder="Password..." />
   {#if messages.password.length > 0}
-    <Alert type='error'>
+    <Alert size='small' type='error'>
       <b>Password does not meet the requirements:</b>
       <ul>
         {#each messages.password as message}
@@ -246,7 +246,7 @@ let messages = $state({
   }}
   placeholder="Email..." />
 {#each messages.email as message}
-  <Message type='error'>{message}</Message>
+  <Message size='small' type='error'>{message}</Message>
 {/each}
 <Input
   required
@@ -259,7 +259,7 @@ let messages = $state({
   }}
   placeholder="Password..." />
 {#if messages.password.length > 0}
-  <Alert type='error'>
+  <Alert size='small' type='error'>
     <b>Password does not meet the requirements:</b>
     <ul>
       {#each messages.password as message}
