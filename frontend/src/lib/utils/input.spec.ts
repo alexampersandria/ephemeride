@@ -1,7 +1,7 @@
 import { expect, it, describe } from 'vitest'
 import { evaluateInputState } from './input'
 
-describe('validateInput', () => {
+describe('evaluateInputState', () => {
   it('should return "untouched" if value is empty and state is untouched', () => {
     const result = evaluateInputState({
       value: '',
@@ -36,7 +36,7 @@ describe('validateInput', () => {
   })
 })
 
-describe('validateInput with regex', () => {
+describe('evaluateInputState with regex', () => {
   it('should return "untouched" if value is empty and state is untouched', () => {
     const result = evaluateInputState({
       value: '',
@@ -74,7 +74,7 @@ describe('validateInput with regex', () => {
   })
 })
 
-describe('validateInput with function', () => {
+describe('evaluateInputState with function', () => {
   it('should return the expected result', () => {
     const validation = (value: string) => {
       return value === 'test' ? 'touched' : 'invalid'

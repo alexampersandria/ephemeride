@@ -1,0 +1,73 @@
+import type { InputState } from '$lib/types/input'
+
+/**
+ * Validation rule for name
+ * Should be at least 1 character, no more than 255 characters
+ * Can include any characters, including spaces, except for new lines
+ */
+export const validateName = (
+  value: string,
+  callback: (errors: Array<string>) => void,
+): InputState => {
+  const errors: Array<string> = []
+  if (value.length < 1) {
+    errors.push('Name must be at least 1 character')
+  }
+  if (value.length > 255) {
+    errors.push('Name must be less than 255 characters')
+  }
+  if (/\n/.test(value)) {
+    errors.push('Invalid name')
+  }
+  callback(errors)
+  return errors.length === 0 ? 'touched' : 'invalid'
+}
+
+/**
+ * Validation rule for email
+ */
+export const validateEmail = (
+  value: string,
+  callback: (errors: Array<string>) => void,
+): InputState => {
+  const errors: Array<string> = []
+  if (
+    !/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(
+      value,
+    )
+  ) {
+    errors.push('Invalid email')
+  }
+  callback(errors)
+  return errors.length === 0 ? 'touched' : 'invalid'
+}
+
+/**
+ * Validation rule for password
+ * Should be at least 7 characters, no more than 255 characters
+ * Should include at least one uppercase letter, one lowercase letter, one number
+ * Has a callback function which will pass any error messages
+ */
+export const validatePassword = (
+  value: string,
+  callback: (errors: Array<string>) => void,
+): InputState => {
+  const errors: Array<string> = []
+  if (value.length < 7) {
+    errors.push('Password must be at least 7 characters')
+  }
+  if (value.length > 255) {
+    errors.push('Password must be less than 255 characters')
+  }
+  if (!/[A-Z]/.test(value)) {
+    errors.push('Password must include at least one uppercase letter')
+  }
+  if (!/[a-z]/.test(value)) {
+    errors.push('Password must include at least one lowercase letter')
+  }
+  if (!/[0-9]/.test(value)) {
+    errors.push('Password must include at least one number')
+  }
+  callback(errors)
+  return errors.length === 0 ? 'touched' : 'invalid'
+}
