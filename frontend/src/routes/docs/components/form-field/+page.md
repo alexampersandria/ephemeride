@@ -12,10 +12,6 @@ The FormField component is a wrapper for form elements that includes a label and
 
 ## Usage
 
-
-
-### ID
-
 FormFields automatically generate a unique ID for the label and input element. The ID is passed to the children snippet as a prop, and can be used in the children to associate the label with the input element using the `for` and `id` attributes.
 
 <DocsExample>

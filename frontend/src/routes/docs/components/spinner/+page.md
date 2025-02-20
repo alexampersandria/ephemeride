@@ -9,8 +9,6 @@ Used to indicate that an action is being performed in the background.
 
 ## Usage
 
-### Default
-
 <DocsExample>
   <Spinner />
 </DocsExample>

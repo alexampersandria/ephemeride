@@ -11,10 +11,6 @@ A message is a simple component that displays a message to the user. Messages ca
 
 The message component should be used to convey information to the user. The message can be any content, including text, links, or lists, but should generally be concise and to the point and preferably be a single line.
 
-### Default
-
-By default, the message will be of type `info`.
-
 <DocsExample>
   <Message>
     Heads up! This is a message.
@@ -29,7 +25,7 @@ By default, the message will be of type `info`.
 
 ### Types
 
-The message type determines the icon used and the color of the icon displayed to the left of the message.
+The message type determines the icon used and the color of the icon displayed to the left of the message. By default, the message will be of type `info`.
 
 #### All Types
 
