@@ -21,3 +21,11 @@ Should almost always be used inside a [FormField](/docs/components/form-field).
 <Label for='name'>Name</Label>
 <Input id='name' />
 ```
+
+## Types
+
+### Props
+
+| Name | Type     | Required | Default | Description                                   |
+| ---- | -------- | :------: | ------- | --------------------------------------------- |
+| for  | `string` |          |         | The ID of the input element the label is for. |
