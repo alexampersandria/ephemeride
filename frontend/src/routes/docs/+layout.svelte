@@ -17,10 +17,7 @@ const components = getRoutes(/\/docs\/components\/[^/]+\//)
 const types = getRoutes(/\/docs\/types\/[^/]+\//)
 
 let { children } = $props()
-let themeObjects = themes.map(theme => ({
-  value: theme,
-  label: `${theme.charAt(0).toUpperCase()}${theme.slice(1).toLowerCase()}`,
-}))
+
 let sidebarOpen = $state(false)
 let content: HTMLElement
 

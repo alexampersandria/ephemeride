@@ -1,4 +1,4 @@
-import type { FormElementProps, InputType, ValidationRule } from '../input'
+import type { InputFieldAttributes, InputType, ValidationRule } from '../input'
 
 export type InputProps = {
   type?: InputType
@@ -7,4 +7,4 @@ export type InputProps = {
   fullwidth?: boolean
   live?: boolean
   validation?: ValidationRule
-} & FormElementProps
+} & InputFieldAttributes

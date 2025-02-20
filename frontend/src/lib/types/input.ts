@@ -3,7 +3,7 @@ export type InputType = 'text' | 'password' | 'email' | 'number' | 'tel' | 'url'
 
 export type ButtonType = 'primary' | 'secondary' | 'ghost' | 'destructive'
 
-export type FormElementProps = {
+export type InputFieldAttributes = {
   disabled?: boolean
   state?: InputState
   name?: string

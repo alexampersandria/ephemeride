@@ -1,5 +1,6 @@
 <script lang="ts">
 import type { SelectProps } from '$lib/types/components/select'
+import { onMount } from 'svelte'
 
 let {
   options,
@@ -21,10 +22,16 @@ const onchange = (event: Event) => {
     state = 'touched'
   }
 }
+
+onMount(() => {
+  if (!placeholder && !value) {
+    value = options[0].value
+  }
+})
 </script>
 
 <select
-  class="select"
+  class="select {placeholder && !value ? 'placeholder-selected' : ''}"
   {disabled}
   {name}
   {id}
@@ -63,6 +70,11 @@ const onchange = (event: Event) => {
   &:not(:disabled) {
     cursor: pointer;
 
+    &,
+    option:not(:disabled) {
+      color: var(--select-color);
+    }
+
     &:hover {
       background-color: var(--select-background-hover);
     }
@@ -77,9 +89,17 @@ const onchange = (event: Event) => {
     background-color: var(--input-disabled-background);
   }
 
+  option:disabled {
+    color: var(--input-disabled-color);
+  }
+
   &.invalid {
     box-shadow: 0 0 0 var(--state-shadow-width) var(--color-invalid-background);
     border-color: var(--color-invalid-border);
+  }
+
+  &.placeholder-selected {
+    color: var(--select-placeholder-color);
   }
 }
 </style>

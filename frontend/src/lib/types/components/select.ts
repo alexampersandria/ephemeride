@@ -1,4 +1,4 @@
-import type { FormElementProps } from '../input'
+import type { InputFieldAttributes } from '../input'
 
 export type SelectOption = {
   label: string
@@ -11,4 +11,4 @@ export type SelectProps = {
   value?: string
   placeholder?: string
   fullwidth?: boolean
-} & FormElementProps
+} & InputFieldAttributes

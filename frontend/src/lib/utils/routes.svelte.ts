@@ -23,7 +23,7 @@ export const getRoutes = (filter?: RegExp) => {
 export const routeTail = (route: string) => {
   const segments = route.split('/')
   const segment = segments[segments.length - 2]
-  return segment.replace(/-|_/g, ' ')
+  return segment
 }
 
 // compare routes ignoring differing trailing slashes

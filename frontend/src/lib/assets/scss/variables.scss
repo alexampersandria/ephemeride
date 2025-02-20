@@ -93,5 +93,8 @@ $logo-size: 1.5em;
   --input-size: var(--font-size-s);
   --button-size: var(--input-size);
 
+  --form-gap: var(--padding-m);
+  --form-field-gap: var(--padding-xs);
+
   --logo-size: #{$logo-size};
 }

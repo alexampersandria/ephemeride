@@ -241,6 +241,7 @@ $colors: list.append($saturatedColors, 'base');
   --select-background: var(--input-background);
   --select-border: var(--input-border);
   --select-color: var(--input-color);
+  --select-placeholder-color: var(--input-placeholder-color);
 
   --select-background-hover: var(--input-background-hover);
   --select-border-hover: var(--input-border-hover);
