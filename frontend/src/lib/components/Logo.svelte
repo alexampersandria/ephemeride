@@ -59,8 +59,6 @@
   justify-content: center;
   align-items: center;
 
-  
-
   svg {
     height: var(--logo-size, 1em);
     width: auto;

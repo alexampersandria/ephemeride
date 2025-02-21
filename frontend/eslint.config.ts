@@ -29,6 +29,7 @@ export default [
   },
   {
     rules: {
+      'no-useless-escape': 'off',
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': [
         'error',

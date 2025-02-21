@@ -1,7 +1,7 @@
 <script lang="ts">
 import { page } from '$app/state'
 import { active } from '$lib/actions/active.svelte'
-import { themes, useUiStore } from '$lib/store/uiStore.svelte'
+import { useUiStore } from '$lib/store/uiStore.svelte'
 import {
   getRoutes,
   componentNameFromRoute,
