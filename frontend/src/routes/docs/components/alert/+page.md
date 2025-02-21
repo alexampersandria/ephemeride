@@ -120,7 +120,7 @@ An alert can render anything in its message content, including lists which can b
 
 ### Size
 
-The size of the alert can be adjusted using the `size` prop. The default size is `medium`.
+The size of the alert can be adjusted using the `size` prop. The default size is `medium`. When used in combination with inputs or buttons to provide feedback, size `small` is should be used to match the size of the input or button.
 
 <DocsExample>
   <Alert size="small">

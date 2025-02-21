@@ -83,7 +83,7 @@ By default, the text of the message will be the same color as the page text. You
 
 ### Sizes
 
-The size of the message can be adjusted using the `size` prop. The size includes the icon and the text.
+The size of the message can be adjusted using the `size` prop. The size includes the icon and the text. When used in combination with inputs or buttons to provide feedback, size `small` is should be used to match the size of the input or button.
 
 <DocsExample>
   <Message size="small">
