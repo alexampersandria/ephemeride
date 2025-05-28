@@ -9,7 +9,7 @@ import { validateEmail, validatePassword } from '$lib/utils/validationRules'
 let value = $state('')
 let liveValue = $state('')
 let definedValue = $state('Predefined value')
-let state = $state('untouched')
+let inputstate = $state('untouched')
 let validationRegexState = $state('untouched')
 let validationFunctionState = $state('untouched')
 let validationRegexStateOther = $state('untouched')
@@ -71,36 +71,36 @@ The input can be disabled using the HTML `disabled` attribute. Disabled inputs s
 <Input disabled placeholder="Your name..." />
 ```
 
-### State
+### Input State
 
-State can be set to `touched`, `untouched`, or `invalid`. If not set, the default state is `untouched`. State uses `$bindable` to modify the state prop, on change will set state to `touched` if state is `untouched`.
+Input state can be set to `touched`, `untouched`, or `invalid`. If not set, the default state is `untouched`. Input state uses `$bindable` to modify the inputstate prop, on change will set state to `touched` if state is `untouched`.
 
-See [Input Types](/docs/types/Input) for more information on states.
+See [Input Types](/docs/types/Input) for more information on input states.
 
 <DocsExample>
-  <Input bind:state placeholder="Your name..." />
+  <Input bind:inputstate placeholder="Your name..." />
 </DocsExample>
 <DocsExample>
-  <p style="margin: 0;">state: <code>{state}</code></p>
+  <p style="margin: 0;">inputstate: <code>{inputstate}</code></p>
 </DocsExample>
 
 ```svelte
 <script>
-let state = $state('untouched')
+let inputstate = $state('untouched')
 </script>
 
-<Input bind:state placeholder="Your name..." />
-<p>state: <code>{state}</code></p>
+<Input bind:inputstate placeholder="Your name..." />
+<p>inputstate: <code>{inputstate}</code></p>
 ```
 
 State can be set to `invalid` to indicate an error in the input.
 
 <DocsExample>
-  <Input value='Joe Smith <email@example.com>' state='invalid' />
+  <Input value='Joe Smith <email@example.com>' inputstate='invalid' />
 </DocsExample>
 
 ```svelte
-<Input value='Joe Smith <email@example.com>' state='invalid' />
+<Input value='Joe Smith <email@example.com>' inputstate='invalid' />
 ```
 
 ### Required
@@ -117,16 +117,16 @@ The input can be set to required using the HTML `required` attribute. Required e
 
 ### Validation
 
-The input can validate the value using the `validation` prop. The `validation` prop can either be a function that takes in `value` and optionally `state` that returns `InputState`, or a regex that will be tested against the value and return `InputState` based on the result. `invalid` for false and `touched` for true if the value is not empty and the input is not `untouched`.
+The input can validate the value using the `validation` prop. The `validation` prop can either be a function that takes in `value` and optionally `inputstate` that returns `InputState`, or a regex that will be tested against the value and return `InputState` based on the result. `invalid` for false and `touched` for true if the value is not empty and the input is not `untouched`.
 
 <DocsExample>
   <Input
     validation={/^[a-zA-Z]+$/}
-    bind:state={validationRegexState}
+    bind:inputstate={validationRegexState}
     placeholder="Only letters..." />
 </DocsExample>
 <DocsExample>
-  <p>state: <code>{validationRegexState}</code></p>
+  <p>inputstate: <code>{validationRegexState}</code></p>
 </DocsExample>
 
 ```svelte
@@ -136,9 +136,9 @@ let validationRegexState = $state('untouched')
 
 <Input
   validation={/^[a-zA-Z]+$/}
-  bind:state={validationRegexState}
+  bind:inputstate={validationRegexState}
   placeholder="Only letters..." />
-<p>state: <code>{validationRegexState}</code></p>
+<p>inputstate: <code>{validationRegexState}</code></p>
 ```
 
 Validation and required can be used together. The input will be required and return `invalid` if the value is empty and state is not `untouched`, otherwise, it will return the result of the validation.
@@ -147,31 +147,31 @@ Validation and required can be used together. The input will be required and ret
   <Input
     required
     validation={/^[a-zA-Z]+$/}
-    bind:state={validationRegexStateOther}
+    bind:inputstate={validationRegexStateOther}
     placeholder="Only letters and required..." />
 </DocsExample>
 <DocsExample>
-  <p>state: <code>{validationRegexStateOther}</code></p>
+  <p>inputstate: <code>{validationRegexStateOther}</code></p>
 </DocsExample>
 
 ```svelte
 <Input
   required
   validation={/^[a-zA-Z]+$/}
-  bind:state={validationRegexState}
+  bind:inputstate={validationRegexState}
   placeholder="Only letters and required..." />
-<p>state: <code>{validationRegexState}</code></p>
+<p>inputstate: <code>{validationRegexState}</code></p>
 ```
 
 #### Feedback Messages
 
 An invalid input should have a message to explain the error. This can be done by using the Message component in combination with Input.
 
-<DocsExample left gap="var(--padding-xs)">
+<DocsExample column left gap="var(--padding-xs)">
   <Input
     fullwidth
     value='Joe Smith <email@example.com>'
-    state='invalid' />
+    inputstate='invalid' />
   <Message size='small' type='error'>
     Please enter a valid email address.
   </Message>
@@ -181,7 +181,7 @@ An invalid input should have a message to explain the error. This can be done by
 <Input
   fullwidth
   value='Joe Smith <email@example.com>'
-  state='invalid' />
+  inputstate='invalid' />
 <Message size='small' type='error'>
   Please enter a valid email address.
 </Message>
@@ -284,7 +284,7 @@ Inherits `FormElementProps`.
 | fullwidth   | `boolean`        |          | `false`     | Full width input.                                      |
 | live        | `boolean`        |          | `false`     | Live input update.                                     |
 | disabled    | `boolean`        |          | `false`     | Disables the input. Inherited from `FormElementProps`. |
-| state       | `InputState`     |          | `untouched` | State of the input. Inherited from `FormElementProps`. |
+| inputstate  | `InputState`     |          | `untouched` | State of the input. Inherited from `FormElementProps`. |
 | validation  | `ValidationRule` |          |             | Validation rule for the input.                         |
 | name        | `string`         |          |             | Name of the input. Inherited from `FormElementProps`.  |
 | id          | `string`         |          |             | ID of the input. Inherited from `FormElementProps`.    |

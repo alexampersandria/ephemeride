@@ -1,23 +1,17 @@
 import type { InputState } from '$lib/types/input'
 
 /**
- * Validation rule for name
- * Should be at least 1 character, no more than 255 characters
- * Can include any characters, including spaces, except for new lines
+ * Generic validation rule for max length
+ * @param maxLength - The maximum length of the input
  */
-export const validateName = (
+export const validateMaxLength = (
   value: string,
+  maxLength: number,
   callback: (errors: Array<string>) => void,
 ): InputState => {
   const errors: Array<string> = []
-  if (value.length < 1) {
-    errors.push('Name must be at least 1 character')
-  }
-  if (value.length > 255) {
-    errors.push('Name must be less than 255 characters')
-  }
-  if (/\n/.test(value)) {
-    errors.push('Invalid name')
+  if (value.length > maxLength) {
+    errors.push(`Input must be less than ${maxLength} characters`)
   }
   callback(errors)
   return errors.length === 0 ? 'touched' : 'invalid'

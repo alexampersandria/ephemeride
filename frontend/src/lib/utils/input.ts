@@ -2,19 +2,19 @@ import type { InputState, ValidationRule } from '$lib/types/input'
 
 export const evaluateInputState = (args: {
   value: string
-  state: InputState
+  inputstate: InputState
   validation?: ValidationRule
   required?: boolean
 }): InputState => {
   if (args.validation) {
     if (typeof args.validation === 'function') {
-      return args.validation(args.value, args.state)
+      return args.validation(args.value, args.inputstate)
     } else {
       if (!args.value) {
         if (args.required) {
           return 'invalid'
         } else {
-          if (args.state === 'untouched') {
+          if (args.inputstate === 'untouched') {
             return 'untouched'
           } else {
             return 'touched'
@@ -29,7 +29,7 @@ export const evaluateInputState = (args: {
       if (args.required) {
         return 'invalid'
       } else {
-        return args.state
+        return args.inputstate
       }
     } else {
       return 'touched'

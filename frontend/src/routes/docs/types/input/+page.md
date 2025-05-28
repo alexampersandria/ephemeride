@@ -29,13 +29,13 @@ type InputState = 'untouched' | 'touched' | 'invalid'
 
 Shared props for form elements such as inputs, selects, and textareas.
 
-| Name     | Type         | Required | Default     | Description         |
-| -------- | ------------ | :------: | ----------- | ------------------- |
-| disabled | `boolean`    |          |             | Disables the input. |
-| state    | `InputState` |          | `untouched` | State of the input. |
-| name     | `string`     |          |             | Name of the input.  |
-| required | `boolean`    |          |             | Required attribute. |
-| id       | `string`     |          |             | ID of the input.    |
+| Name       | Type         | Required | Default     | Description         |
+| ---------- | ------------ | :------: | ----------- | ------------------- |
+| disabled   | `boolean`    |          |             | Disables the input. |
+| inputstate | `InputState` |          | `untouched` | State of the input. |
+| name       | `string`     |          |             | Name of the input.  |
+| required   | `boolean`    |          |             | Required attribute. |
+| id         | `string`     |          |             | ID of the input.    |
 
 ## ValidationRule
 
@@ -56,7 +56,7 @@ A function that returns `InputState` based on input value and optionally state.
 ```ts
 type ValidationFunction = (
   value: string,
-  state?: InputState,
+  inputstate?: InputState,
 ) => InputState
 ```
 

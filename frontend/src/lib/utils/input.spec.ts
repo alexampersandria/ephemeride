@@ -5,7 +5,7 @@ describe('evaluateInputState', () => {
   it('should return "untouched" if value is empty and state is untouched', () => {
     const result = evaluateInputState({
       value: '',
-      state: 'untouched',
+      inputstate: 'untouched',
     })
     expect(result).toBe('untouched')
   })
@@ -13,7 +13,7 @@ describe('evaluateInputState', () => {
   it('should return "touched" if value is empty and state is touched', () => {
     const result = evaluateInputState({
       value: '',
-      state: 'touched',
+      inputstate: 'touched',
     })
     expect(result).toBe('touched')
   })
@@ -21,7 +21,7 @@ describe('evaluateInputState', () => {
   it('should return "touched" if value is not empty', () => {
     const result = evaluateInputState({
       value: 'test',
-      state: 'untouched',
+      inputstate: 'untouched',
     })
     expect(result).toBe('touched')
   })
@@ -29,7 +29,7 @@ describe('evaluateInputState', () => {
   it('should return "invalid" if value is empty and required is true', () => {
     const result = evaluateInputState({
       value: '',
-      state: 'untouched',
+      inputstate: 'untouched',
       required: true,
     })
     expect(result).toBe('invalid')
@@ -40,7 +40,7 @@ describe('evaluateInputState with regex', () => {
   it('should return "untouched" if value is empty and state is untouched', () => {
     const result = evaluateInputState({
       value: '',
-      state: 'untouched',
+      inputstate: 'untouched',
       validation: /test/,
     })
     expect(result).toBe('untouched')
@@ -49,7 +49,7 @@ describe('evaluateInputState with regex', () => {
   it('should return "touched" if value is empty and state is touched', () => {
     const result = evaluateInputState({
       value: '',
-      state: 'touched',
+      inputstate: 'touched',
       validation: /test/,
     })
     expect(result).toBe('touched')
@@ -58,7 +58,7 @@ describe('evaluateInputState with regex', () => {
   it('should return "touched" if value matches regex', () => {
     const result = evaluateInputState({
       value: 'test',
-      state: 'untouched',
+      inputstate: 'untouched',
       validation: /test/,
     })
     expect(result).toBe('touched')
@@ -67,7 +67,7 @@ describe('evaluateInputState with regex', () => {
   it('should return "invalid" if value does not match regex', () => {
     const result = evaluateInputState({
       value: 'test',
-      state: 'untouched',
+      inputstate: 'untouched',
       validation: /invalid/,
     })
     expect(result).toBe('invalid')
@@ -82,12 +82,12 @@ describe('evaluateInputState with function', () => {
 
     const resultInvalid = evaluateInputState({
       value: '',
-      state: 'untouched',
+      inputstate: 'untouched',
       validation,
     })
     const resultValid = evaluateInputState({
       value: 'test',
-      state: 'untouched',
+      inputstate: 'untouched',
       validation,
     })
 

@@ -10,7 +10,7 @@ Labels are used in combination with input components to provide context for the 
 
 ## Usage
 
-Should almost always be used inside a [FormField](/docs/components/form-field).
+Should almost always be used alongside an input component. The `for` prop should match the `id` of the input element to ensure accessibility.
 
 <DocsExample>
   <Label for='name'>Name</Label>

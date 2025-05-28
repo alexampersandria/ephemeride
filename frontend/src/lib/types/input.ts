@@ -5,7 +5,7 @@ export type ButtonType = 'primary' | 'secondary' | 'ghost' | 'destructive'
 
 export type InputFieldAttributes = {
   disabled?: boolean
-  state?: InputState
+  inputstate?: InputState
   name?: string
   required?: boolean
   id?: string
@@ -13,7 +13,7 @@ export type InputFieldAttributes = {
 
 export type ValidationFunction = (
   value: string,
-  state?: InputState,
+  inputstate?: InputState,
 ) => InputState
 
 export type ValidationRule = ValidationFunction | RegExp

@@ -14,6 +14,7 @@ let uiStore = useUiStore()
 
 const design = getRoutes(/\/docs\/design\/[^/]+\//)
 const components = getRoutes(/\/docs\/components\/[^/]+\//)
+const assemblies = getRoutes(/\/docs\/assemblies\/[^/]+\//)
 const types = getRoutes(/\/docs\/types\/[^/]+\//)
 
 let { children } = $props()
@@ -94,6 +95,16 @@ const ThemeToggleIcon = $derived.by(() => {
     <div class="docs-routes">
       <div class="docs-route-title">Components</div>
       {#each components as route}
+        <div class="docs-route-link">
+          <a href={route} use:active>
+            {componentNameFromRoute(route)}
+          </a>
+        </div>
+      {/each}
+    </div>
+    <div class="docs-routes">
+      <div class="docs-route-title">Assemblies</div>
+      {#each assemblies as route}
         <div class="docs-route-link">
           <a href={route} use:active>
             {componentNameFromRoute(route)}

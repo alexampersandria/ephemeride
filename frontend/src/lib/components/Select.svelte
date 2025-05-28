@@ -7,7 +7,7 @@ let {
   value = $bindable(),
   placeholder,
   disabled,
-  state = $bindable('untouched'),
+  inputstate: state = $bindable('untouched'),
   name,
   id,
   required,

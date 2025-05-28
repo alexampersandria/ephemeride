@@ -7,7 +7,7 @@ let {
   value = $bindable(),
   placeholder,
   disabled,
-  state = $bindable('untouched'),
+  inputstate = $bindable('untouched'),
   fullwidth,
   live,
   validation,
@@ -20,9 +20,9 @@ const onchange = (event: Event) => {
   const target = event.target as HTMLSelectElement
   value = target.value
 
-  state = evaluateInputState({
+  inputstate = evaluateInputState({
     value,
-    state,
+    inputstate,
     validation,
     required,
   })
@@ -45,8 +45,8 @@ const oninput = (event: Event) => {
   {id}
   {required}
   class:fullwidth
-  class:invalid={state === 'invalid'}
-  aria-invalid={state === 'invalid'}
+  class:invalid={inputstate === 'invalid'}
+  aria-invalid={inputstate === 'invalid'}
   {onchange}
   {oninput} />
 

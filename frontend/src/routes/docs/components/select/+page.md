@@ -16,7 +16,7 @@ let optionsWithDisabled = $state([
 
 let value = $state('')
 let otherValue = $state('2')
-let state = $state('untouched')
+let inputstate = $state('untouched')
 </script>
 
 # Select
@@ -53,36 +53,36 @@ let value = $state('')
 <p>value: <code>{value}</code></p>
 ```
 
-### State
+### Input State
 
-State can be set to `touched`, `untouched`, or `invalid`. If not set, the default state is `untouched`. State uses `$bindable` to modify the state prop, on change will set state to `touched` if state is `untouched`.
+Input state can be set to `touched`, `untouched`, or `invalid`. If not set, the default state is `untouched`. Input state uses `$bindable` to modify the state prop, on change will set state to `touched` if state is `untouched`.
 
-See [Input Types](/docs/types/Input) for more information on states.
+See [Input Types](/docs/types/Input) for more information on input states.
 
 <DocsExample>
-  <Select {options} bind:state />
+  <Select {options} bind:inputstate />
 </DocsExample>
 <DocsExample>
-  <p style="margin: 0;">state: <code>{state}</code></p>
+  <p style="margin: 0;">inputstate: <code>{inputstate}</code></p>
 </DocsExample>
 
 ```svelte
 <script>
-let state = $state('untouched')
+let inputstate = $state('untouched')
 </script>
 
-<Select {options} bind:state />
-<p>state: <code>{state}</code></p>
+<Select {options} bind:inputstate />
+<p>inputstate: <code>{inputstate}</code></p>
 ```
 
 State can be set to `invalid`.
 
 <DocsExample>
-  <Select {options} state='invalid' />
+  <Select {options} inputstate='invalid' />
 </DocsExample>
 
 ```svelte
-<Select {options} state="invalid" />
+<Select {options} inputstate="invalid" />
 ```
 
 ### Disabled
@@ -128,7 +128,7 @@ Inherits `FormElementProps`.
 | placeholder | `string`       |          |             | Placeholder text.                                       |
 | fullwidth   | `boolean`      |          | `false`     | Full width select.                                      |
 | disabled    | `boolean`      |          | `false`     | Disables the select. Inherited from `FormElementProps`. |
-| state       | `InputState`   |          | `untouched` | State of the select. Inherited from `FormElementProps`. |
+| inputstate  | `InputState`   |          | `untouched` | State of the select. Inherited from `FormElementProps`. |
 | name        | `string`       |          |             | Name of the select. Inherited from `FormElementProps`.  |
 | id          | `string`       |          |             | ID of the select. Inherited from `FormElementProps`.    |
 | required    | `boolean`      |          | `false`     | Required attribute. Inherited from `FormElementProps`.  |
