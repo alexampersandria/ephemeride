@@ -13,13 +13,17 @@ Labels are used in combination with input components to provide context for the 
 Should almost always be used alongside an input component. The `for` prop should match the `id` of the input element to ensure accessibility.
 
 <DocsExample>
-  <Label for='name'>Name</Label>
-  <Input id='name' />
+  <div class="form-field">
+    <Label for='name'>Name</Label>
+    <Input id='name' />
+  </div>
 </DocsExample>
 
 ```svelte
-<Label for='name'>Name</Label>
-<Input id='name' />
+<div class="form-field">
+  <Label for='name'>Name</Label>
+  <Input id='name' />'
+</div>
 ```
 
 ## Types
