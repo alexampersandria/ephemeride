@@ -34,6 +34,19 @@ $ cargo install diesel_cli --no-default-features --features postgres
 $ cd backend
 ```
 
+On MacOS you might need to install libpq and add it to PATH first
+
+```bash
+$ brew install libpq && brew link --force libpq
+$ echo 'export PATH="/usr/local/opt/libpq/bin:$PATH"' >> ~/.zshrc
+```
+
+and then install diesel cli
+
+```bash
+$ cargo install diesel_cli --no-default-features --features postgres
+```
+
 #### Run
 
 ```bash
