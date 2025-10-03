@@ -87,14 +87,7 @@ $color-pink-80: #ff9bce;
 $color-pink-90: #ffbedd;
 $color-pink-100: #ffdaec;
 
-$saturatedColors: (
-  'blue',
-  'green',
-  'yellow',
-  'red',
-  'purple',
-  'pink'
-);
+$saturatedColors: ('blue', 'green', 'yellow', 'red', 'purple', 'pink');
 $colors: list.append($saturatedColors, 'base');
 
 #root {
