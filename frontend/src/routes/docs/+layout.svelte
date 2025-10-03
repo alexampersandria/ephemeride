@@ -8,7 +8,7 @@ import {
   titleFromRoute,
 } from '$lib/utils/routes.svelte'
 import Logo from '$lib/components/Logo.svelte'
-import { Menu, Moon, Sun, X } from 'lucide-svelte'
+import { Github, Menu, Moon, Sun, X } from 'lucide-svelte'
 
 let uiStore = useUiStore()
 
@@ -73,10 +73,16 @@ const ThemeToggleIcon = $derived.by(() => {
         </a>
       </div>
     </div>
-    <div class="docs-theme-changer">
-      <button onclick={themeToggle}>
+    <div class="docs-icon-actions">
+      <button class="theme-changer" onclick={themeToggle}>
         <ThemeToggleIcon />
       </button>
+      <a
+        class="github-link"
+        href="https://github.com/alexampersandria/ephemeride"
+        target="_blank">
+        <Github />
+      </a>
     </div>
   </div>
 
@@ -171,20 +177,32 @@ const ThemeToggleIcon = $derived.by(() => {
       }
     }
 
-    .docs-theme-changer,
+    .docs-icon-actions,
     .docs-sidebar-toggle {
-      button {
+      button,
+      a {
         background-color: transparent;
         border: none;
         font-size: 1.5rem;
         cursor: pointer;
-
         color: var(--text-muted);
+
+        &:hover {
+          color: var(--text-primary);
+        }
+
+        &:active {
+          color: var(--text-muted);
+        }
       }
     }
 
-    .docs-theme-changer {
+    .docs-icon-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--padding-s);
       margin-left: auto;
+      padding-right: var(--padding-s);
     }
 
     .docs-sidebar-toggle {
