@@ -27,9 +27,31 @@ import { Transgender } from "lucide-svelte"
 
 ### Wrapper
 
-In order for lucide icons to align with the text, a wrapper class `lucide-icon-wrapper` should be applied, this sets the height to zero to fix padding issues and lets the icon inherit the font size of the parent element, and sets it to `1.5em` which is lucide's default size. This class should be applied when the desired icon size is larger than the text.
+The `lucide-icon-wrapper` class should be applied when you want icons to be `1.5em` in size (lucide's default). This class sets the height to zero to fix padding issues and allows the icon to inherit the font size of the parent element.
 
 Icons not inside a `lucide-icon-wrapper` will have a size of `1em` to align with text, this can be used in buttons or other components where the icon should be the same size as the text.
+
+<DocsExample column gap="3rem">
+  <div class="lucide-icon-wrapper">
+    <Transgender />
+    Icon with wrapper (1.5em)
+  </div>
+  <div>
+    <Transgender />
+    Icon without wrapper (1em)
+  </div>
+</DocsExample>
+
+```svelte
+<div class="lucide-icon-wrapper">
+  <Transgender />
+  Icon with wrapper (1.5em)
+</div>
+<div>
+  <Transgender />
+  Icon without wrapper (1em)
+</div>
+```
 
 ## References
 

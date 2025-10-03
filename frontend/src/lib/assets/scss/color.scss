@@ -87,7 +87,14 @@ $color-pink-80: #ff9bce;
 $color-pink-90: #ffbedd;
 $color-pink-100: #ffdaec;
 
-$saturatedColors: ('blue', 'green', 'yellow', 'red', 'purple', 'pink');
+$saturatedColors: (
+  'blue',
+  'green',
+  'yellow',
+  'red',
+  'purple',
+  'pink'
+);
 $colors: list.append($saturatedColors, 'base');
 
 #root {
@@ -265,7 +272,7 @@ $colors: list.append($saturatedColors, 'base');
   --button-primary-background-hover: var(--color-base-20);
   --button-primary-border-hover: var(--button-primary-background-hover);
   --button-primary-color-hover: var(--button-primary-color);
-  --button-primary-background-active: var(--color-base-40);
+  --button-primary-background-active: var(--color-base-00);
   --button-primary-border-active: var(--button-primary-background-active);
   --button-primary-color-active: var(--button-primary-color);
 
@@ -283,6 +290,64 @@ $colors: list.append($saturatedColors, 'base');
   --alert-background: var(--background-primary);
   --alert-border: var(--border-color);
   --alert-color: var(--text-primary);
+
+  --chip-subtle-base-background: var(--color-base-90);
+  --chip-subtle-base-background-hover: var(--color-base-80);
+  --chip-subtle-base-background-active: var(--color-base-70);
+  --chip-subtle-base-color: var(--color-base-50);
+  --chip-subtle-blue-background: var(--color-blue-100);
+  --chip-subtle-blue-background-hover: var(--color-blue-90);
+  --chip-subtle-blue-background-active: var(--color-blue-80);
+  --chip-subtle-blue-color: var(--color-blue-40);
+  --chip-subtle-green-background: var(--color-green-100);
+  --chip-subtle-green-background-hover: var(--color-green-90);
+  --chip-subtle-green-background-active: var(--color-green-80);
+  --chip-subtle-green-color: var(--color-green-40);
+  --chip-subtle-red-background: var(--color-red-100);
+  --chip-subtle-red-background-hover: var(--color-red-90);
+  --chip-subtle-red-background-active: var(--color-red-80);
+  --chip-subtle-red-color: var(--color-red-40);
+  --chip-subtle-yellow-background: var(--color-yellow-100);
+  --chip-subtle-yellow-background-hover: var(--color-yellow-90);
+  --chip-subtle-yellow-background-active: var(--color-yellow-80);
+  --chip-subtle-yellow-color: var(--color-yellow-40);
+  --chip-subtle-purple-background: var(--color-purple-100);
+  --chip-subtle-purple-background-hover: var(--color-purple-90);
+  --chip-subtle-purple-background-active: var(--color-purple-80);
+  --chip-subtle-purple-color: var(--color-purple-40);
+  --chip-subtle-pink-background: var(--color-pink-100);
+  --chip-subtle-pink-background-hover: var(--color-pink-90);
+  --chip-subtle-pink-background-active: var(--color-pink-80);
+  --chip-subtle-pink-color: var(--color-pink-40);
+
+  --chip-solid-base-background: var(--color-base-80);
+  --chip-solid-base-background-hover: var(--color-base-70);
+  --chip-solid-base-background-active: var(--color-base-60);
+  --chip-solid-base-color: var(--color-base-100);
+  --chip-solid-blue-background: var(--color-blue-70);
+  --chip-solid-blue-background-hover: var(--color-blue-60);
+  --chip-solid-blue-background-active: var(--color-blue-50);
+  --chip-solid-blue-color: var(--color-base-100);
+  --chip-solid-green-background: var(--color-green-70);
+  --chip-solid-green-background-hover: var(--color-green-60);
+  --chip-solid-green-background-active: var(--color-green-50);
+  --chip-solid-green-color: var(--color-base-100);
+  --chip-solid-red-background: var(--color-red-70);
+  --chip-solid-red-background-hover: var(--color-red-60);
+  --chip-solid-red-background-active: var(--color-red-50);
+  --chip-solid-red-color: var(--color-base-100);
+  --chip-solid-yellow-background: var(--color-yellow-80);
+  --chip-solid-yellow-background-hover: var(--color-yellow-70);
+  --chip-solid-yellow-background-active: var(--color-yellow-60);
+  --chip-solid-yellow-color: var(--color-base-100);
+  --chip-solid-purple-background: var(--color-purple-70);
+  --chip-solid-purple-background-hover: var(--color-purple-60);
+  --chip-solid-purple-background-active: var(--color-purple-50);
+  --chip-solid-purple-color: var(--color-base-100);
+  --chip-solid-pink-background: var(--color-pink-70);
+  --chip-solid-pink-background-hover: var(--color-pink-60);
+  --chip-solid-pink-background-active: var(--color-pink-50);
+  --chip-solid-pink-color: var(--color-base-100);
 }
 
 #root.theme-dark {
@@ -333,6 +398,8 @@ $colors: list.append($saturatedColors, 'base');
   --selection-color: var(--color-blue-50);
   --selection-text-color: var(--color-base-100);
 
+  --button-background-active: var(--background-primary);
+
   --button-primary-background: var(--color-base-100);
   --button-primary-border: var(--color-base-100);
   --button-primary-color: var(--color-base-00);
@@ -345,4 +412,62 @@ $colors: list.append($saturatedColors, 'base');
   --button-primary-color-active: var(--button-primary-color);
 
   --button-destructive-color: var(--button-color);
+
+  --chip-subtle-base-background: var(--color-base-10);
+  --chip-subtle-base-background-hover: var(--color-base-20);
+  --chip-subtle-base-background-active: var(--color-base-10);
+  --chip-subtle-base-color: var(--color-base-70);
+  --chip-subtle-blue-background: var(--color-blue-10);
+  --chip-subtle-blue-background-hover: var(--color-blue-20);
+  --chip-subtle-blue-background-active: var(--color-blue-10);
+  --chip-subtle-blue-color: var(--color-blue-70);
+  --chip-subtle-green-background: var(--color-green-10);
+  --chip-subtle-green-background-hover: var(--color-green-20);
+  --chip-subtle-green-background-active: var(--color-green-10);
+  --chip-subtle-green-color: var(--color-green-70);
+  --chip-subtle-red-background: var(--color-red-10);
+  --chip-subtle-red-background-hover: var(--color-red-20);
+  --chip-subtle-red-background-active: var(--color-red-10);
+  --chip-subtle-red-color: var(--color-red-70);
+  --chip-subtle-yellow-background: var(--color-yellow-10);
+  --chip-subtle-yellow-background-hover: var(--color-yellow-20);
+  --chip-subtle-yellow-background-active: var(--color-yellow-10);
+  --chip-subtle-yellow-color: var(--color-yellow-70);
+  --chip-subtle-purple-background: var(--color-purple-10);
+  --chip-subtle-purple-background-hover: var(--color-purple-20);
+  --chip-subtle-purple-background-active: var(--color-purple-10);
+  --chip-subtle-purple-color: var(--color-purple-70);
+  --chip-subtle-pink-background: var(--color-pink-10);
+  --chip-subtle-pink-background-hover: var(--color-pink-20);
+  --chip-subtle-pink-background-active: var(--color-pink-10);
+  --chip-subtle-pink-color: var(--color-pink-70);
+
+  --chip-solid-base-background: var(--color-base-60);
+  --chip-solid-base-background-hover: var(--color-base-70);
+  --chip-solid-base-background-active: var(--color-base-60);
+  --chip-solid-base-color: var(--color-base-100);
+  --chip-solid-blue-background: var(--color-blue-50);
+  --chip-solid-blue-background-hover: var(--color-blue-60);
+  --chip-solid-blue-background-active: var(--color-blue-50);
+  --chip-solid-blue-color: var(--color-base-100);
+  --chip-solid-green-background: var(--color-green-50);
+  --chip-solid-green-background-hover: var(--color-green-60);
+  --chip-solid-green-background-active: var(--color-green-50);
+  --chip-solid-green-color: var(--color-base-100);
+  --chip-solid-red-background: var(--color-red-50);
+  --chip-solid-red-background-hover: var(--color-red-60);
+  --chip-solid-red-background-active: var(--color-red-50);
+  --chip-solid-red-color: var(--color-base-100);
+  --chip-solid-yellow-background: var(--color-yellow-60);
+  --chip-solid-yellow-background-hover: var(--color-yellow-70);
+  --chip-solid-yellow-background-active: var(--color-yellow-60);
+  --chip-solid-yellow-color: var(--color-base-100);
+  --chip-solid-purple-background: var(--color-purple-50);
+  --chip-solid-purple-background-hover: var(--color-purple-60);
+  --chip-solid-purple-background-active: var(--color-purple-50);
+  --chip-solid-purple-color: var(--color-base-100);
+  --chip-solid-pink-background: var(--color-pink-50);
+  --chip-solid-pink-background-hover: var(--color-pink-60);
+  --chip-solid-pink-background-active: var(--color-pink-50);
+  --chip-solid-pink-color: var(--color-base-100);
 }

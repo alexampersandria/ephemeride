@@ -50,6 +50,10 @@ let clickHandler = () => {
   border: var(--border-width) solid var(--button-border);
   background-color: var(--button-background);
 
+  &:active {
+    transform: var(--click-transform);
+  }
+
   .button-content {
     display: flex;
     align-items: center;
