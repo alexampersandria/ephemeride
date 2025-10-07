@@ -1,5 +1,5 @@
 use crate::{
-  services::{auth, user, UserCredentials},
+  services::{auth, user, AuthConfig, UserCredentials},
   util::{
     error::{error_response, EphemerideError},
     response,
@@ -8,6 +8,9 @@ use crate::{
 use poem::{handler, http::StatusCode, web::Json, Request, Response};
 
 use validator::Validate;
+
+use dotenvy::dotenv;
+use std::env;
 
 #[handler]
 pub fn authenticate_user(Json(user): Json<user::AuthUser>, request: &Request) -> Response {
@@ -28,4 +31,15 @@ pub fn authenticate_user(Json(user): Json<user::AuthUser>, request: &Request) ->
     Ok(session) => response(StatusCode::CREATED, &session),
     Err(error) => error_response(error),
   }
+}
+
+#[handler]
+pub fn auth_config() -> Response {
+  dotenv().ok();
+
+  let auth_config: AuthConfig = AuthConfig {
+    invite_required: env::var("INVITE_REQUIRED").unwrap_or("false".to_string()) == "true",
+  };
+
+  response(StatusCode::OK, &auth_config)
 }

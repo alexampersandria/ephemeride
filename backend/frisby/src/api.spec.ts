@@ -5,8 +5,8 @@ import { env } from './env'
 
 const url = env.URL
 
-it("'/v1' responds with 200", (done) => {
-  get(`${url}/v1`).expect('status', 200).done(done)
+it("'/' responds with 200", (done) => {
+  get(`${url}/`).expect('status', 200).done(done)
 })
 
 const user = {

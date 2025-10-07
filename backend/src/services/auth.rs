@@ -35,6 +35,11 @@ pub struct UserCredentials {
   pub password: String,
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+pub struct AuthConfig {
+  pub invite_required: bool,
+}
+
 pub fn session_metadata(request: &Request) -> SessionMetadata {
   SessionMetadata {
     ip_address: request.remote_addr().to_string(),
