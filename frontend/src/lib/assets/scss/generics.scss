@@ -14,3 +14,27 @@ form,
   gap: var(--form-field-gap);
   width: 100%;
 }
+
+.dimmed {
+  color: var(--text-dimmed);
+
+  a {
+    color: var(--text-muted);
+
+    &:hover {
+      color: var(--text-dimmed);
+    }
+  }
+}
+
+.muted {
+  color: var(--text-muted);
+
+  a {
+    color: var(--text-primary);
+
+    &:hover {
+      color: var(--text-muted);
+    }
+  }
+}

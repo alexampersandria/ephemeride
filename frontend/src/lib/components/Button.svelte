@@ -7,6 +7,7 @@ let {
   type = 'secondary',
   loading,
   disabled,
+  fullwidth = false,
   onclick,
 }: ButtonProps = $props()
 
@@ -23,6 +24,7 @@ let clickHandler = () => {
   class="button {type}"
   class:loading
   class:disabled
+  class:fullwidth
   aria-busy={loading}
   {disabled}
   onclick={clickHandler}>
@@ -50,15 +52,15 @@ let clickHandler = () => {
   border: var(--border-width) solid var(--button-border);
   background-color: var(--button-background);
 
-  &:active {
-    transform: var(--click-transform);
-  }
-
   .button-content {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: var(--button-content-gap);
+  }
+
+  &.fullwidth {
+    width: 100%;
   }
 
   :global(.lucide-icon) {
@@ -93,6 +95,7 @@ let clickHandler = () => {
       color: var(--button-color-active);
       background-color: var(--button-background-active);
       border-color: var(--button-border-active);
+      transform: var(--click-transform);
     }
   }
 

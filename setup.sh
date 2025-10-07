@@ -24,7 +24,7 @@ sudo -u postgres psql -d postgres -c "ALTER USER \"$username\" WITH PASSWORD '$p
 sudo -u postgres psql -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE \"$database\" TO \"$username\";"
 cargo install diesel_cli --no-default-features --features postgres
 echo -e "DATABASE_URL=postgres://$username:$password@localhost/$database\nDIESEL_CONFIG_FILE=./diesel.toml\nINVITE_REQUIRED=true\nPORT=3000" > backend/.env
-echo -e "VITE_API_URL=http://localhost:3000" > frontend/.env
+echo -e "PUBLIC_VITE_API_URL=http://localhost:3000/api" > frontend/.env
 cd backend
 diesel setup
 diesel migration run

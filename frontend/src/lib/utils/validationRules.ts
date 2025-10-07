@@ -48,19 +48,19 @@ export const validatePassword = (
 ): InputState => {
   const errors: Array<string> = []
   if (value.length < 7) {
-    errors.push('Password must be at least 7 characters')
+    errors.push('Must be at least 7 characters')
   }
   if (value.length > 255) {
-    errors.push('Password must be less than 255 characters')
+    errors.push('Must be less than 255 characters')
   }
   if (!/[A-Z]/.test(value)) {
-    errors.push('Password must include at least one uppercase letter')
+    errors.push('Must include at least one uppercase letter')
   }
   if (!/[a-z]/.test(value)) {
-    errors.push('Password must include at least one lowercase letter')
+    errors.push('Must include at least one lowercase letter')
   }
   if (!/[0-9]/.test(value)) {
-    errors.push('Password must include at least one number')
+    errors.push('Must include at least one number')
   }
   callback(errors)
   return errors.length === 0 ? 'touched' : 'invalid'

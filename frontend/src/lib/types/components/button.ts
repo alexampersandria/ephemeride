@@ -6,5 +6,6 @@ export type ButtonProps = {
   type?: ButtonType
   loading?: boolean
   disabled?: boolean
+  fullwidth?: boolean
   onclick?: () => void
 }

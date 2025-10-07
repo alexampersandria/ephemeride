@@ -38,7 +38,7 @@ let errors: string[] = $state([])
 
   {#if errors.length > 0}
     <Alert size="small" type="error">
-      <b>Password does not meet the following requirements:</b>
+      <b>Invalid password</b>
       <ul>
         {#each errors as error}
           <li>{error}</li>
