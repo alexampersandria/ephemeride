@@ -44,8 +44,7 @@ let disabled = $state(false)
 
 $effect(() => {
   // React to model changes
-  model
-  if (isValid) {
+  if (model && isValid) {
     disabled = false
   }
 })

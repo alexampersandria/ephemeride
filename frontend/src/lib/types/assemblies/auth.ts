@@ -1,13 +1,13 @@
-import type { InputState } from "../input"
+import type { InputState } from '../input'
 
 export type AuthModelField = {
-  value: string,
+  value: string
   inputstate: InputState
 }
 
 export type AuthModel = {
-  name: AuthModelField,
-  email: AuthModelField,
-  password: AuthModelField,
+  name: AuthModelField
+  email: AuthModelField
+  password: AuthModelField
   inviteCode: AuthModelField
 }
