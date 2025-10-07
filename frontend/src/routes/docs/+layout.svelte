@@ -265,13 +265,16 @@ const ThemeToggleIcon = $derived.by(() => {
       left: 0;
       width: 100%;
       height: 100vh;
-      background-color: var(--background-overlay);
-      opacity: 0;
-      transition: opacity 0.3s;
+      background-color: transparent;
+      transition:
+        background-color 0.15s ease-out,
+        backdrop-filter 0.3s ease-out;
       pointer-events: none;
+      z-index: 1311;
 
       &:has(+ .sidebarOpen) {
-        opacity: 1;
+        background-color: var(--background-overlay);
+        backdrop-filter: blur(4px);
       }
     }
 
@@ -281,7 +284,7 @@ const ThemeToggleIcon = $derived.by(() => {
       border-right: var(--border-width) solid var(--border-color);
       left: calc(-100% - var(--border-width));
       width: 100%;
-      z-index: 1;
+      z-index: 1312;
 
       transition: left 0.3s;
 
