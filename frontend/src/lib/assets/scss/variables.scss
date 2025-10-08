@@ -37,6 +37,9 @@ $logo-size: 1.5em;
 $click-transform: scale(0.97);
 $click-transition: transform 0.1s ease-out;
 
+$mood-button-size: 2.5rem;
+$mood-button-gap: 0.5rem;
+
 :root {
   --container-width: #{$container-width};
 
@@ -102,4 +105,7 @@ $click-transition: transform 0.1s ease-out;
   --logo-size: #{$logo-size};
 
   --click-transform: #{$click-transform};
+
+  --mood-button-size: #{$mood-button-size};
+  --mood-button-gap: #{$mood-button-gap};
 }

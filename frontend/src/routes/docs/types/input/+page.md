@@ -61,3 +61,13 @@ type ValidationFunction = (
 ```
 
 See [Input Validation](/docs/components/input#validation) for more information.
+
+## MoodValue
+
+Numerical value from 1-5
+
+### Definition
+
+```ts
+type MoodValue = 1 | 2 | 3 | 4 | 5;
+```

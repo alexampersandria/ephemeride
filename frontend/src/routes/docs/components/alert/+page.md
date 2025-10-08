@@ -101,7 +101,7 @@ An alert can render anything in its message content, including lists which can b
 <DocsExample>
   <Alert type="error">
     <b>Password does not meet requirements:</b>
-    <ul class="text-muted">
+    <ul class="muted">
       <li>Minimum 8 characters</li>
       <li>At least one uppercase letter</li>
     </ul>
@@ -111,7 +111,7 @@ An alert can render anything in its message content, including lists which can b
 ```svelte
 <Alert type="error">
   <b>Password does not meet requirements:</b>
-  <ul class="text-muted">
+  <ul class="muted">
     <li>Minimum 8 characters</li>
     <li>At least one uppercase letter</li>
   </ul>

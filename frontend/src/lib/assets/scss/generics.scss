@@ -1,3 +1,138 @@
+input,
+select,
+textarea {
+  font-size: var(--input-size);
+}
+
+button {
+  font-size: var(--button-size);
+  cursor: pointer;
+
+  &.link {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--color-link);
+
+    &:hover {
+      color: var(--color-link-hover);
+    }
+  }
+}
+
+form {
+  width: 100%;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+
+  gap: var(--form-gap);
+}
+
+::placeholder {
+  color: var(--input-placeholder-color);
+}
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--color-link-hover);
+  }
+}
+
+*:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 var(--focus-shadow-offset) var(--background-primary),
+    0 0 0 calc(var(--focus-shadow-offset) + var(--focus-shadow-offset)) var(--color-focus) !important;
+}
+
+::selection {
+  background-color: var(--selection-color);
+  color: var(--selection-text-color);
+}
+
+.container {
+  max-width: var(--container-width);
+  margin: 0 auto;
+}
+
+.fill {
+  width: 100%;
+  height: 100%;
+}
+
+.center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  font-size: var(--h1-size);
+}
+
+h2 {
+  font-size: var(--h2-size);
+}
+
+h3 {
+  font-size: var(--h3-size);
+}
+
+h4 {
+  font-size: var(--h4-size);
+}
+
+h5 {
+  font-size: var(--h5-size);
+}
+
+h6 {
+  font-size: var(--h6-size);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:has(+ p) {
+    margin-bottom: 0;
+  }
+}
+
+code {
+  font-size: var(--code-size);
+}
+
+hr {
+  border: 0;
+  border-top: var(--border-width) solid var(--hr-color);
+  margin: var(--padding-m) 0;
+}
+
+*:disabled {
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+ul,
+ol,
+dl {
+  margin: var(--padding-xxs) 0;
+}
+
 form,
 .form {
   width: 100%;
@@ -36,5 +171,28 @@ form,
     &:hover {
       color: var(--text-muted);
     }
+  }
+}
+
+/* lucide icon same size as text */
+.lucide-icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.1em;
+}
+
+/* lucide icon alignment fix, use wrapper for default 1.5rem lucide icon size */
+.lucide-icon-wrapper {
+  position: relative;
+  top: 1px;
+  font-size: inherit;
+
+  height: 0;
+
+  .lucide-icon {
+    font-size: inherit;
+    width: 1.5em;
+    height: 1.5em;
+    vertical-align: -0.15em;
   }
 }
