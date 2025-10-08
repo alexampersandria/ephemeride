@@ -1,8 +1,8 @@
 use crate::{
   establish_connection,
   schema::{self, users},
-  util,
-  util::error::EphemerideError,
+  services::create_default_data,
+  util::{self, error::EphemerideError},
 };
 use diesel::{
   deserialize::Queryable, prelude::Insertable, ExpressionMethods, QueryDsl, RunQueryDsl,
@@ -147,10 +147,17 @@ pub fn create_user(user: CreateUser) -> Result<UserDetails, EphemerideError> {
     .values(&new_user)
     .execute(&mut conn);
 
-  match result {
-    Ok(_) => Ok(user_details(new_user)),
-    Err(_) => Err(EphemerideError::DatabaseError),
+  if result.is_err() {
+    return Err(EphemerideError::DatabaseError);
   }
+
+  let created_user_defaults = create_default_data(new_user.id.clone());
+
+  if created_user_defaults.is_err() {
+    return Err(EphemerideError::DatabaseError);
+  }
+
+  Ok(user_details(new_user))
 }
 
 pub fn delete_user(id: &str) -> Result<bool, EphemerideError> {

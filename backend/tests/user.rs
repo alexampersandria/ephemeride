@@ -1,8 +1,8 @@
-use ephemeride_backend::services::{auth, user};
+use ephemeride_backend::services::{auth, log, user};
 use uuid::Uuid;
 
 #[test]
-fn create_user_and_get_by_email() {
+fn create_user() {
   let random_name = Uuid::new_v4().to_string();
   let email = format!("{}@example.com", random_name);
 
@@ -20,7 +20,20 @@ fn create_user_and_get_by_email() {
   let found_user = user::get_user(&created_user.unwrap().id);
 
   assert!(found_user.is_ok());
-  assert_eq!(found_user.unwrap().name, random_name);
+  let found_user = found_user.unwrap();
+  assert_eq!(found_user.name, random_name);
+
+  let found_categories = log::get_all_categories(&found_user.id);
+
+  assert!(found_categories.is_ok());
+  let categories = found_categories.unwrap();
+  assert!(categories.len() > 0);
+
+  for category in categories {
+    let found_tags = log::get_category_tags(&category.id, &found_user.id);
+    assert!(found_tags.is_ok());
+    assert!(found_tags.unwrap().len() > 0);
+  }
 }
 
 #[test]

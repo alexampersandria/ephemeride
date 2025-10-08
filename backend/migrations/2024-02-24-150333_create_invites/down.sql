@@ -1,2 +1,2 @@
 -- This file should undo anything in `up.sql`
-DROP TABLE invites;
+DROP TABLE IF EXISTS invites;

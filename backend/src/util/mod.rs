@@ -1,3 +1,5 @@
+pub mod color;
+pub use color::*;
 pub mod error;
 pub use error::*;
 pub mod invite_code;

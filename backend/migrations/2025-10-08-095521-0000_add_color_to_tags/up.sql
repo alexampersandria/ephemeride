@@ -1,0 +1,9 @@
+-- Your SQL goes here
+ALTER TABLE tags
+ADD COLUMN color VARCHAR(255) NOT NULL DEFAULT 'base';
+
+ALTER TABLE tags
+ADD COLUMN category_id VARCHAR(255) NOT NULL REFERENCES categories (id);
+
+ALTER TABLE tags
+DROP COLUMN icon;

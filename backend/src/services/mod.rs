@@ -4,3 +4,5 @@ pub mod user;
 pub use user::*;
 pub mod auth;
 pub use auth::*;
+pub mod log;
+pub use log::*;

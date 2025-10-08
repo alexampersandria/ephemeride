@@ -1,6 +1,18 @@
 // @generated automatically by Diesel CLI.
 
 diesel::table! {
+    categories (id) {
+        #[max_length = 255]
+        id -> Varchar,
+        #[max_length = 255]
+        name -> Varchar,
+        #[max_length = 255]
+        user_id -> Varchar,
+        created_at -> Int8,
+    }
+}
+
+diesel::table! {
     entries (id) {
         #[max_length = 255]
         id -> Varchar,
@@ -62,7 +74,9 @@ diesel::table! {
         #[max_length = 255]
         name -> Varchar,
         #[max_length = 255]
-        icon -> Varchar,
+        color -> Varchar,
+        #[max_length = 255]
+        category_id -> Varchar,
     }
 }
 
@@ -83,11 +97,15 @@ diesel::table! {
     }
 }
 
+diesel::joinable!(categories -> users (user_id));
 diesel::joinable!(entries -> users (user_id));
 diesel::joinable!(entry_tags -> entries (entry_id));
 diesel::joinable!(entry_tags -> tags (tag_id));
 diesel::joinable!(sessions -> users (user_id));
+diesel::joinable!(tags -> categories (category_id));
 diesel::joinable!(tags -> users (user_id));
 diesel::joinable!(users -> invites (invite));
 
-diesel::allow_tables_to_appear_in_same_query!(entries, entry_tags, invites, sessions, tags, users,);
+diesel::allow_tables_to_appear_in_same_query!(
+  categories, entries, entry_tags, invites, sessions, tags, users,
+);
