@@ -128,4 +128,6 @@ $mood-bar-width: 2px;
   --mood-bar-height-primary: #{$mood-bar-height-primary};
   --mood-bar-height-secondary: #{$mood-bar-height-secondary};
   --mood-bar-width: #{$mood-bar-width};
+
+  --filled-circle-size: var(--font-size-m);
 }

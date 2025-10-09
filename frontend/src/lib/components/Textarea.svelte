@@ -1,9 +1,10 @@
 <script lang="ts">
 import type { TextareaProps } from '$lib/types/components/textarea'
 import { onMount } from 'svelte'
+import FilledCircle from './FilledCircle.svelte'
 
 let {
-  value = $bindable(),
+  value = $bindable(''),
   placeholder,
   disabled,
   name,
@@ -45,7 +46,20 @@ const evaluateInputState = () => {
 }
 
 onMount(() => {
+  console.log(value)
   evaluateInputState()
+})
+
+const circlePercentage = $derived.by(() => {
+  if (maxlength) {
+    if (value) {
+      return Math.min((value.length / maxlength) * 100, 100)
+    } else {
+      return 0
+    }
+  } else {
+    return 0
+  }
 })
 </script>
 
@@ -68,7 +82,14 @@ onMount(() => {
       class:error={exceedsMaxLength}
       aria-live="polite"
       aria-atomic="true">
-      {value ? value.length : 0} / {maxlength}
+      <div class="length-text">
+        {value ? value.length : 0} / {maxlength}
+      </div>
+      <div class="circle">
+        <FilledCircle
+          percentage={circlePercentage}
+          color={exceedsMaxLength ? 'red' : 'base'} />
+      </div>
     </div>
   {/if}
 </div>
@@ -85,6 +106,8 @@ onMount(() => {
     background-color: var(--input-background);
     border: var(--border-width) solid var(--input-border);
     resize: vertical;
+    height: calc(6lh + var(--padding-s) * 2);
+    min-height: calc(2lh + var(--padding-s) * 2);
 
     &:not(:disabled) {
       &:hover {
@@ -117,6 +140,9 @@ onMount(() => {
   }
 
   .textarea-maxlength {
+    display: flex;
+    align-items: center;
+    gap: var(--padding-xs);
     margin-top: var(--padding-xs);
     font-size: var(--font-size-xs);
     color: var(--text-muted);
@@ -124,6 +150,11 @@ onMount(() => {
 
     &.error {
       color: var(--color-error);
+    }
+
+    .circle {
+      position: relative;
+      top: -1px;
     }
   }
 }

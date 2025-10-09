@@ -124,6 +124,10 @@ code {
   font-size: var(--code-size);
 }
 
+.mono {
+  font-family: 'Fira Code', serif;
+}
+
 hr {
   border: 0;
   border-top: var(--border-width) solid var(--hr-color);
