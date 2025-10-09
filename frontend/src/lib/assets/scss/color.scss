@@ -87,6 +87,27 @@ $color-pink-80: #ff9bce;
 $color-pink-90: #ffbedd;
 $color-pink-100: #ffdaec;
 
+$color-mood-1: #ff5e2d;
+$color-mood-1-unselected: #ffb3a7;
+$color-mood-1-unselected-text: #ad310b;
+$color-mood-1-hover: #ff8f70;
+$color-mood-2: #ff8f13;
+$color-mood-2-unselected: #ffc18f;
+$color-mood-2-unselected-text: #904a0c;
+$color-mood-2-hover: #ffa64d;
+$color-mood-3: #fec906;
+$color-mood-3-unselected: #ffd991;
+$color-mood-3-unselected-text: #5d3b00;
+$color-mood-3-hover: #ffd483;
+$color-mood-4: #b4d426;
+$color-mood-4-unselected: #d4e6a1;
+$color-mood-4-unselected-text: #324f09;
+$color-mood-4-hover: #c4d62d;
+$color-mood-5: #43d151;
+$color-mood-5-unselected: #a1e3b4;
+$color-mood-5-unselected-text: #1e6823;
+$color-mood-5-hover: #35d65b;
+
 $saturatedColors: ('blue', 'green', 'yellow', 'red', 'purple', 'pink');
 $colors: list.append($saturatedColors, 'base');
 
@@ -176,6 +197,35 @@ $colors: list.append($saturatedColors, 'base');
   --color-pink-80: #{$color-pink-80};
   --color-pink-90: #{$color-pink-90};
   --color-pink-100: #{$color-pink-100};
+
+  // #TODO: adjust the actual colors to fit the purpose of the mood scale colors, these are just taken from my obsidian prototype of this app and the actual colors used in the app are not fit for this purpose, this is a hotfix and the entire color palette should be redesigned
+  // #TODO: ALSO THESE ONLY WORK IN LIGHT MODE
+
+  --color-mood-1: #{$color-mood-1};
+  --color-mood-1-unselected: #{$color-mood-1-unselected};
+  --color-mood-1-unselected-text: #{$color-mood-1-unselected-text};
+  --color-mood-1-hover: #{$color-mood-1-hover};
+  --color-mood-1-active: #{$color-mood-1};
+  --color-mood-2: #{$color-mood-2};
+  --color-mood-2-unselected: #{$color-mood-2-unselected};
+  --color-mood-2-unselected-text: #{$color-mood-2-unselected-text};
+  --color-mood-2-hover: #{$color-mood-2-hover};
+  --color-mood-2-active: #{$color-mood-2};
+  --color-mood-3: #{$color-mood-3};
+  --color-mood-3-unselected: #{$color-mood-3-unselected};
+  --color-mood-3-unselected-text: #{$color-mood-3-unselected-text};
+  --color-mood-3-hover: #{$color-mood-3-hover};
+  --color-mood-3-active: #{$color-mood-3};
+  --color-mood-4: #{$color-mood-4};
+  --color-mood-4-unselected: #{$color-mood-4-unselected};
+  --color-mood-4-unselected-text: #{$color-mood-4-unselected-text};
+  --color-mood-4-hover: #{$color-mood-4-hover};
+  --color-mood-4-active: #{$color-mood-4};
+  --color-mood-5: #{$color-mood-5};
+  --color-mood-5-unselected: #{$color-mood-5-unselected};
+  --color-mood-5-unselected-text: #{$color-mood-5-unselected-text};
+  --color-mood-5-hover: #{$color-mood-5-hover};
+  --color-mood-5-active: #{$color-mood-5};
 
   --logo-neutral: var(--color-base-00);
   --logo-upper: var(--color-pink-60);
@@ -341,32 +391,6 @@ $colors: list.append($saturatedColors, 'base');
   --chip-solid-pink-background-hover: var(--color-pink-60);
   --chip-solid-pink-background-active: var(--color-pink-50);
   --chip-solid-pink-color: var(--color-base-100);
-
-  --mood-background-1: var(--chip-subtle-red-background);
-  --mood-background-hover-1: var(--chip-subtle-red-background-hover);
-  --mood-background-active-1: var(--chip-subtle-red-background-active);
-  --mood-background-selected-1: var(--chip-solid-red-background);
-  --mood-color-1: var(--chip-subtle-red-color);
-  --mood-background-2: var(--chip-subtle-pink-background);
-  --mood-background-hover-2: var(--chip-subtle-pink-background-hover);
-  --mood-background-active-2: var(--chip-subtle-pink-background-active);
-  --mood-background-selected-2: var(--chip-solid-pink-background);
-  --mood-color-2: var(--chip-subtle-pink-color);
-  --mood-background-3: var(--chip-subtle-yellow-background);
-  --mood-background-hover-3: var(--chip-subtle-yellow-background-hover);
-  --mood-background-active-3: var(--chip-subtle-yellow-background-active);
-  --mood-background-selected-3: var(--chip-solid-yellow-background);
-  --mood-color-3: var(--chip-subtle-yellow-color);
-  --mood-background-4: var(--chip-subtle-blue-background);
-  --mood-background-hover-4: var(--chip-subtle-blue-background-hover);
-  --mood-background-active-4: var(--chip-subtle-blue-background-active);
-  --mood-background-selected-4: var(--chip-solid-blue-background);
-  --mood-color-4: var(--chip-subtle-blue-color);
-  --mood-background-5: var(--chip-subtle-green-background);
-  --mood-background-hover-5: var(--chip-subtle-green-background-hover);
-  --mood-background-active-5: var(--chip-subtle-green-background-active);
-  --mood-background-selected-5: var(--chip-solid-green-background);
-  --mood-color-5: var(--chip-subtle-green-color);
 }
 
 #root.theme-dark {

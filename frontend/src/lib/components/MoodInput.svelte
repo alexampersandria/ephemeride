@@ -36,23 +36,23 @@ const setValue = (mood: number) => () => {
 
     @each $mood in 1, 2, 3, 4, 5 {
       &.mood-#{$mood} {
-        background-color: var(--mood-background-#{$mood});
-        color: var(--mood-color-#{$mood});
+        background-color: var(--color-mood-#{$mood}-unselected);
+        color: var(--color-mood-#{$mood}-unselected-text);
 
         &:hover {
-          background-color: var(--mood-background-hover-#{$mood});
+          background-color: var(--color-mood-#{$mood}-hover);
         }
 
         &:active {
-          background-color: var(--mood-background-active-#{$mood});
+          background-color: var(--color-mood-#{$mood});
         }
 
         &.selected {
-          background-color: var(--mood-background-selected-#{$mood});
+          background-color: var(--color-mood-#{$mood});
           color: var(--background-primary);
           box-shadow:
-            0 0 0 2px var(--background-primary),
-            0 0 0 4px var(--mood-background-selected-#{$mood});
+            INSET 0 0 0 2px var(--background-primary),
+            0 0 0 2px var(--color-mood-#{$mood});
         }
       }
     }
