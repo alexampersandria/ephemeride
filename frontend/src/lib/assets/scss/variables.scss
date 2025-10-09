@@ -19,6 +19,13 @@ $padding-m: 1rem;
 $padding-l: 2rem;
 $padding-xl: 4rem;
 
+$block-size-xxs: 16rem;
+$block-size-xs: 24rem;
+$block-size-s: 32rem;
+$block-size-m: 42rem;
+$block-size-l: 56rem;
+$block-size-xl: 72rem;
+
 $border-width: 1px;
 $focus-shadow-width: 2px;
 
@@ -37,8 +44,11 @@ $logo-size: 1.5em;
 $click-transform: scale(0.97);
 $click-transition: transform 0.1s ease-out;
 
-$mood-button-size: 2.5rem;
-$mood-button-gap: 0.5rem;
+$mood-button-height: 2.5rem;
+
+$mood-bar-height-primary: 1.5rem;
+$mood-bar-height-secondary: 1rem;
+$mood-bar-width: 2px;
 
 :root {
   --container-width: #{$container-width};
@@ -61,6 +71,13 @@ $mood-button-gap: 0.5rem;
   --font-size-m: #{$font-size-m};
   --font-size-l: #{$font-size-l};
   --font-size-xl: #{$font-size-xl};
+
+  --block-size-xxs: #{$block-size-xxs};
+  --block-size-xs: #{$block-size-xs};
+  --block-size-s: #{$block-size-s};
+  --block-size-m: #{$block-size-m};
+  --block-size-l: #{$block-size-l};
+  --block-size-xl: #{$block-size-xl};
 
   --input-padding: var(--padding-s) var(--padding-m);
   --input-radius: var(--radius-xs);
@@ -106,6 +123,9 @@ $mood-button-gap: 0.5rem;
 
   --click-transform: #{$click-transform};
 
-  --mood-button-size: #{$mood-button-size};
-  --mood-button-gap: #{$mood-button-gap};
+  --mood-button-height: #{$mood-button-height};
+
+  --mood-bar-height-primary: #{$mood-bar-height-primary};
+  --mood-bar-height-secondary: #{$mood-bar-height-secondary};
+  --mood-bar-width: #{$mood-bar-width};
 }

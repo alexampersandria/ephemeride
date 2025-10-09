@@ -13,6 +13,7 @@ import Spinner from './Spinner.svelte'
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 9876543210;
   width: 100vw;
   height: 100vh;
 
