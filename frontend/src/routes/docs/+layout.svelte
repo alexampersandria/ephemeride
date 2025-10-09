@@ -57,7 +57,20 @@ const ThemeToggleIcon = $derived.by(() => {
     return Moon
   }
 })
+
+const title = $derived(
+  [...page.url.pathname.split('/').slice(2)]
+    .filter(Boolean)
+    .map(part =>
+      part.replace(/-|_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+    )
+    .join('/') + ' — Ephemeride Documentation',
+)
 </script>
+
+<svelte:head>
+  <title>{title}</title>
+</svelte:head>
 
 <div class="docs">
   <div class="docs-menu">

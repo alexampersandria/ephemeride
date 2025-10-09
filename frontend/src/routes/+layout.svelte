@@ -12,7 +12,13 @@ initializeStores()
 let uiStore = useUiStore()
 
 let { children } = $props()
+
+const title = $derived('Ephemeride')
 </script>
+
+<svelte:head>
+  <title>{title}</title>
+</svelte:head>
 
 <div id="root" class="theme-{uiStore.appliedTheme}">
   {@render children()}
