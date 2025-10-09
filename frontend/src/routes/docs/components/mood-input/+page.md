@@ -20,7 +20,7 @@ The component features 5 values as buttons which change the bindable prop `value
 </DocsExample>
 
 ```svelte
-<script lang="ts">
+<script>
 let value = $state()
 </script>
 

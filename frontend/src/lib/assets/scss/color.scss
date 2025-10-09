@@ -362,6 +362,15 @@ $colors: list.append($saturatedColors, 'base');
   --mood-bar-color-secondary: var(--color-base-90);
   --mood-bar-color-primary-filled: var(--color-base-50);
   --mood-bar-color-secondary-filled: var(--color-base-60);
+
+  --circle-background-color: var(--color-base-80);
+  --circle-fill-color-base: var(--color-base-60);
+  --circle-fill-color-blue: var(--color-blue-60);
+  --circle-fill-color-green: var(--color-green-60);
+  --circle-fill-color-yellow: var(--color-yellow-70);
+  --circle-fill-color-red: var(--color-red-60);
+  --circle-fill-color-purple: var(--color-purple-60);
+  --circle-fill-color-pink: var(--color-pink-60);
 }
 
 #root.theme-dark {
@@ -505,4 +514,13 @@ $colors: list.append($saturatedColors, 'base');
   --mood-bar-color-secondary: var(--color-base-20);
   --mood-bar-color-primary-filled: var(--color-base-50);
   --mood-bar-color-secondary-filled: var(--color-base-60);
+
+  --circle-background-color: var(--color-base-30);
+  --circle-fill-color-base: var(--color-base-60);
+  --circle-fill-color-blue: var(--color-blue-50);
+  --circle-fill-color-green: var(--color-green-50);
+  --circle-fill-color-yellow: var(--color-yellow-60);
+  --circle-fill-color-red: var(--color-red-50);
+  --circle-fill-color-purple: var(--color-purple-50);
+  --circle-fill-color-pink: var(--color-pink-50);
 }

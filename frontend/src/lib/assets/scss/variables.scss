@@ -42,7 +42,6 @@ $h6-size: 1rem;
 $logo-size: 1.5em;
 
 $click-transform: scale(0.97);
-$click-transition: transform 0.1s ease-out;
 
 $mood-button-height: 2.5rem;
 
@@ -130,4 +129,5 @@ $mood-bar-width: 2px;
   --mood-bar-width: #{$mood-bar-width};
 
   --filled-circle-size: var(--font-size-m);
+  --filled-circle-thickness: 2px;
 }
