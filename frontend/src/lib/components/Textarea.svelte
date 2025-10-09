@@ -27,7 +27,7 @@ const oninput = () => {
   evaluateInputState()
 }
 
-const evaluateInputState = () => {
+const evaluateInputState = (mount = false) => {
   if (value) {
     if (maxlength) {
       if (value.length > maxlength) {
@@ -38,16 +38,18 @@ const evaluateInputState = () => {
     } else {
       inputstate = 'touched'
     }
-  } else if (required) {
-    inputstate = 'invalid'
-  } else {
-    inputstate = 'touched'
+  } else if (!mount) {
+    if (required) {
+      inputstate = 'invalid'
+    } else {
+      inputstate = 'touched'
+    }
   }
 }
 
 onMount(() => {
   console.log(value)
-  evaluateInputState()
+  evaluateInputState(true)
 })
 
 const circlePercentage = $derived.by(() => {
