@@ -5,6 +5,6 @@ export type ChipVariant = 'subtle' | 'solid'
 
 export type ChipProps = {
   children: Snippet
-  color: Color
+  color?: Color
   variant?: ChipVariant
 }

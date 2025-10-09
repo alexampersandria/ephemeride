@@ -10,7 +10,11 @@ let isSingleCharacter = $state(false)
 const evalSingleCharacter = () => {
   if (!chip) return
   const content = chip.textContent?.trim() || ''
-  isSingleCharacter = content.length === 1
+  const hasOnlyIcon =
+    chip.children.length === 1 &&
+    chip.children[0].tagName === 'svg' &&
+    chip.children[0].classList.contains('lucide')
+  isSingleCharacter = content.length === 1 || hasOnlyIcon
 }
 
 onMount(() => {
@@ -50,6 +54,11 @@ onMount(() => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  :global(.lucide) {
+    min-width: 1em;
+    min-height: 1em;
+  }
 
   &.single-character {
     max-width: 1.765625rem;

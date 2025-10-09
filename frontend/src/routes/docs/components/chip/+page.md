@@ -3,6 +3,8 @@ import Chip from '$lib/components/Chip.svelte';
 import Button from '$lib/components/Button.svelte';
 import DocsExample from '$lib/components/utils/DocsExample.svelte';
 
+import { Pencil } from 'lucide-svelte'
+
 let count = $state(1)
 
 const incrementCount = () => {
@@ -45,10 +47,10 @@ incrementCount()
 </script>
 
 <template>
-Messages
-<Chip>
-  { count }
-</Chip>
+  Messages
+  <Chip>
+    {count}
+  </Chip>
 </template>
 ```
 
@@ -194,13 +196,33 @@ Bold variant with solid backgrounds and light text:
 <Chip variant="solid" color="pink">Pink Solid</Chip>
 ```
 
+## Icon Content
+
+Icons can be used inside the chip as well, usefull for tiny buttons.
+
+<DocsExample>
+  <button>
+    <Chip>
+      <Pencil />
+    </Chip>
+  </button>
+</DocsExample>
+
+```svelte
+<button>
+  <Chip>
+    <Pencil />
+  </Chip>
+</button>
+```
+
 ## Types
 
 ### Props
 
 | Name     | Type          | Required | Default    | Description                         |
 | -------- | ------------- | :------: | ---------- | ----------------------------------- |
-| children | `Snippet`     |    ✅     |            | Content to display inside the chip. |
+| children | `Snippet`     |    ✅    |            | Content to display inside the chip. |
 | color    | `Color`       |          | `'base'`   | Color theme of the chip.            |
 | variant  | `ChipVariant` |          | `'subtle'` | Visual variant of the chip.         |
 
