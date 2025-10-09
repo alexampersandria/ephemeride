@@ -25,9 +25,9 @@ const setValue = (mood: number) => () => {
   <div class="mood-bar-wrapper">
     {#each ['filled', 'base'] as variant}
       <div class="mood-bar {variant} mood-value-{value || 'none'}">
-        {#each [1, 2, 3, 4, 5]}
+        {#each [1, 2, 3, 4, 5] as _}
           <div class="mood-bar-segment">
-            {#each [1, 2, 3, 4, 5]}
+            {#each [1, 2, 3, 4, 5] as _}
               <div class="mood-bar-segment-bar"></div>
             {/each}
           </div>
