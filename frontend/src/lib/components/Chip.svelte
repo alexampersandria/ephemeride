@@ -11,6 +11,7 @@ const evalSingleCharacter = () => {
   if (!chip) return
   const content = chip.textContent?.trim() || ''
   const hasOnlyIcon =
+    content.length === 0 &&
     chip.children.length === 1 &&
     chip.children[0].tagName === 'svg' &&
     chip.children[0].classList.contains('lucide')

@@ -1,11 +1,11 @@
 <script lang="ts">
 import Chip from '$lib/components/Chip.svelte'
 import type { CategoryProps } from '$lib/types/assemblies/category'
-import { Pencil, Tag, X } from 'lucide-svelte'
+import { Pencil, PencilOff, Plus, Tag, X } from 'lucide-svelte'
 
 let {
   name,
-  tags = [],
+  tags = $bindable([]),
   selectedTagIds = $bindable([]),
   mode = 'view',
 }: CategoryProps = $props()
@@ -17,16 +17,33 @@ const onclick = (tag: { id: string }) => {
     } else {
       selectedTagIds = [...selectedTagIds, tag.id]
     }
+  } else if (mode === 'edit') {
+    // #TODO: edit name or color or remove tag
   }
 }
 
 const onedit = () => {
-  // #TODO
+  if (mode === 'select') {
+    mode = 'edit'
+  } else if (mode === 'edit') {
+    mode = 'select'
+  }
 }
 
 const onclear = () => {
   // remove only tags in category from selectedTagIds
   selectedTagIds = selectedTagIds.filter(id => !tags.find(tag => tag.id === id))
+}
+
+const onadd = () => {
+  // #TODO: add new tag
+}
+
+const _removeTag = (tagId: string) => {
+  if (mode === 'edit') {
+    tags = tags.filter(tag => tag.id !== tagId)
+    selectedTagIds = selectedTagIds.filter(id => id !== tagId)
+  }
 }
 </script>
 
@@ -38,19 +55,31 @@ const onclear = () => {
 
     {#if mode === 'select' || mode === 'edit'}
       <div class="category-actions">
-        <button onclick={onedit} aria-label="Edit {name} category">
-          <Chip>
-            <Pencil />
-          </Chip>
-        </button>
+        {#if mode === 'edit'}
+          <button onclick={onadd} aria-label="Add tag">
+            <Chip>
+              <Plus />
+            </Chip>
+          </button>
+        {/if}
 
-        {#if mode === 'select'}
+        {#if mode === 'select' && selectedTagIds.some( id => tags.find(tag => tag.id === id), )}
           <button onclick={onclear} aria-label="Clear selected {name} tags">
             <Chip>
               <X />
             </Chip>
           </button>
         {/if}
+
+        <button onclick={onedit} aria-label="Edit {name} category">
+          <Chip>
+            {#if mode === 'select'}
+              <Pencil />
+            {:else if mode === 'edit'}
+              <PencilOff />
+            {/if}
+          </Chip>
+        </button>
       </div>
     {/if}
   </div>
