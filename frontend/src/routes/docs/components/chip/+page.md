@@ -238,4 +238,4 @@ The `ChipVariant` type includes:
 
 ## References
 
-- [Color Types](/docs/types/color)
+- [Color](/docs/design/color)

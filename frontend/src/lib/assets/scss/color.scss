@@ -385,12 +385,12 @@ $colors: list.append($saturatedColors, 'base');
   --logo-upper: var(--color-blue-70);
   --logo-lower: var(--color-pink-60);
 
-  --background-primary: var(--color-base-00);
-  --background-secondary: var(--color-base-05);
-  --background-accent: var(--color-base-10);
+  --background-primary: var(--color-base-05);
+  --background-secondary: var(--color-base-10);
+  --background-accent: var(--color-base-20);
 
   --background-overlay: #{color.adjust($color-base-00, $alpha: -0.25)};
-  --background-overlay-subtle: #{color.adjust($color-base-00, $alpha: -0.33)};
+  --background-overlay-subtle: #{color.adjust($color-base-10, $alpha: -0.33)};
 
   --border-color: var(--color-base-20);
 
@@ -431,11 +431,11 @@ $colors: list.append($saturatedColors, 'base');
 
   --button-primary-background: var(--color-base-100);
   --button-primary-border: var(--color-base-100);
-  --button-primary-color: var(--color-base-00);
+  --button-primary-color: var(--background-primary);
 
   --button-primary-background-hover: var(--color-base-80);
   --button-primary-border-hover: var(--color-base-80);
-  --button-primary-color-hover: var(--color-base-00);
+  --button-primary-color-hover: var(--button-primary-color);
   --button-primary-background-active: var(--color-base-70);
   --button-primary-border-active: var(--color-base-70);
   --button-primary-color-active: var(--button-primary-color);
@@ -443,12 +443,12 @@ $colors: list.append($saturatedColors, 'base');
   --button-destructive-color: var(--button-color);
 
   --modal-background: var(--background-primary);
-  --modal-backdrop: var(--background-overlay);
+  --modal-backdrop: var(--background-overlay-subtle);
   --modal-border: var(--border-color);
 
-  --chip-subtle-base-background: var(--color-base-10);
-  --chip-subtle-base-background-hover: var(--color-base-20);
-  --chip-subtle-base-background-active: var(--color-base-10);
+  --chip-subtle-base-background: var(--color-base-20);
+  --chip-subtle-base-background-hover: var(--color-base-30);
+  --chip-subtle-base-background-active: var(--color-base-40);
   --chip-subtle-base-color: var(--color-base-70);
   --chip-subtle-blue-background: var(--color-blue-10);
   --chip-subtle-blue-background-hover: var(--color-blue-20);

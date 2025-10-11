@@ -298,7 +298,7 @@ const validAddTag = $derived.by(() => {
           </Modal>
         {/if}
 
-        {#if mode === 'select' && selectedTagIds.some( id => tags.find(tag => tag.id === id), )}
+        {#if selectedTagIds.some(id => tags.find(tag => tag.id === id))}
           <button onclick={onclear} aria-label="Clear selected {name} tags">
             <Chip>
               <X />
@@ -307,7 +307,7 @@ const validAddTag = $derived.by(() => {
         {/if}
 
         <button onclick={onedit} aria-label="Edit {name} category">
-          <Chip>
+          <Chip outline={mode === 'edit'}>
             {#if mode === 'select'}
               <Pencil />
             {:else if mode === 'edit'}
