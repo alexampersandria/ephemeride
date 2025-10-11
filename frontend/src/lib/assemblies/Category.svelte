@@ -8,24 +8,33 @@ import Select from '$lib/components/Select.svelte'
 import type { CategoryProps } from '$lib/types/assemblies/category'
 import { colors, type Color } from '$lib/types/color'
 import type { InputState } from '$lib/types/input'
-import { Pencil, PencilOff, Plus, Tag, X } from 'lucide-svelte'
+import { Pencil, PencilOff, Plus, TagIcon, X } from 'lucide-svelte'
+import type { Tag } from '$lib/types/log'
 
 let {
   name,
   tags = $bindable([]),
   selectedTagIds = $bindable([]),
   mode = 'view',
+  onaddtag,
+  onremovetag,
+  onselecttag,
+  onedittag,
 }: CategoryProps = $props()
 
-const onclick = (tag: { id: string }) => {
+const clickTag = (tag: Tag) => {
   if (mode === 'select') {
     if (selectedTagIds.includes(tag.id)) {
       selectedTagIds = selectedTagIds.filter(id => id !== tag.id)
     } else {
       selectedTagIds = [...selectedTagIds, tag.id]
     }
+
+    if (onselecttag) {
+      onselecttag(tag, selectedTagIds.includes(tag.id))
+    }
   } else if (mode === 'edit') {
-    // #TODO: edit name or color or remove tag
+    openEditTag(tag.id)
   }
 }
 
@@ -42,8 +51,10 @@ const onclear = () => {
   selectedTagIds = selectedTagIds.filter(id => !tags.find(tag => tag.id === id))
 }
 
-let addTag: {
+let tagDetails: {
+  mode: 'add' | 'edit'
   open: boolean
+  id?: string
   name: {
     value?: string
     inputstate: InputState
@@ -54,7 +65,9 @@ let addTag: {
   }
   errors: string[]
 } = $state({
+  mode: 'add',
   open: false,
+  id: undefined,
   name: {
     value: undefined,
     inputstate: 'untouched',
@@ -66,83 +79,146 @@ let addTag: {
   errors: [] as string[],
 })
 
-const toggleAddTag = () => {
-  addTag.open = !addTag.open
+const openAddTag = () => {
+  tagDetails.open = true
+}
 
-  if (!addTag.open) {
-    resetAddTag()
+const openEditTag = (tagId: string) => {
+  const tag = tags.find(tag => tag.id === tagId)
+  if (tag) {
+    tagDetails.mode = 'edit'
+    tagDetails.id = tag.id
+    tagDetails.name.value = tag.name
+    tagDetails.name.inputstate = 'touched'
+    tagDetails.color.value = tag.color
+    tagDetails.color.inputstate = 'touched'
+    tagDetails.open = true
   }
 }
 
-const validateAddTag = () => {
-  addTag.errors = []
+const closeTagDetails = () => {
+  tagDetails.open = false
+  resetTagDetails()
+}
 
-  if (!addTag.name.value && addTag.name.inputstate !== 'untouched') {
-    addTag.name.inputstate = 'invalid'
-    addTag.errors.push('Name is required')
+const validateAddTag = () => {
+  tagDetails.errors = []
+
+  if (!tagDetails.name.value && tagDetails.name.inputstate !== 'untouched') {
+    tagDetails.name.inputstate = 'invalid'
+    tagDetails.errors.push('Name is required')
   }
 
-  if (!addTag.color.value && addTag.color.inputstate !== 'untouched') {
-    addTag.color.inputstate = 'invalid'
-    addTag.errors.push('Color is required')
+  if (!tagDetails.color.value && tagDetails.color.inputstate !== 'untouched') {
+    tagDetails.color.inputstate = 'invalid'
+    tagDetails.errors.push('Color is required')
   }
 
   if (
     tags.find(
-      tag => tag.name.toLowerCase() === addTag.name.value?.toLowerCase(),
+      tag =>
+        tag.name.toLowerCase() === tagDetails.name.value?.toLowerCase() &&
+        tag.id !== tagDetails.id,
     )
   ) {
-    addTag.name.inputstate = 'invalid'
-    addTag.errors.push('Tag name must be unique')
+    tagDetails.name.inputstate = 'invalid'
+    tagDetails.errors.push('Tag name must be unique')
   }
 }
 
-const addNewTag = () => {
+const submitAddTag = () => {
   validateAddTag()
 
   if (
-    addTag.name.inputstate !== 'touched' ||
-    addTag.color.inputstate !== 'touched' ||
-    !addTag.color.value ||
-    !addTag.name.value
+    tagDetails.name.inputstate !== 'touched' ||
+    tagDetails.color.inputstate !== 'touched' ||
+    !tagDetails.color.value ||
+    !tagDetails.name.value
   ) {
     return
   }
 
+  const newTag = {
+    name: tagDetails.name.value,
+    color: tagDetails.color.value as Color,
+  }
+
+  // timestamp, await ID from backend #TODO
   tags.push({
     id: Date.now().toString(),
-    name: addTag.name.value,
-    color: addTag.color.value as Color,
+    ...newTag,
   })
 
-  resetAddTag()
+  if (onaddtag) {
+    onaddtag(newTag)
+  }
+
+  resetTagDetails()
+}
+
+const submitEditTag = () => {
+  validateAddTag()
+
+  if (
+    tagDetails.name.inputstate !== 'touched' ||
+    tagDetails.color.inputstate !== 'touched' ||
+    !tagDetails.color.value ||
+    !tagDetails.name.value ||
+    !tagDetails.id
+  ) {
+    return
+  }
+
+  const editedTag = {
+    id: tagDetails.id,
+    name: tagDetails.name.value,
+    color: tagDetails.color.value as Color,
+  }
+
+  const tagIndex = tags.findIndex(tag => tag.id === tagDetails.id)
+  if (tagIndex !== -1) {
+    tags[tagIndex] = editedTag
+
+    if (onedittag) {
+      onedittag(editedTag)
+    }
+  }
+
+  resetTagDetails()
 }
 
 $effect(() => {
-  if (!addTag.open) {
-    resetAddTag()
+  if (!tagDetails.open) {
+    resetTagDetails()
   }
 })
 
-const validAddTag = $derived.by(() => {
-  return (
-    addTag.name.inputstate !== 'invalid' &&
-    addTag.color.inputstate !== 'invalid'
-  )
-})
-
-const resetAddTag = () => {
-  addTag.name.value = undefined
-  addTag.color.value = undefined
-  addTag.open = false
+const resetTagDetails = () => {
+  tagDetails.id = undefined
+  tagDetails.name.value = undefined
+  tagDetails.name.inputstate = 'untouched'
+  tagDetails.color.value = undefined
+  tagDetails.color.inputstate = 'untouched'
+  tagDetails.errors = []
+  tagDetails.open = false
 }
 
 const _removeTag = (tagId: string) => {
   if (mode === 'edit') {
     tags = tags.filter(tag => tag.id !== tagId)
     selectedTagIds = selectedTagIds.filter(id => id !== tagId)
+    if (onremovetag) {
+      onremovetag(tagId)
+    }
   }
 }
+
+const validAddTag = $derived.by(() => {
+  return (
+    tagDetails.name.inputstate !== 'invalid' &&
+    tagDetails.color.inputstate !== 'invalid'
+  )
+})
 </script>
 
 <div class="category">
@@ -154,20 +230,21 @@ const _removeTag = (tagId: string) => {
     {#if mode === 'select' || mode === 'edit'}
       <div class="category-actions">
         {#if mode === 'edit'}
-          <button onclick={toggleAddTag} aria-label="Add tag">
+          <button onclick={openAddTag} aria-label="Add tag">
             <Chip>
               <Plus />
             </Chip>
           </button>
-          <Modal bind:open={addTag.open}>
+
+          <Modal bind:open={tagDetails.open}>
             <h4>Add tag</h4>
             <div class="add-tag">
               <Input
                 fullwidth
                 live
                 required
-                bind:value={addTag.name.value}
-                bind:inputstate={addTag.name.inputstate}
+                bind:value={tagDetails.name.value}
+                bind:inputstate={tagDetails.name.inputstate}
                 onchange={() => {
                   validateAddTag()
                 }}
@@ -177,18 +254,18 @@ const _removeTag = (tagId: string) => {
                 fullwidth
                 required
                 options={colors.map(color => ({ label: color, value: color }))}
-                bind:value={addTag.color.value}
-                bind:inputstate={addTag.color.inputstate}
+                bind:value={tagDetails.color.value}
+                bind:inputstate={tagDetails.color.inputstate}
                 onchange={() => {
                   validateAddTag()
                 }}
                 placeholder="Tag color" />
 
-              {#if addTag.errors.length > 0}
+              {#if tagDetails.errors.length > 0}
                 <Alert type="error" size="small">
                   <b>Invalid tag</b>
                   <ul>
-                    {#each addTag.errors as error}
+                    {#each tagDetails.errors as error}
                       <li>{error}</li>
                     {/each}
                   </ul>
@@ -196,11 +273,22 @@ const _removeTag = (tagId: string) => {
               {/if}
 
               <div class="add-tag-actions">
-                <Button onclick={toggleAddTag}>Cancel</Button>
-                <Button
-                  type="primary"
-                  onclick={addNewTag}
-                  disabled={!validAddTag}>Add tag</Button>
+                <Button onclick={closeTagDetails}>Cancel</Button>
+                {#if tagDetails.mode === 'add'}
+                  <Button
+                    type="primary"
+                    onclick={submitAddTag}
+                    disabled={!validAddTag}>
+                    Add tag
+                  </Button>
+                {:else if tagDetails.mode === 'edit'}
+                  <Button
+                    type="primary"
+                    onclick={submitEditTag}
+                    disabled={!validAddTag}>
+                    Save changes
+                  </Button>
+                {/if}
               </div>
             </div>
           </Modal>
@@ -230,14 +318,14 @@ const _removeTag = (tagId: string) => {
   <div class="category-tags">
     {#if tags.length === 0}
       <div class="category-no-tags dimmed">
-        <Tag />
+        <TagIcon />
         No tags
       </div>
     {:else}
       {#each tags as tag}
         <button
           class="plain"
-          onclick={() => onclick(tag)}
+          onclick={() => clickTag(tag)}
           role="option"
           aria-selected={selectedTagIds.includes(tag.id)}
           aria-label={mode === 'select'
