@@ -102,8 +102,11 @@ const closeTagDetails = () => {
   resetTagDetails()
 }
 
-const validateAddTag = (requireUntouched = true) => {
+const validateTagDetails = (requireUntouched = true) => {
   tagDetails.errors = []
+  if (tagDetails.name.value) {
+    tagDetails.name.value = tagDetails.name.value.trim()
+  }
 
   if (
     !tagDetails.name.value &&
@@ -134,7 +137,7 @@ const validateAddTag = (requireUntouched = true) => {
 }
 
 const submitAddTag = () => {
-  validateAddTag(false)
+  validateTagDetails(false)
 
   if (
     tagDetails.name.inputstate !== 'touched' ||
@@ -164,7 +167,7 @@ const submitAddTag = () => {
 }
 
 const submitEditTag = () => {
-  validateAddTag(false)
+  validateTagDetails(false)
 
   if (
     tagDetails.name.inputstate !== 'touched' ||
@@ -254,14 +257,14 @@ const validAddTag = $derived.by(() => {
                   bind:value={tagDetails.name.value}
                   bind:inputstate={tagDetails.name.inputstate}
                   onchange={() => {
-                    validateAddTag()
+                    validateTagDetails()
                   }}
                   placeholder="Tag name" />
                 <ColorPicker
                   bind:value={tagDetails.color.value}
                   bind:inputstate={tagDetails.color.inputstate}
                   onChange={() => {
-                    validateAddTag()
+                    validateTagDetails()
                   }} />
               </div>
 
