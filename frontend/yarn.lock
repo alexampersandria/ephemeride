@@ -2062,6 +2062,7 @@ __metadata:
     svelte: "npm:^5.0.0"
     svelte-check: "npm:^4.0.0"
     svelte-eslint-parser: "npm:^0.43.0"
+    svelte-portal: "npm:^2.2.1"
     typescript: "npm:^5.7.3"
     typescript-eslint: "npm:^8.24.0"
     vite: "npm:^6.0.0"
@@ -3813,6 +3814,13 @@ __metadata:
     svelte:
       optional: true
   checksum: 10c0/52bbbf5d266fc36f64626e38d8de4354d78a5490fa60b61b1cd127c1c661d94f0c671a220e3ed7dd92b144a3c99f517d5205c218f78feea0603132f24eeb4c9d
+  languageName: node
+  linkType: hard
+
+"svelte-portal@npm:^2.2.1":
+  version: 2.2.1
+  resolution: "svelte-portal@npm:2.2.1"
+  checksum: 10c0/95c66824edf174b9868d10ecb4a886da6ad938b13280c1d843de0e9f2f2580c3a71ae1ee695bc7920c111898c6444d8245e998dab7424dd70af9ba97c3585b95
   languageName: node
   linkType: hard
 

@@ -119,7 +119,6 @@ const _removeTag = (tagId: string) => {
   flex-direction: column;
   gap: var(--padding-xs);
   width: 100%;
-  max-width: var(--block-size-m);
 
   .category-no-tags {
     font-size: var(--font-size-s);

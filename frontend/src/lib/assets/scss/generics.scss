@@ -19,12 +19,24 @@ button {
     }
   }
 
-  &.plain {
+  &.plain,
+  &.basic {
     background: none;
     border: none;
     padding: 0;
     color: inherit;
     font-size: inherit;
+  }
+
+  &.basic {
+    color: var(--text-primary);
+    &:hover {
+      color: var(--text-muted);
+    }
+    &:active {
+      color: var(--text-dimmed);
+      transform: var(--click-transform);
+    }
   }
 }
 
@@ -114,6 +126,8 @@ h6 {
   &:first-child {
     margin-top: 0;
   }
+
+  margin-bottom: 0.5em;
 
   &:has(+ p) {
     margin-bottom: 0;
