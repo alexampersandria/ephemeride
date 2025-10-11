@@ -338,6 +338,7 @@ const validAddTag = $derived.by(() => {
               : `Select tag: ${tag.name}`
             : tag.name}>
           <Chip
+            outline={selectedTagIds.includes(tag.id)}
             color={tag.color}
             variant={selectedTagIds.includes(tag.id) ? 'solid' : 'subtle'}>
             {tag.name}
@@ -379,7 +380,7 @@ const validAddTag = $derived.by(() => {
   .category-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--padding-xs);
+    gap: var(--padding-s);
     max-width: 100%;
   }
 }

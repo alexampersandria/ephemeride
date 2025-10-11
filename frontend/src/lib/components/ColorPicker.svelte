@@ -27,6 +27,7 @@ const onclick = (selectedColor: string) => {
         onclick={() => onclick(option)}
         aria-label={`Select color ${option}`}>
         <Chip
+          outline={value === option}
           color={option}
           variant={value === option || !value ? 'solid' : 'subtle'}>
           &#10240;
@@ -41,7 +42,6 @@ const onclick = (selectedColor: string) => {
   display: flex;
   flex-wrap: nowrap;
   gap: var(--padding-xs);
-  overflow-x: auto;
 
   &.fullwidth {
     width: 100%;

@@ -2,7 +2,12 @@
 import type { ChipProps } from '$lib/types/components/chip'
 import { onMount } from 'svelte'
 
-let { children, color = 'base', variant = 'subtle' }: ChipProps = $props()
+let {
+  children,
+  color = 'base',
+  variant = 'subtle',
+  outline,
+}: ChipProps = $props()
 
 let chip: HTMLDivElement | null = null
 let isSingleCharacter = $state(false)
@@ -35,8 +40,9 @@ onMount(() => {
 
 <div
   class="chip {color} {variant}"
-  bind:this={chip}
-  class:single-character={isSingleCharacter}>
+  class:outline
+  class:single-character={isSingleCharacter}
+  bind:this={chip}>
   {@render children()}
 </div>
 
@@ -55,6 +61,10 @@ onMount(() => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  box-shadow:
+    0 0 0 0 var(--background-primary),
+    0 0 0 0 var(--chip-background-color);
+  transition: box-shadow 0.05s ease-out;
 
   :global(.lucide) {
     min-width: 1em;
@@ -64,6 +74,13 @@ onMount(() => {
   &.single-character {
     max-width: 1.765625rem;
     aspect-ratio: 1 / 1;
+  }
+
+  &.outline {
+    box-shadow:
+      0 0 0 var(--focus-shadow-offset) var(--background-primary),
+      0 0 0 calc(var(--focus-shadow-offset) + var(--focus-shadow-offset))
+        var(--chip-background-color);
   }
 
   @each $color in color.$colors {
@@ -99,6 +116,8 @@ onMount(() => {
 
 :global(a:has(.chip)),
 :global(button:has(.chip)) {
+  border-radius: 9999px;
+
   &:hover .chip {
     background-color: var(--chip-background-color-hover);
   }

@@ -7,4 +7,5 @@ export type ChipProps = {
   children: Snippet
   color?: Color
   variant?: ChipVariant
+  outline?: boolean
 }

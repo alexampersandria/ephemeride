@@ -220,11 +220,12 @@ Icons can be used inside the chip as well, usefull for tiny buttons.
 
 ### Props
 
-| Name     | Type          | Required | Default    | Description                         |
-| -------- | ------------- | :------: | ---------- | ----------------------------------- |
-| children | `Snippet`     |    ✅    |            | Content to display inside the chip. |
-| color    | `Color`       |          | `'base'`   | Color theme of the chip.            |
-| variant  | `ChipVariant` |          | `'subtle'` | Visual variant of the chip.         |
+| Name     | Type          | Required | Default    | Description                                                              |
+| -------- | ------------- | :------: | ---------- | ------------------------------------------------------------------------ |
+| children | `Snippet`     |    ✅    |            | Content to display inside the chip.                                      |
+| color    | `Color`       |          | `'base'`   | Color theme of the chip.                                                 |
+| variant  | `ChipVariant` |          | `'subtle'` | Visual variant of the chip.                                              |
+| outline  | `boolean`     |          | `false`    | If the chip should have an outline, used to indicate selected value etc. |
 
 ### ChipVariant
 
