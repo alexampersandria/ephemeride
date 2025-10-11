@@ -1,5 +1,6 @@
 <script lang="ts">
 import type { SelectProps } from '$lib/types/components/select'
+import { evaluateInputState } from '$lib/utils/input'
 import { onMount } from 'svelte'
 
 let {
@@ -7,7 +8,7 @@ let {
   value = $bindable(),
   placeholder,
   disabled,
-  inputstate: state = $bindable('untouched'),
+  inputstate = $bindable('untouched'),
   name,
   id,
   required,
@@ -18,9 +19,11 @@ const onchange = (event: Event) => {
   const target = event.target as HTMLSelectElement
   value = target.value
 
-  if (state === 'untouched') {
-    state = 'touched'
-  }
+  inputstate = evaluateInputState({
+    value,
+    inputstate,
+    required,
+  })
 }
 
 onMount(() => {
@@ -37,8 +40,8 @@ onMount(() => {
   {id}
   {required}
   class:fullwidth
-  class:invalid={state === 'invalid'}
-  aria-invalid={state === 'invalid'}
+  class:invalid={inputstate === 'invalid'}
+  aria-invalid={inputstate === 'invalid'}
   {onchange}>
   {#if placeholder}
     <option class="select-option" value="" disabled selected={!value}>
@@ -64,7 +67,7 @@ onMount(() => {
   border: var(--border-width) solid var(--select-border);
 
   &.fullwidth {
-    width: calc(100% - var(--input-padding) * 2);
+    width: 100%;
   }
 
   &:not(:disabled) {
