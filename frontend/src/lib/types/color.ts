@@ -1,5 +1,4 @@
 export const saturatedColors = [
-  'base',
   'blue',
   'green',
   'red',
@@ -10,6 +9,6 @@ export const saturatedColors = [
 
 export type SaturatedColor = (typeof saturatedColors)[number]
 
-export const colors = [...saturatedColors, 'base'] as const
+export const colors = ['base', ...saturatedColors] as const
 
 export type Color = (typeof colors)[number]

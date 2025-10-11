@@ -4,12 +4,12 @@ import Button from '$lib/components/Button.svelte'
 import Chip from '$lib/components/Chip.svelte'
 import Input from '$lib/components/Input.svelte'
 import Modal from '$lib/components/Modal.svelte'
-import Select from '$lib/components/Select.svelte'
 import type { CategoryProps } from '$lib/types/assemblies/category'
-import { colors, type Color } from '$lib/types/color'
+import { type Color } from '$lib/types/color'
 import type { InputState } from '$lib/types/input'
 import { Pencil, PencilOff, Plus, TagIcon, X } from 'lucide-svelte'
 import type { Tag } from '$lib/types/log'
+import ColorPicker from '$lib/components/ColorPicker.svelte'
 
 let {
   name,
@@ -245,28 +245,25 @@ const validAddTag = $derived.by(() => {
 
           <Modal bind:open={tagDetails.open}>
             <h4>Add tag</h4>
-            <div class="add-tag">
-              <Input
-                fullwidth
-                live
-                required
-                bind:value={tagDetails.name.value}
-                bind:inputstate={tagDetails.name.inputstate}
-                onchange={() => {
-                  validateAddTag()
-                }}
-                placeholder="Tag name" />
-              <!-- #TODO: add color picker component -->
-              <Select
-                fullwidth
-                required
-                options={colors.map(color => ({ label: color, value: color }))}
-                bind:value={tagDetails.color.value}
-                bind:inputstate={tagDetails.color.inputstate}
-                onchange={() => {
-                  validateAddTag()
-                }}
-                placeholder="Tag color" />
+            <div class="tag-details">
+              <div class="tag-details-inputs">
+                <Input
+                  fullwidth
+                  live
+                  required
+                  bind:value={tagDetails.name.value}
+                  bind:inputstate={tagDetails.name.inputstate}
+                  onchange={() => {
+                    validateAddTag()
+                  }}
+                  placeholder="Tag name" />
+                <ColorPicker
+                  bind:value={tagDetails.color.value}
+                  bind:inputstate={tagDetails.color.inputstate}
+                  onChange={() => {
+                    validateAddTag()
+                  }} />
+              </div>
 
               {#if tagDetails.errors.length > 0}
                 <Alert type="error" size="small">
@@ -279,7 +276,7 @@ const validAddTag = $derived.by(() => {
                 </Alert>
               {/if}
 
-              <div class="add-tag-actions">
+              <div class="tag-details-actions">
                 <Button onclick={closeTagDetails}>Cancel</Button>
                 {#if tagDetails.mode === 'add'}
                   <Button
@@ -387,12 +384,19 @@ const validAddTag = $derived.by(() => {
   }
 }
 
-.add-tag {
+.tag-details {
   display: flex;
   flex-direction: column;
   gap: var(--padding-s);
 
-  .add-tag-actions {
+  .tag-details-inputs {
+    display: flex;
+    gap: var(--padding-s);
+    flex-direction: column;
+    margin-bottom: var(--padding-m);
+  }
+
+  .tag-details-actions {
     display: flex;
     justify-content: space-between;
   }
