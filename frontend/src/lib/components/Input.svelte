@@ -14,9 +14,11 @@ let {
   name,
   id,
   required,
+  onchange: emitOnChange,
+  oninput: emitOnInput,
 }: InputProps = $props()
 
-const onchange = (event: Event) => {
+const onchange = (event: Event, fromLive = false) => {
   const target = event.target as HTMLSelectElement
   value = target.value
 
@@ -26,11 +28,19 @@ const onchange = (event: Event) => {
     validation,
     required,
   })
+
+  if (emitOnChange && !fromLive) {
+    emitOnChange(event)
+  }
 }
 
 const oninput = (event: Event) => {
   if (live) {
-    onchange(event)
+    onchange(event, true)
+  }
+
+  if (emitOnInput) {
+    emitOnInput(event)
   }
 }
 </script>

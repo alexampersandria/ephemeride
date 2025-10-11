@@ -13,6 +13,8 @@ let {
   maxlength,
   fullwidth,
   inputstate = $bindable('untouched'),
+  onchange: emitOnChange,
+  oninput: emitOnInput,
 }: TextareaProps = $props()
 
 let exceedsMaxLength = $derived.by(() => {
@@ -23,8 +25,18 @@ let exceedsMaxLength = $derived.by(() => {
   }
 })
 
-const oninput = () => {
+const oninput = (event: Event) => {
   evaluateInputState()
+
+  if (emitOnInput) {
+    emitOnInput(event)
+  }
+}
+
+const onchange = (event: Event) => {
+  if (emitOnChange) {
+    emitOnChange(event)
+  }
 }
 
 const evaluateInputState = (mount = false) => {
@@ -75,7 +87,8 @@ const circlePercentage = $derived.by(() => {
     {name}
     {id}
     {required}
-    {oninput}>
+    {oninput}
+    {onchange}>
   </textarea>
 
   {#if maxlength}

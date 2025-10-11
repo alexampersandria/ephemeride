@@ -1,4 +1,5 @@
 <script lang="ts">
+import Alert from '$lib/components/Alert.svelte'
 import Button from '$lib/components/Button.svelte'
 import Chip from '$lib/components/Chip.svelte'
 import Input from '$lib/components/Input.svelte'
@@ -41,16 +42,28 @@ const onclear = () => {
   selectedTagIds = selectedTagIds.filter(id => !tags.find(tag => tag.id === id))
 }
 
-let addTag = $state({
+let addTag: {
+  open: boolean
+  name: {
+    value?: string
+    inputstate: InputState
+  }
+  color: {
+    value?: Color
+    inputstate: InputState
+  }
+  errors: string[]
+} = $state({
   open: false,
   name: {
-    value: '',
-    inputstate: 'untouched' as InputState,
+    value: undefined,
+    inputstate: 'untouched',
   },
   color: {
-    value: '',
-    inputstate: 'untouched' as InputState,
+    value: undefined,
+    inputstate: 'untouched',
   },
+  errors: [] as string[],
 })
 
 const toggleAddTag = () => {
@@ -62,18 +75,25 @@ const toggleAddTag = () => {
 }
 
 const validateAddTag = () => {
-  if (!addTag.name.value) {
+  addTag.errors = []
+
+  if (!addTag.name.value && addTag.name.inputstate !== 'untouched') {
     addTag.name.inputstate = 'invalid'
+    addTag.errors.push('Name is required')
   }
 
-  if (!addTag.color.value) {
+  if (!addTag.color.value && addTag.color.inputstate !== 'untouched') {
     addTag.color.inputstate = 'invalid'
+    addTag.errors.push('Color is required')
   }
 
   if (
-    tags.find(tag => tag.name.toLowerCase() === addTag.name.value.toLowerCase())
+    tags.find(
+      tag => tag.name.toLowerCase() === addTag.name.value?.toLowerCase(),
+    )
   ) {
     addTag.name.inputstate = 'invalid'
+    addTag.errors.push('Tag name must be unique')
   }
 }
 
@@ -82,7 +102,9 @@ const addNewTag = () => {
 
   if (
     addTag.name.inputstate !== 'touched' ||
-    addTag.color.inputstate !== 'touched'
+    addTag.color.inputstate !== 'touched' ||
+    !addTag.color.value ||
+    !addTag.name.value
   ) {
     return
   }
@@ -110,8 +132,8 @@ const validAddTag = $derived.by(() => {
 })
 
 const resetAddTag = () => {
-  addTag.name.value = ''
-  addTag.color.value = ''
+  addTag.name.value = undefined
+  addTag.color.value = undefined
   addTag.open = false
 }
 
@@ -146,6 +168,9 @@ const _removeTag = (tagId: string) => {
                 required
                 bind:value={addTag.name.value}
                 bind:inputstate={addTag.name.inputstate}
+                onchange={() => {
+                  validateAddTag()
+                }}
                 placeholder="Tag name" />
               <!-- #TODO: add color picker component -->
               <Select
@@ -154,7 +179,22 @@ const _removeTag = (tagId: string) => {
                 options={colors.map(color => ({ label: color, value: color }))}
                 bind:value={addTag.color.value}
                 bind:inputstate={addTag.color.inputstate}
+                onchange={() => {
+                  validateAddTag()
+                }}
                 placeholder="Tag color" />
+
+              {#if addTag.errors.length > 0}
+                <Alert type="error" size="small">
+                  <b>Invalid tag</b>
+                  <ul>
+                    {#each addTag.errors as error}
+                      <li>{error}</li>
+                    {/each}
+                  </ul>
+                </Alert>
+              {/if}
+
               <div class="add-tag-actions">
                 <Button onclick={toggleAddTag}>Cancel</Button>
                 <Button

@@ -9,6 +9,8 @@ export type InputFieldAttributes = {
   name?: string
   required?: boolean
   id?: string
+  onchange?: (event: Event) => void
+  oninput?: (event: Event) => void
 }
 
 export type ValidationFunction = (

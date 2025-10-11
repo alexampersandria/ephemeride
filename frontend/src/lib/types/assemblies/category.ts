@@ -5,4 +5,5 @@ export type CategoryProps = {
   tags: Tag[]
   selectedTagIds: string[]
   mode?: 'view' | 'edit' | 'select'
+  onaddtag?: (tag: Tag) => void
 }

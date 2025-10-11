@@ -13,6 +13,8 @@ let {
   id,
   required,
   fullwidth,
+  onchange: emitOnChange,
+  oninput: emitOnInput,
 }: SelectProps = $props()
 
 const onchange = (event: Event) => {
@@ -24,6 +26,16 @@ const onchange = (event: Event) => {
     inputstate,
     required,
   })
+
+  if (emitOnChange) {
+    emitOnChange(event)
+  }
+}
+
+const oninput = (event: Event) => {
+  if (emitOnInput) {
+    emitOnInput(event)
+  }
 }
 
 onMount(() => {
@@ -42,7 +54,8 @@ onMount(() => {
   class:fullwidth
   class:invalid={inputstate === 'invalid'}
   aria-invalid={inputstate === 'invalid'}
-  {onchange}>
+  {onchange}
+  {oninput}>
   {#if placeholder}
     <option class="select-option" value="" disabled selected={!value}>
       {placeholder}

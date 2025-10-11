@@ -6,11 +6,15 @@ export type Category = {
   name: string
 }
 
+export type NewCategory = Omit<Category, 'id'>
+
 export type Tag = {
   id: string
   name: string
   color: Color
 }
+
+export type NewTag = Omit<Tag, 'id'>
 
 export type Entry = {
   id: string
@@ -18,3 +22,5 @@ export type Entry = {
   mood: MoodValue
   entry?: string
 }
+
+export type NewEntry = Omit<Entry, 'id'>
