@@ -81,6 +81,7 @@ let tagDetails: {
 
 const openAddTag = () => {
   tagDetails.open = true
+  tagDetails.mode = 'add'
 }
 
 const openEditTag = (tagId: string) => {
@@ -101,15 +102,21 @@ const closeTagDetails = () => {
   resetTagDetails()
 }
 
-const validateAddTag = () => {
+const validateAddTag = (requireUntouched = true) => {
   tagDetails.errors = []
 
-  if (!tagDetails.name.value && tagDetails.name.inputstate !== 'untouched') {
+  if (
+    !tagDetails.name.value &&
+    (tagDetails.name.inputstate !== 'untouched' || !requireUntouched)
+  ) {
     tagDetails.name.inputstate = 'invalid'
     tagDetails.errors.push('Name is required')
   }
 
-  if (!tagDetails.color.value && tagDetails.color.inputstate !== 'untouched') {
+  if (
+    !tagDetails.color.value &&
+    (tagDetails.color.inputstate !== 'untouched' || !requireUntouched)
+  ) {
     tagDetails.color.inputstate = 'invalid'
     tagDetails.errors.push('Color is required')
   }
@@ -127,7 +134,7 @@ const validateAddTag = () => {
 }
 
 const submitAddTag = () => {
-  validateAddTag()
+  validateAddTag(false)
 
   if (
     tagDetails.name.inputstate !== 'touched' ||
@@ -157,7 +164,7 @@ const submitAddTag = () => {
 }
 
 const submitEditTag = () => {
-  validateAddTag()
+  validateAddTag(false)
 
   if (
     tagDetails.name.inputstate !== 'touched' ||
