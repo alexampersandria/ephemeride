@@ -2,6 +2,7 @@
 import type { TextareaProps } from '$lib/types/components/textarea'
 import { onMount } from 'svelte'
 import FilledCircle from './FilledCircle.svelte'
+import { formatNumber } from '$lib/utils/numbers'
 
 let {
   value = $bindable(''),
@@ -98,7 +99,7 @@ const circlePercentage = $derived.by(() => {
       aria-live="polite"
       aria-atomic="true">
       <div class="length-text">
-        {value ? value.length : 0} / {maxlength}
+        {formatNumber(value.length)} / {formatNumber(maxlength)}
       </div>
       <div class="circle">
         <FilledCircle

@@ -8,6 +8,11 @@ export type Category = {
 
 export type NewCategory = Omit<Category, 'id'>
 
+export type CategoryWithTags = Category & {
+  tags: Tag[]
+  selectedTagIds?: string[]
+}
+
 export type Tag = {
   id: string
   name: string
@@ -24,3 +29,5 @@ export type Entry = {
 }
 
 export type NewEntry = Omit<Entry, 'id'>
+
+export const entryMaxLength = 1000

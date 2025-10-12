@@ -1,21 +1,25 @@
 <script lang="ts">
 import type { MoodInputProps, MoodValue } from '$lib/types/components/moodinput'
 
-let { value = $bindable() }: MoodInputProps = $props()
+let { mode = 'edit', value = $bindable() }: MoodInputProps = $props()
 
 const setValue = (mood: number) => () => {
-  value = mood as MoodValue
+  if (mode === 'edit') {
+    value = mood as MoodValue
+  }
 }
 </script>
 
-<div class="mood-input mood-value-{value || 'none'}">
+<div class="mood-input mood-value-{value || 'none'} mode-{mode}">
   <div class="mood-buttons-container">
     {#each [1, 2, 3, 4, 5] as mood}
       <button
         class="plain mood-button mood-{mood}"
         class:selected={value === mood}
         onclick={setValue(mood)}
-        aria-label={`Select mood ${mood}`}>
+        disabled={mode === 'view'}
+        aria-label={mode === 'edit' ? `Select mood ${mood}` : `Mood ${mood}`}
+        aria-disabled={mode === 'view'}>
         <div class="mood-button-inner">
           {mood}
         </div>
@@ -75,18 +79,34 @@ const setValue = (mood: number) => () => {
         height: var(--mood-button-height);
       }
 
-      &:active {
-        transform: var(--click-transform);
-      }
-
       &.selected {
         color: var(--mood-color-chosen-primary);
+      }
+
+      &:disabled {
+        cursor: default;
       }
     }
 
     &:has(.selected) {
-      .mood-button:not(.selected, :hover) {
+      .mood-button:not(.selected) {
         color: var(--mood-button-unselected);
+      }
+    }
+  }
+
+  &.mode-edit {
+    .mood-buttons-container:has(.selected) {
+      .mood-button {
+        &:not(.selected):hover {
+          color: var(--text-primary);
+        }
+
+        &:active {
+          .mood-button-inner {
+            transform: var(--click-transform);
+          }
+        }
       }
     }
   }
