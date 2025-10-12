@@ -10,6 +10,7 @@ import Alert from '$lib/components/Alert.svelte'
 import Chip from '$lib/components/Chip.svelte'
 import Modal from '$lib/components/Modal.svelte'
 import Markdown from 'svelte-exmarkdown'
+import type { MoodValue } from '$lib/types/components/moodinput'
 
 let {
   date,
@@ -32,6 +33,45 @@ let errors = $derived.by(() => {
 })
 
 let entryTextModal = $state(false)
+
+let editModel = $state<{
+  mood?: MoodValue
+  entry: string
+}>({
+  mood: undefined,
+  entry: '',
+})
+
+const resetEditModel = () => {
+  editModel.mood = mood
+  editModel.entry = entry
+}
+
+const applyEditModel = () => {
+  if (editModel.mood !== undefined) {
+    mood = editModel.mood
+  }
+  entry = editModel.entry
+}
+
+const startEdit = () => {
+  resetEditModel()
+  mode = 'edit'
+}
+
+const saveChanges = () => {
+  if (errors.length > 0) {
+    return
+  }
+
+  applyEditModel()
+  mode = 'view'
+}
+
+const cancelChanges = () => {
+  resetEditModel()
+  mode = 'view'
+}
 </script>
 
 <div class="entry">
@@ -41,7 +81,9 @@ let entryTextModal = $state(false)
 
   <div class="entry-field mood-field">
     <div class="entry-field-title">Mood</div>
-    <MoodInput bind:value={mood} mode={mode === 'view' ? 'view' : 'edit'} />
+    <MoodInput
+      bind:value={editModel.mood}
+      mode={mode === 'view' ? 'view' : 'edit'} />
   </div>
 
   {#if categories.length}
@@ -50,6 +92,7 @@ let entryTextModal = $state(false)
 
       <div class="categories">
         {#each categories as category}
+          <b>#TODO</b>
           <Category name={category.name} tags={category.tags} />
         {/each}
       </div>
@@ -92,7 +135,7 @@ let entryTextModal = $state(false)
     {#if mode === 'edit' || mode === 'create'}
       <div class="entry-textarea">
         <Textarea
-          bind:value={entry}
+          bind:value={editModel.entry}
           maxlength={entryMaxLength}
           placeholder="Write your thoughts here..."
           fullwidth />
@@ -121,14 +164,14 @@ let entryTextModal = $state(false)
 
   <div class="entry-actions">
     {#if mode === 'view'}
-      <Button onclick={() => (mode = 'edit')}>
+      <Button onclick={() => startEdit()}>
         <Pencil /> Edit
       </Button>
     {:else if mode === 'edit' || mode === 'create'}
-      <Button onclick={() => (mode = 'view')}>Cancel</Button>
+      <Button onclick={() => cancelChanges()}>Cancel</Button>
       <Button
         type="primary"
-        onclick={() => (mode = 'view')}
+        onclick={() => saveChanges()}
         disabled={errors.length > 0}>Save</Button>
     {/if}
   </div>

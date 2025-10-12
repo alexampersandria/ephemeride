@@ -6,5 +6,5 @@ import Entry from '$lib/assemblies/Entry.svelte'
 # Entry
 
 <DocsExample>
-  <Entry mode='create' />
+  <Entry />
 </DocsExample>
