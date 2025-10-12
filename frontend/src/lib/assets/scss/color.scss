@@ -210,10 +210,10 @@ $colors: list.append($saturatedColors, 'base');
   --color-info-border: var(--color-blue-70);
   --color-info-background: var(--color-blue-90);
 
-  --color-link: var(--color-blue-50);
-  --color-link-hover: var(--color-blue-60);
+  --color-link: var(--color-pink-60);
+  --color-link-hover: var(--color-pink-40);
 
-  --color-focus: var(--color-link);
+  --color-focus: var(--color-blue-60);
 
   --color-invalid: var(--color-error);
   --color-invalid-border: var(--color-error-border);
@@ -419,8 +419,10 @@ $colors: list.append($saturatedColors, 'base');
   --color-info-border: var(--color-blue-50);
   --color-info-background: var(--color-blue-10);
 
-  --color-link: var(--color-blue-50);
-  --color-link-hover: var(--color-blue-40);
+  --color-link: var(--color-pink-60);
+  --color-link-hover: var(--color-pink-50);
+
+  --color-focus: var(--color-blue-50);
 
   --spinner-color: var(--color-base-70);
 

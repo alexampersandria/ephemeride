@@ -58,6 +58,7 @@ $effect(() => {
   justify-content: center;
   z-index: 1000;
   overscroll-behavior: contain;
+  padding: var(--padding-m);
 
   .modal-backdrop {
     position: absolute;

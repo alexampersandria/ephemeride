@@ -135,11 +135,11 @@ $mood-bar-width: 2px;
 
   --modal-padding: var(--padding-l);
   --modal-radius: var(--radius-m);
-  --modal-shadow: 0 4rem 8rem rgba(0, 0, 0, 0.1), 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  --modal-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
   --modal-filter: blur(2px) grayscale(25%) invert(15%);
 }
 
 #root.theme-dark {
-  --modal-shadow: 0 4rem 8rem rgba(0, 0, 0, 0.2), 0 0.5rem 1rem rgba(0, 0, 0, 0.33);
+  --modal-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.33);
   --modal-filter: blur(2px) grayscale(50%);
 }

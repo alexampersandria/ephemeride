@@ -4,6 +4,12 @@ textarea {
   font-size: var(--input-size);
 }
 
+p {
+  white-space: normal;
+  word-break: break-word;
+  hyphens: auto;
+}
+
 button {
   font-size: var(--button-size);
   cursor: pointer;

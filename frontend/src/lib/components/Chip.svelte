@@ -65,6 +65,7 @@ onMount(() => {
     0 0 0 0 var(--background-primary),
     0 0 0 0 var(--chip-background-color);
   transition: box-shadow 0.05s ease-out;
+  min-height: 1.899rem;
 
   :global(.lucide) {
     min-width: 1em;
@@ -72,8 +73,8 @@ onMount(() => {
   }
 
   &.single-character {
-    max-width: 1.765625rem;
-    aspect-ratio: 1 / 1;
+    // #TODO: maybe figure out a better way to do this, like fixed height instead of padding and then we can set the width to the same or use aspect ratio?
+    width: 1.899rem;
   }
 
   &.outline {

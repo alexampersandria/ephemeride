@@ -4,9 +4,12 @@ import MoodInput from '$lib/components/MoodInput.svelte'
 import Textarea from '$lib/components/Textarea.svelte'
 import Category from './Category.svelte'
 import Button from '$lib/components/Button.svelte'
-import { Pencil } from 'lucide-svelte'
+import { Pencil, Signature } from 'lucide-svelte'
 import { entryMaxLength } from '$lib/types/log'
 import Alert from '$lib/components/Alert.svelte'
+import Chip from '$lib/components/Chip.svelte'
+import Modal from '$lib/components/Modal.svelte'
+import Markdown from 'svelte-exmarkdown'
 
 let {
   date,
@@ -27,6 +30,8 @@ let errors = $derived.by(() => {
 
   return errs
 })
+
+let entryTextModal = $state(false)
 </script>
 
 <div class="entry">
@@ -52,7 +57,37 @@ let errors = $derived.by(() => {
   {/if}
 
   <div class="entry-field entry-field-text">
-    <div class="entry-field-title">Entry</div>
+    <div class="entry-field-title">
+      Entry
+      {#if mode === 'edit' || mode === 'create'}
+        <button
+          onclick={() => (entryTextModal = true)}
+          aria-label="Show entry text formatting help">
+          <Chip>
+            <Signature />
+          </Chip>
+        </button>
+
+        <Modal bind:open={entryTextModal}>
+          <p>
+            Entry text supports markdown formatting, it uses
+            <a
+              href="https://ssssota.github.io/svelte-exmarkdown/"
+              target="_blank">
+              svelte-exmarkdown
+            </a>
+            for formatting
+          </p>
+          <p>
+            See general markdown documentation <a
+              href="https://www.markdownguide.org/cheat-sheet/"
+              target="_blank">
+              here
+            </a>
+          </p>
+        </Modal>
+      {/if}
+    </div>
 
     {#if mode === 'edit' || mode === 'create'}
       <div class="entry-textarea">
@@ -65,9 +100,7 @@ let errors = $derived.by(() => {
     {:else}
       <div class="entry-text">
         {#if entry}
-          <p>
-            {entry}
-          </p>
+          <Markdown md={entry} />
         {:else}
           <p class="muted">No entry text.</p>
         {/if}
@@ -140,6 +173,9 @@ let errors = $derived.by(() => {
       font-size: var(--font-size-l);
       overflow: hidden;
       text-overflow: ellipsis;
+
+      display: flex;
+      justify-content: space-between;
     }
   }
 
