@@ -24,4 +24,8 @@ export type EntryProps = {
    * entry text
    */
   entry?: string
+  /**
+   * array of selected tag ids
+   */
+  selectedTagIds?: string[]
 }

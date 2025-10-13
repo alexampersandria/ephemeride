@@ -70,6 +70,7 @@ a {
 }
 
 *:focus-visible {
+  transition: box-shadow 0.1s ease-out;
   outline: none;
   box-shadow:
     0 0 0 var(--focus-shadow-offset) var(--background-primary),
@@ -163,6 +164,19 @@ ul,
 ol,
 dl {
   margin: var(--padding-xxs) 0;
+  padding-inline-start: var(--padding-m);
+
+  &.plain {
+    list-style: none;
+    padding-inline-start: 0;
+  }
+}
+
+input[type='checkbox'],
+input[type='radio'] {
+  &:not(:disabled) {
+    cursor: pointer;
+  }
 }
 
 form,
@@ -180,6 +194,18 @@ form,
   flex-direction: column;
   gap: var(--form-field-gap);
   width: 100%;
+
+  &.inline {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--form-field-inline-gap);
+
+    label {
+      flex: 0 0 auto;
+      width: auto;
+    }
+  }
 }
 
 .dimmed {

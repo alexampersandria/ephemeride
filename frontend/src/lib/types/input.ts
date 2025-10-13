@@ -9,6 +9,7 @@ export type InputFieldAttributes = {
   name?: string
   required?: boolean
   id?: string
+  'aria-label'?: string
   onchange?: (event: Event) => void
   oninput?: (event: Event) => void
 }

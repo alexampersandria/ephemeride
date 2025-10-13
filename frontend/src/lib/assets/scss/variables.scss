@@ -6,6 +6,7 @@ $font-size-m: 1rem;
 $font-size-l: 1.125rem;
 $font-size-xl: 1.25rem;
 
+$radius-xxs: 0.125rem;
 $radius-xs: 0.25rem;
 $radius-s: 0.375rem;
 $radius-m: 0.5rem;
@@ -52,6 +53,7 @@ $mood-bar-width: 2px;
 :root {
   --container-width: #{$container-width};
 
+  --radius-xxs: #{$radius-xxs};
   --radius-xs: #{$radius-xs};
   --radius-s: #{$radius-s};
   --radius-m: #{$radius-m};
@@ -117,6 +119,7 @@ $mood-bar-width: 2px;
 
   --form-gap: var(--padding-m);
   --form-field-gap: var(--padding-xs);
+  --form-field-inline-gap: var(--padding-l);
 
   --logo-size: #{$logo-size};
 
@@ -137,6 +140,9 @@ $mood-bar-width: 2px;
   --modal-radius: var(--radius-m);
   --modal-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
   --modal-filter: blur(2px) grayscale(25%) invert(15%);
+
+  --chip-height: 1.75rem;
+  --chip-min-width: 3rem;
 }
 
 #root.theme-dark {

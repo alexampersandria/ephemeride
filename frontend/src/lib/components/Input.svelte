@@ -16,6 +16,7 @@ let {
   required,
   onchange: emitOnChange,
   oninput: emitOnInput,
+  'aria-label': ariaLabel,
 }: InputProps = $props()
 
 const onchange = (event: Event, fromLive = false) => {
@@ -54,6 +55,7 @@ const oninput = (event: Event) => {
   {name}
   {id}
   {required}
+  aria-label={ariaLabel}
   class:fullwidth
   class:invalid={inputstate === 'invalid'}
   aria-invalid={inputstate === 'invalid'}

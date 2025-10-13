@@ -9,4 +9,5 @@ export type CategoryProps = {
   onremovetag?: (id: Tag['id']) => void
   onselecttag?: (tag: Tag, selected: boolean) => void
   onedittag?: (tag: Tag) => void
+  oneditcategory?: () => void
 }

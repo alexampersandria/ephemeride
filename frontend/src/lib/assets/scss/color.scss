@@ -191,7 +191,7 @@ $colors: list.append($saturatedColors, 'base');
   --border-color: var(--color-base-80);
 
   --text-primary: var(--color-base-00);
-  --text-muted: var(--color-base-50);
+  --text-muted: var(--color-base-60);
   --text-dimmed: var(--color-base-70);
 
   --color-success: var(--color-green-60);
@@ -223,7 +223,7 @@ $colors: list.append($saturatedColors, 'base');
 
   --hr-color: var(--border-color);
 
-  --selection-color: var(--color-blue-50);
+  --selection-color: var(--color-blue-60);
   --selection-text-color: var(--color-base-100);
 
   --input-background: var(--background-primary);
@@ -426,7 +426,7 @@ $colors: list.append($saturatedColors, 'base');
 
   --spinner-color: var(--color-base-70);
 
-  --selection-color: var(--color-blue-50);
+  --selection-color: var(--color-blue-30);
   --selection-text-color: var(--color-base-100);
 
   --button-background-active: var(--background-primary);

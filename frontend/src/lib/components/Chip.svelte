@@ -56,7 +56,7 @@ onMount(() => {
   justify-content: center;
   border-radius: 9999px;
   font-size: var(--font-size-xs);
-  padding: var(--padding-xxs) var(--padding-s);
+  padding: 0 var(--padding-s);
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
@@ -65,7 +65,8 @@ onMount(() => {
     0 0 0 0 var(--background-primary),
     0 0 0 0 var(--chip-background-color);
   transition: box-shadow 0.05s ease-out;
-  min-height: 1.899rem;
+  height: var(--chip-height);
+  min-width: var(--chip-min-width);
 
   :global(.lucide) {
     min-width: 1em;
@@ -73,8 +74,8 @@ onMount(() => {
   }
 
   &.single-character {
-    // #TODO: maybe figure out a better way to do this, like fixed height instead of padding and then we can set the width to the same or use aspect ratio?
-    width: 1.899rem;
+    min-width: var(--chip-height);
+    width: var(--chip-height);
   }
 
   &.outline {
@@ -126,6 +127,12 @@ onMount(() => {
   &:active .chip {
     background-color: var(--chip-background-color-active);
     transform: var(--click-transform);
+  }
+
+  &:focus-visible .chip {
+    box-shadow:
+      0 0 0 0 var(--background-primary),
+      0 0 0 0 var(--chip-background-color);
   }
 }
 </style>

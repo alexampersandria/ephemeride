@@ -1,16 +1,25 @@
 <script lang="ts">
 import type { MoodInputProps, MoodValue } from '$lib/types/components/moodinput'
 
-let { mode = 'edit', value = $bindable() }: MoodInputProps = $props()
+let {
+  mode = 'edit',
+  value = $bindable(),
+  'aria-label': ariaLabel,
+  inputstate = $bindable('untouched'),
+}: MoodInputProps = $props()
 
 const setValue = (mood: number) => () => {
   if (mode === 'edit') {
     value = mood as MoodValue
+    inputstate = 'touched'
   }
 }
 </script>
 
-<div class="mood-input mood-value-{value || 'none'} mode-{mode}">
+<div
+  class="mood-input mood-value-{value || 'none'} mode-{mode}"
+  aria-label={ariaLabel}
+  aria-invalid={inputstate === 'invalid'}>
   <div class="mood-buttons-container">
     {#each [1, 2, 3, 4, 5] as mood}
       <button

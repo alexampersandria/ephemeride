@@ -15,6 +15,7 @@ let {
   fullwidth,
   onchange: emitOnChange,
   oninput: emitOnInput,
+  'aria-label': ariaLabel,
 }: SelectProps = $props()
 
 const onchange = (event: Event) => {
@@ -54,6 +55,7 @@ onMount(() => {
   class:fullwidth
   class:invalid={inputstate === 'invalid'}
   aria-invalid={inputstate === 'invalid'}
+  aria-label={ariaLabel}
   {onchange}
   {oninput}>
   {#if placeholder}

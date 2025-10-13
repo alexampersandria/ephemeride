@@ -1,7 +1,6 @@
 <script lang="ts">
 import type { ColorPickerProps } from '$lib/types/components/colorpicker'
 import { colors as defaultColors } from '$lib/types/color'
-import Chip from './Chip.svelte'
 
 let {
   colors = [...defaultColors],
@@ -9,6 +8,7 @@ let {
   onChange,
   fullwidth,
   inputstate = $bindable('untouched'),
+  id,
 }: ColorPickerProps = $props()
 
 const onclick = (selectedColor: string) => {
@@ -20,24 +20,29 @@ const onclick = (selectedColor: string) => {
 }
 </script>
 
-<div class="color-picker" class:fullwidth>
+<div
+  class="color-picker"
+  class:fullwidth
+  role="radiogroup"
+  {id}
+  aria-invalid={inputstate === 'invalid'}>
   {#each colors as option}
-    <div class="option color-{option}">
+    <div class="option color-{option}" class:selected={value === option}>
+      <!-- #TODO: ideally should be <input type="radio" /> -->
       <button
+        class="option-inner plain"
         onclick={() => onclick(option)}
+        role="radio"
+        aria-checked={value === option}
         aria-label={`Select color ${option}`}>
-        <Chip
-          outline={value === option}
-          color={option}
-          variant={value === option || !value ? 'solid' : 'subtle'}>
-          &#10240;
-        </Chip>
       </button>
     </div>
   {/each}
 </div>
 
 <style lang="scss">
+@use '../assets/scss/color';
+
 .color-picker {
   display: flex;
   flex-wrap: nowrap;
@@ -46,6 +51,56 @@ const onclick = (selectedColor: string) => {
   &.fullwidth {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .option {
+    // #TODO: add colors to color variables
+    --color-picker-option-color: var(--color-base-40);
+
+    .option-inner {
+      width: var(--font-size-xl);
+      aspect-ratio: 1 / 1;
+      border-radius: var(--radius-xxs);
+      background-color: var(--color-picker-option-color);
+      transition: box-shadow 0.1s ease-out;
+
+      box-shadow:
+        0 0 0 0 var(--background-primary),
+        0 0 0 0 var(--color-picker-option-color);
+
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: var(--padding-xxs);
+        right: var(--padding-xxs);
+        width: 4px;
+        aspect-ratio: 1 / 1;
+        border-radius: 9999px;
+        background-color: transparent;
+        transition: background-color 0.2s ease-out;
+      }
+    }
+
+    &.selected {
+      .option-inner {
+        position: relative;
+
+        box-shadow:
+          0 0 0 var(--focus-shadow-offset) var(--background-primary),
+          0 0 0 calc(var(--focus-shadow-offset) + var(--focus-shadow-offset))
+            var(--color-picker-option-color);
+
+        &:after {
+          background-color: var(--color-base-100);
+        }
+      }
+    }
+
+    @each $color in color.$colors {
+      &.color-#{$color} {
+        --color-picker-option-color: var(--color-#{$color}-70);
+      }
+    }
   }
 }
 </style>

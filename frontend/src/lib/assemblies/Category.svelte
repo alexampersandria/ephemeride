@@ -7,9 +7,19 @@ import Modal from '$lib/components/Modal.svelte'
 import type { CategoryProps } from '$lib/types/assemblies/category'
 import { type Color } from '$lib/types/color'
 import type { InputState } from '$lib/types/input'
-import { Pencil, PencilOff, Plus, TagIcon, X } from 'lucide-svelte'
+import {
+  Pencil,
+  PencilOff,
+  Plus,
+  Save,
+  Settings,
+  TagIcon,
+  Trash,
+  X,
+} from 'lucide-svelte'
 import type { Tag } from '$lib/types/log'
 import ColorPicker from '$lib/components/ColorPicker.svelte'
+import Label from '$lib/components/Label.svelte'
 
 let {
   name,
@@ -20,6 +30,7 @@ let {
   onremovetag,
   onselecttag,
   onedittag,
+  oneditcategory,
 }: CategoryProps = $props()
 
 const clickTag = (tag: Tag) => {
@@ -213,13 +224,18 @@ const resetTagDetails = () => {
   tagDetails.open = false
 }
 
-const _removeTag = (tagId: string) => {
-  if (mode === 'edit') {
-    tags = tags.filter(tag => tag.id !== tagId)
-    selectedTagIds = selectedTagIds.filter(id => id !== tagId)
-    if (onremovetag) {
-      onremovetag(tagId)
-    }
+const deleteEditTag = () => {
+  if (tagDetails.id) {
+    removeTag(tagDetails.id)
+    closeTagDetails()
+  }
+}
+
+const removeTag = (tagId: string) => {
+  tags = tags.filter(tag => tag.id !== tagId)
+  selectedTagIds = selectedTagIds.filter(id => id !== tagId)
+  if (onremovetag) {
+    onremovetag(tagId)
   }
 }
 
@@ -229,49 +245,86 @@ const validAddTag = $derived.by(() => {
     tagDetails.color.inputstate !== 'invalid'
   )
 })
+
+const onclickeditcategory = () => {
+  if (oneditcategory) {
+    oneditcategory()
+  }
+}
 </script>
 
 <div class="category">
   <div class="category-info">
+    {#if (mode === 'edit' || mode === 'select') && oneditcategory}
+      <button onclick={onclickeditcategory} aria-label="Edit {name} category">
+        <Chip>
+          <Settings />
+        </Chip>
+      </button>
+    {/if}
+
     <div class="category-name">
       {name}
     </div>
 
     {#if mode === 'select' || mode === 'edit'}
       <div class="category-actions">
+        {#if selectedTagIds.some(id => tags.find(tag => tag.id === id))}
+          <button onclick={onclear} aria-label="Clear selected {name} tags">
+            <Chip color="red">
+              <X />
+            </Chip>
+          </button>
+        {/if}
+
         {#if mode === 'edit'}
           <button onclick={openAddTag} aria-label="Add tag">
             <Chip>
-              <Plus />
+              <div class="add-tag-inner">
+                <Plus />
+                Add tag
+              </div>
             </Chip>
           </button>
 
           <Modal bind:open={tagDetails.open}>
-            <h4>Add tag</h4>
             <div class="tag-details">
+              <div class="tag-details-title">
+                <TagIcon />
+                {tagDetails.mode === 'add' ? 'Add Tag' : 'Edit Tag'}
+              </div>
+
               <div class="tag-details-inputs">
-                <Input
-                  fullwidth
-                  live
-                  required
-                  bind:value={tagDetails.name.value}
-                  bind:inputstate={tagDetails.name.inputstate}
-                  onchange={() => {
-                    validateTagDetails()
-                  }}
-                  placeholder="Tag name" />
-                <ColorPicker
-                  bind:value={tagDetails.color.value}
-                  bind:inputstate={tagDetails.color.inputstate}
-                  onChange={() => {
-                    validateTagDetails()
-                  }} />
+                <div class="form-field inline color-picker">
+                  <Label>Color</Label>
+                  <ColorPicker
+                    bind:value={tagDetails.color.value}
+                    bind:inputstate={tagDetails.color.inputstate}
+                    onChange={() => {
+                      validateTagDetails()
+                    }} />
+                </div>
+
+                <div class="form-field inline tag-name">
+                  <Input
+                    name="category-tag-details-name"
+                    aria-label="Tag name"
+                    placeholder="Tag name"
+                    fullwidth
+                    live
+                    required
+                    bind:value={tagDetails.name.value}
+                    bind:inputstate={tagDetails.name.inputstate}
+                    onchange={() => {
+                      validateTagDetails()
+                    }} />
+                </div>
               </div>
 
               {#if tagDetails.errors.length > 0}
                 <Alert type="error" size="small">
                   <b>Invalid tag</b>
-                  <ul>
+                  <ul class="plain">
                     {#each tagDetails.errors as error}
                       <li>{error}</li>
                     {/each}
@@ -280,33 +333,30 @@ const validAddTag = $derived.by(() => {
               {/if}
 
               <div class="tag-details-actions">
-                <Button onclick={closeTagDetails}>Cancel</Button>
                 {#if tagDetails.mode === 'add'}
                   <Button
                     type="primary"
                     onclick={submitAddTag}
                     disabled={!validAddTag}>
-                    Add tag
+                    <Plus /> Add
                   </Button>
                 {:else if tagDetails.mode === 'edit'}
+                  <Button type="destructive" onclick={deleteEditTag}>
+                    <Trash />
+                    Delete tag
+                  </Button>
+
                   <Button
                     type="primary"
                     onclick={submitEditTag}
                     disabled={!validAddTag}>
+                    <Save />
                     Save changes
                   </Button>
                 {/if}
               </div>
             </div>
           </Modal>
-        {/if}
-
-        {#if selectedTagIds.some(id => tags.find(tag => tag.id === id))}
-          <button onclick={onclear} aria-label="Clear selected {name} tags">
-            <Chip>
-              <X />
-            </Chip>
-          </button>
         {/if}
 
         <button onclick={onedit} aria-label="Edit {name} category">
@@ -366,17 +416,23 @@ const validAddTag = $derived.by(() => {
   .category-info {
     display: flex;
     justify-content: space-between;
+    gap: var(--padding-s);
+    align-items: center;
 
     .category-name {
       font-weight: 600;
       font-size: var(--font-size-l);
       overflow: hidden;
       text-overflow: ellipsis;
+      flex: 1 1 auto;
+      white-space: nowrap;
     }
 
     .category-actions {
       display: flex;
       gap: var(--padding-xs);
+
+      flex-shrink: 0;
     }
   }
 
@@ -393,16 +449,25 @@ const validAddTag = $derived.by(() => {
   flex-direction: column;
   gap: var(--padding-s);
 
+  .tag-details-title {
+    font-weight: 600;
+    font-size: var(--font-size-xl);
+  }
+
   .tag-details-inputs {
     display: flex;
     gap: var(--padding-s);
     flex-direction: column;
-    margin-bottom: var(--padding-m);
+    margin: var(--padding-m) 0;
   }
 
   .tag-details-actions {
     display: flex;
     justify-content: space-between;
+
+    :global(:only-child) {
+      margin-left: auto;
+    }
   }
 }
 </style>
