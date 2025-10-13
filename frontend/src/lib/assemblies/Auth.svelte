@@ -36,7 +36,9 @@ const isValid = $derived.by(() => {
     (mode === 'login' || model.name.inputstate === 'touched') &&
     model.email.inputstate === 'touched' &&
     model.password.inputstate === 'touched' &&
-    (mode === 'login' || model.inviteCode.inputstate === 'touched')
+    (mode === 'login' ||
+      model.inviteCode.inputstate === 'touched' ||
+      !inviteRequired)
   )
 })
 
