@@ -39,7 +39,7 @@ let errors: string[] = $state([])
   {#if errors.length > 0}
     <Alert size="small" type="error">
       <b>Invalid password</b>
-      <ul class="plain">
+      <ul class="muted">
         {#each errors as error}
           <li>{error}</li>
         {/each}

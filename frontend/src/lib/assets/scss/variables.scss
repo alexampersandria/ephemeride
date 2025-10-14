@@ -30,6 +30,8 @@ $block-size-xl: 72rem;
 $border-width: 1px;
 $focus-shadow-width: 2px;
 
+$blockquote-border-width: 2px;
+
 $spinner-size: 1.5rem;
 $spinner-animation-duration: 1.2s;
 
@@ -102,6 +104,8 @@ $mood-bar-width: 2px;
   --focus-shadow-offset: var(--focus-shadow-width);
   --state-shadow-width: var(--focus-shadow-width);
 
+  --blockquote-border-width: #{$blockquote-border-width};
+
   --spinner-size: #{$spinner-size};
   --spinner-animation-duration: #{$spinner-animation-duration};
 
@@ -143,6 +147,8 @@ $mood-bar-width: 2px;
 
   --chip-height: 1.75rem;
   --chip-min-width: 3rem;
+
+  --interactive-transition: color 0.05s ease-out, background-color 0.05s ease-out, border-color 0.05s ease-out, box-shadow 0.05s ease-out, transform 0.05s ease-out;
 }
 
 #root.theme-dark {

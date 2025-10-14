@@ -69,8 +69,18 @@ a {
   }
 }
 
+a,
+button,
+input,
+select,
+textarea {
+  &,
+  * {
+    transition: var(--interactive-transition);
+  }
+}
+
 *:focus-visible {
-  transition: box-shadow 0.1s ease-out;
   outline: none;
   box-shadow:
     0 0 0 var(--focus-shadow-offset) var(--background-primary),
@@ -206,6 +216,12 @@ form,
       width: auto;
     }
   }
+}
+
+blockquote {
+  border-left: var(--blockquote-border-width) solid var(--blockquote-border-color);
+  margin: 0;
+  padding-left: var(--padding-m);
 }
 
 .dimmed {

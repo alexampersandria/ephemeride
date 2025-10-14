@@ -324,7 +324,7 @@ const onclickeditcategory = () => {
               {#if tagDetails.errors.length > 0}
                 <Alert type="error" size="small">
                   <b>Invalid tag</b>
-                  <ul class="plain">
+                  <ul class="muted">
                     {#each tagDetails.errors as error}
                       <li>{error}</li>
                     {/each}

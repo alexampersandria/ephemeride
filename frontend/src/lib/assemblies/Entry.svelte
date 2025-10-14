@@ -24,6 +24,7 @@ import Input from '$lib/components/Input.svelte'
 import type { Category as CategoryType, CategoryWithTags } from '$lib/types/log'
 import type { InputState } from '$lib/types/input'
 import Message from '$lib/components/Message.svelte'
+import { onMount } from 'svelte'
 
 let {
   date,
@@ -54,7 +55,7 @@ let editModel = $state<{
   categories: CategoryWithTags[]
   selectedTagIds: string[]
 }>({
-  mood: undefined,
+  mood: mood,
   entry: '',
   categories: [],
   selectedTagIds: [],
@@ -203,6 +204,10 @@ const deleteCategory = () => {
 
   resetCategoryDetails()
 }
+
+onMount(() => {
+  resetEditModel()
+})
 </script>
 
 <div class="entry">
@@ -269,7 +274,9 @@ const deleteCategory = () => {
     {:else}
       <div class="entry-text">
         {#if entry}
-          <Markdown md={entry} />
+          <div class="entry-text-content">
+            <Markdown md={entry} />
+          </div>
         {:else}
           <p class="muted">No entry</p>
         {/if}
@@ -359,7 +366,7 @@ const deleteCategory = () => {
   {#if errors.length}
     <Alert type="error" size="small">
       <b>Invalid entry</b>
-      <ul class="plain">
+      <ul class="muted">
         {#each errors as error}
           <li>{error}</li>
         {/each}
