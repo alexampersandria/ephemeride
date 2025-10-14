@@ -1,3 +1,4 @@
+// @ts-ignore - eslint-config-prettier doesn't have type definitions
 import prettier from 'eslint-config-prettier'
 import eslint from '@eslint/js'
 import tsEslint from 'typescript-eslint'

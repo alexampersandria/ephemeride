@@ -9,6 +9,7 @@ let {
   fullwidth,
   inputstate = $bindable('untouched'),
   id,
+  'aria-label': ariaLabel = 'Color picker',
 }: ColorPickerProps = $props()
 
 const onclick = (selectedColor: string) => {
@@ -25,10 +26,10 @@ const onclick = (selectedColor: string) => {
   class:fullwidth
   role="radiogroup"
   {id}
+  aria-label={ariaLabel}
   aria-invalid={inputstate === 'invalid'}>
   {#each colors as option}
     <div class="option color-{option}" class:selected={value === option}>
-      <!-- #TODO: ideally should be <input type="radio" /> -->
       <button
         class="option-inner plain"
         onclick={() => onclick(option)}
@@ -40,6 +41,7 @@ const onclick = (selectedColor: string) => {
   {/each}
 </div>
 
+<!-- svelte-ignore css_unused_selector -->
 <style lang="scss">
 @use '../assets/scss/color';
 

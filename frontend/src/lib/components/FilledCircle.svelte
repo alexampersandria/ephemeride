@@ -10,6 +10,7 @@ let { percentage = 0, color = 'base' }: FilledCircleProps = $props()
   <div class="inner"></div>
 </div>
 
+<!-- svelte-ignore css_unused_selector -->
 <style lang="scss">
 @use '../assets/scss/color';
 
