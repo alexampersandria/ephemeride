@@ -9,10 +9,11 @@ let {
   type = 'info',
   colortext,
   size,
+  solid = false,
 }: AlertProps = $props()
 </script>
 
-<div class="alert {type}">
+<div class="alert {type} " class:solid role="alert">
   <div class="alert-message">
     <Message {type} {colortext} {size}>
       {#if children}
@@ -54,6 +55,28 @@ let {
     display: flex;
     gap: var(--alert-padding);
     margin-left: auto;
+  }
+
+  &.solid {
+    &.info {
+      background-color: var(--color-info-background);
+      border-color: var(--color-info-border);
+    }
+
+    &.success {
+      background-color: var(--color-success-background);
+      border-color: var(--color-success-border);
+    }
+
+    &.warning {
+      background-color: var(--color-warning-background);
+      border-color: var(--color-warning-border);
+    }
+
+    &.error {
+      background-color: var(--color-error-background);
+      border-color: var(--color-error-border);
+    }
   }
 }
 </style>

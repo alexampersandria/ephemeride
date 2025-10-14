@@ -66,7 +66,7 @@ Chips inside an `a` tag, or other interactable elements like the [Button](/docs/
     <Chip color="red">delete</Chip>
   </button>
   <Button>
-    Unread <Chip variant="solid">13</Chip>
+    Unread <Chip solid>13</Chip>
   </Button>
 </DocsExample>
 
@@ -78,7 +78,7 @@ Chips inside an `a` tag, or other interactable elements like the [Button](/docs/
   <Chip color="red">delete</Chip>
 </button>
 <Button>
-  Unread <Chip variant="solid">13</Chip>
+  Unread <Chip solid>13</Chip>
 </Button>
 ```
 
@@ -152,48 +152,50 @@ Chips support various color options for different semantic meanings:
 <Chip color="pink">pink</Chip>
 ```
 
-## Variant
+## Solid
 
-Chips support two visual variants: `subtle` (default) with light backgrounds and `solid` with bold backgrounds.
-
-### Subtle Variant
-
-The default variant with light backgrounds and darker text:
+Chip with solid backgrounds and light text, used for selected state or for chips that need to stand out visually
 
 <DocsExample>
-  <Chip variant="subtle">Subtle</Chip>
-  <Chip variant="subtle" color="blue">Blue Subtle</Chip>
-  <Chip variant="subtle" color="green">Green Subtle</Chip>
+  <Chip solid>Solid</Chip>
+  <Chip solid color="blue">Blue Solid</Chip>
+  <Chip solid color="green">Green Solid</Chip>
+  <Chip solid color="red">Red Solid</Chip>
+  <Chip solid color="yellow">Yellow Solid</Chip>
+  <Chip solid color="purple">Purple Solid</Chip>
+  <Chip solid color="pink">Pink Solid</Chip>
 </DocsExample>
 
 ```svelte
-<Chip variant="subtle">Subtle</Chip>
-<Chip variant="subtle" color="blue">Blue Subtle</Chip>
-<Chip variant="subtle" color="green">Green Subtle</Chip>
+<Chip solid>Solid</Chip>
+<Chip solid color="blue">Blue Solid</Chip>
+<Chip solid color="green">Green Solid</Chip>
+<Chip solid color="red">Red Solid</Chip>
+<Chip solid color="yellow">Yellow Solid</Chip>
+<Chip solid color="purple">Purple Solid</Chip>
+<Chip solid color="pink">Pink Solid</Chip>
 ```
 
-### Solid Variant
+## Outline
 
-Bold variant with solid backgrounds and light text:
+Chip with an outline, _also_ used for selected state or for chips that need to stand out visually
 
 <DocsExample>
-  <Chip variant="solid">Solid</Chip>
-  <Chip variant="solid" color="blue">Blue Solid</Chip>
-  <Chip variant="solid" color="green">Green Solid</Chip>
-  <Chip variant="solid" color="red">Red Solid</Chip>
-  <Chip variant="solid" color="yellow">Yellow Solid</Chip>
-  <Chip variant="solid" color="purple">Purple Solid</Chip>
-  <Chip variant="solid" color="pink">Pink Solid</Chip>
+  <Chip outline>Outline</Chip>
+  <Chip outline solid>Outline</Chip>
+  <Chip color="blue" outline>Outline</Chip>
+  <Chip color="pink" outline>Outline</Chip>
+  <Chip color="red" outline solid>Outline</Chip>
+  <Chip color="yellow" outline solid>Outline</Chip>
 </DocsExample>
 
 ```svelte
-<Chip variant="solid">Solid</Chip>
-<Chip variant="solid" color="blue">Blue Solid</Chip>
-<Chip variant="solid" color="green">Green Solid</Chip>
-<Chip variant="solid" color="red">Red Solid</Chip>
-<Chip variant="solid" color="yellow">Yellow Solid</Chip>
-<Chip variant="solid" color="purple">Purple Solid</Chip>
-<Chip variant="solid" color="pink">Pink Solid</Chip>
+<Chip outline>Outline</Chip>
+<Chip outline solid>Outline</Chip>
+<Chip color="blue" outline>Outline</Chip>
+<Chip color="pink" outline>Outline</Chip>
+<Chip color="red" outline solid>Outline</Chip>
+<Chip color="yellow" outline solid>Outline</Chip>
 ```
 
 ## Icon Content
@@ -220,21 +222,12 @@ Icons can be used inside the chip as well, usefull for tiny buttons.
 
 ### Props
 
-| Name     | Type          | Required | Default    | Description                                                              |
-| -------- | ------------- | :------: | ---------- | ------------------------------------------------------------------------ |
-| children | `Snippet`     |    ✅    |            | Content to display inside the chip.                                      |
-| color    | `Color`       |          | `'base'`   | Color theme of the chip.                                                 |
-| variant  | `ChipVariant` |          | `'subtle'` | Visual variant of the chip.                                              |
-| outline  | `boolean`     |          | `false`    | If the chip should have an outline, used to indicate selected value etc. |
-
-### ChipVariant
-
-The `ChipVariant` type includes:
-
-| Value    | Description                       |
-| -------- | --------------------------------- |
-| `subtle` | Light background with darker text |
-| `solid`  | Solid background with light text  |
+| Name     | Type      | Required | Default   | Description                                                              |
+| -------- | --------- | :------: | --------- | ------------------------------------------------------------------------ |
+| children | `Snippet` |    ✅    |           | Content to display inside the chip.                                      |
+| color    | `Color`   |          | `'base'`  | Color theme of the chip.                                                 |
+| solid    | `boolean` |          | `'balse'` | Whether the chip should be solid or not                                  |
+| outline  | `boolean` |          | `false`   | If the chip should have an outline, used to indicate selected value etc. |
 
 ## References
 

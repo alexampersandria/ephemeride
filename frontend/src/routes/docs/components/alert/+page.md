@@ -25,9 +25,7 @@ By default, the alert will be of type `info`.
 </DocsExample>
 
 ```svelte
-<Alert>
-  Heads up! This is an alert.
-</Alert>
+<Alert>Heads up! This is an alert.</Alert>
 ```
 
 ### Message & Actions
@@ -80,18 +78,12 @@ The alerts type determines the icon used and the color of the icon displayed to 
 </DocsExample>
 
 ```svelte
-<Alert type="error">
-  An error occurred. Please try again.
-</Alert>
+<Alert type="error">An error occurred. Please try again.</Alert>
 <Alert type="warning">
   Email address is already in use. Try <a href="#forgot-password">forgot password</a>.
 </Alert>
-<Alert type="success">
-  Successfully updated your profile.
-</Alert>
-<Alert type="info">
-  You've got mail! Check your inbox.
-</Alert>
+<Alert type="success">Successfully updated your profile.</Alert>
+<Alert type="info">You've got mail! Check your inbox.</Alert>
 ```
 
 #### Error with more info
@@ -129,9 +121,7 @@ The size of the alert can be adjusted using the `size` prop. The default size is
 </DocsExample>
 
 ```svelte
-<Alert size="small">
-  Heads up! This is a small alert.
-</Alert>
+<Alert size="small">Heads up! This is a small alert.</Alert>
 ```
 
 ## Types

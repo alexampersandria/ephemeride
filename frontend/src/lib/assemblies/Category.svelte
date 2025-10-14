@@ -393,7 +393,7 @@ const onclickeditcategory = () => {
           <Chip
             outline={selectedTagIds.includes(tag.id)}
             color={tag.color}
-            variant={selectedTagIds.includes(tag.id) ? 'solid' : 'subtle'}>
+            solid={selectedTagIds.includes(tag.id)}>
             {tag.name}
           </Chip>
         </button>

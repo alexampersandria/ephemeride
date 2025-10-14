@@ -2,12 +2,7 @@
 import type { ChipProps } from '$lib/types/components/chip'
 import { onMount } from 'svelte'
 
-let {
-  children,
-  color = 'base',
-  variant = 'subtle',
-  outline,
-}: ChipProps = $props()
+let { children, color = 'base', solid = false, outline }: ChipProps = $props()
 
 let chip: HTMLDivElement | null = null
 let isSingleCharacter = $state(false)
@@ -39,13 +34,15 @@ onMount(() => {
 </script>
 
 <div
-  class="chip {color} {variant}"
+  class="chip {color} "
+  class:solid
   class:outline
   class:single-character={isSingleCharacter}
   bind:this={chip}>
   {@render children()}
 </div>
 
+<!-- svelte-ignore css_unused_selector -->
 <style lang="scss">
 @use '../assets/scss/color';
 
@@ -63,8 +60,7 @@ onMount(() => {
   text-overflow: ellipsis;
   box-shadow:
     0 0 0 0 var(--background-primary),
-    0 0 0 0 var(--chip-background-color);
-  transition: box-shadow 0.05s ease-out;
+    0 0 0 0 var(--background-primary);
   height: var(--chip-height);
   min-width: var(--chip-min-width);
 
@@ -78,32 +74,37 @@ onMount(() => {
     width: var(--chip-height);
   }
 
-  &.outline {
-    box-shadow:
-      0 0 0 var(--focus-shadow-offset) var(--background-primary),
-      0 0 0 calc(var(--focus-shadow-offset) + var(--focus-shadow-offset))
-        var(--chip-background-color);
-  }
-
   @each $color in color.$colors {
     &.#{$color} {
-      @each $variant in ('subtle', 'solid') {
-        &.#{$variant} {
-          --chip-background-color: var(--chip-#{$variant}-#{$color}-background);
-          --chip-background-color-hover: var(
-            --chip-#{$variant}-#{$color}-background-hover
-          );
-          --chip-background-color-active: var(
-            --chip-#{$variant}-#{$color}-background-active
-          );
-          --chip-text-color: var(--chip-#{$variant}-#{$color}-color);
+      background-color: var(--chip-#{$color}-background);
+      color: var(--chip-#{$color}-color);
+
+      &.outline {
+        box-shadow:
+          0 0 0 var(--focus-shadow-offset) var(--background-primary),
+          0
+            0
+            0
+            calc(var(--focus-shadow-offset) + var(--focus-shadow-offset))
+            var(--chip-#{$color}-background);
+      }
+
+      &.solid {
+        background-color: var(--chip-solid-#{$color}-background);
+        color: var(--chip-solid-#{$color}-color);
+
+        &.outline {
+          box-shadow:
+            0 0 0 var(--focus-shadow-offset) var(--background-primary),
+            0
+              0
+              0
+              calc(var(--focus-shadow-offset) + var(--focus-shadow-offset))
+              var(--chip-solid-#{$color}-background);
         }
       }
     }
   }
-
-  background-color: var(--chip-background-color);
-  color: var(--chip-text-color);
 }
 
 :global(button:has(.chip)) {
@@ -117,22 +118,37 @@ onMount(() => {
 }
 
 :global(a:has(.chip)),
-:global(button:has(.chip)) {
+:global(button:not(.button):has(.chip)) {
+  line-height: 1;
   border-radius: 9999px;
 
-  &:hover .chip {
-    background-color: var(--chip-background-color-hover);
+  @each $color in color.$colors {
+    &:hover .chip.#{$color} {
+      background-color: var(--chip-#{$color}-background-hover);
+
+      &.solid {
+        background-color: var(--chip-solid-#{$color}-background-hover);
+      }
+    }
+
+    &:active .chip.#{$color} {
+      background-color: var(--chip-#{$color}-background-active);
+      transform: var(--click-transform);
+
+      &.solid {
+        background-color: var(--chip-solid-#{$color}-background-active);
+      }
+    }
   }
 
-  &:active .chip {
-    background-color: var(--chip-background-color-active);
-    transform: var(--click-transform);
-  }
-
-  &:focus-visible .chip {
-    box-shadow:
-      0 0 0 0 var(--background-primary),
-      0 0 0 0 var(--chip-background-color);
+  &:focus-visible {
+    .chip {
+      &.outline {
+        box-shadow:
+          0 0 0 0 var(--background-primary),
+          0 0 0 0 var(--background-primary);
+      }
+    }
   }
 }
 </style>
