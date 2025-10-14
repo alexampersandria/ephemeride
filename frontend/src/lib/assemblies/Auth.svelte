@@ -7,10 +7,14 @@ import type { AuthModel } from '$lib/types/assemblies/auth'
 import Message from '$lib/components/Message.svelte'
 import { onMount } from 'svelte'
 import { env } from '$env/dynamic/public'
+import Alert from '$lib/components/Alert.svelte'
+import type { ServerError } from '$lib/types/error'
 
 let mode = $state<'login' | 'register'>('login')
 let inviteRequired = $state(false)
 let loading = $state(false)
+
+let serverError: ServerError | undefined = $state()
 
 let model: AuthModel = $state({
   name: {
@@ -59,7 +63,7 @@ const checkValidity = () => {
   if (!isValid) {
     disabled = true
 
-    if (mode === 'register' && model.name.inputstate === 'untouched') {
+    if (model.name.inputstate === 'untouched') {
       model.name.inputstate = 'invalid'
     }
     if (model.email.inputstate === 'untouched') {
@@ -68,7 +72,7 @@ const checkValidity = () => {
     if (model.password.inputstate === 'untouched') {
       model.password.inputstate = 'invalid'
     }
-    if (mode === 'register' && model.inviteCode.inputstate === 'untouched') {
+    if (model.inviteCode.inputstate === 'untouched') {
       model.inviteCode.inputstate = 'invalid'
     }
 
@@ -104,7 +108,14 @@ onMount(async () => {
     })
     .catch(err => {
       console.error('Failed to fetch auth config:', err)
+      serverError = 'FETCH_CONFIG'
     })
+})
+
+$effect(() => {
+  if (serverError) {
+    console.error('Server error detected:', serverError)
+  }
 })
 </script>
 
@@ -116,6 +127,15 @@ onMount(async () => {
       Register
     {/if}
   </div>
+
+  {#if serverError}
+    <Alert type="error" size="small">
+      Failed to contact the server, please try again later or <a
+        href="https://github.com/alexampersandria/ephemeride/issues/new"
+        target="_blank">create an issue</a> if the problem persists.
+    </Alert>
+  {/if}
+
   {#if mode === 'register'}
     <div class="form-field">
       <Input
