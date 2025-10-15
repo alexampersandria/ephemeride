@@ -20,6 +20,12 @@
 
 body {
   margin: 0;
+
+  &:has(#root.theme-dark) {
+    background-color: #{color.$color-base-05};
+    color: #{color.$color-base-100};
+    color-scheme: dark;
+  }
 }
 
 *,
