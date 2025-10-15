@@ -1,6 +1,6 @@
 <script lang="ts">
 import type { ColorPickerProps } from '$lib/types/components/colorpicker'
-import { colors as defaultColors } from '$lib/types/color'
+import { colorPriority, colors as defaultColors } from '$lib/types/color'
 
 let {
   colors = [...defaultColors],
@@ -19,6 +19,12 @@ const onclick = (selectedColor: string) => {
     onChange(selectedColor)
   }
 }
+
+const sortedColors = $derived.by(() => {
+  return [...colors].sort((a, b) => {
+    return colorPriority[b] - colorPriority[a]
+  })
+})
 </script>
 
 <div
@@ -28,7 +34,7 @@ const onclick = (selectedColor: string) => {
   {id}
   aria-label={ariaLabel}
   aria-invalid={inputstate === 'invalid'}>
-  {#each colors as option}
+  {#each sortedColors as option}
     <div class="option color-{option}" class:selected={value === option}>
       <button
         class="option-inner plain"

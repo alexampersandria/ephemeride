@@ -25,6 +25,7 @@ import type { Category as CategoryType, CategoryWithTags } from '$lib/types/log'
 import type { InputState } from '$lib/types/input'
 import Message from '$lib/components/Message.svelte'
 import { onMount } from 'svelte'
+import { sortCategories } from '$lib/utils/log'
 
 let {
   date = new Date().toISOString().split('T')[0],
@@ -63,9 +64,9 @@ let editModel = $state<{
 
 const resetEditModel = () => {
   editModel.mood = mood
-  editModel.entry = JSON.parse(JSON.stringify(entry))
-  editModel.categories = JSON.parse(JSON.stringify(categories))
-  editModel.selectedTagIds = JSON.parse(JSON.stringify(selectedTagIds))
+  editModel.entry = entry
+  editModel.categories = sortCategories(categories)
+  editModel.selectedTagIds = selectedTagIds
   resetCategoryDetails()
 }
 
