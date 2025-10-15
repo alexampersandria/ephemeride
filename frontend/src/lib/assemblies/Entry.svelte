@@ -27,7 +27,7 @@ import Message from '$lib/components/Message.svelte'
 import { onMount } from 'svelte'
 
 let {
-  date,
+  date = new Date().toISOString().split('T')[0],
   mode = $bindable('view'),
   categories = $bindable([]),
   entry = $bindable(''),
