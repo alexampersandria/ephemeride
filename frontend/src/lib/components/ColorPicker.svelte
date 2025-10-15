@@ -60,6 +60,7 @@ const onclick = (selectedColor: string) => {
     --color-picker-option-color: var(--color-base-40);
 
     .option-inner {
+      position: relative;
       width: var(--font-size-xl);
       aspect-ratio: 1 / 1;
       border-radius: var(--radius-xxs);
@@ -85,8 +86,6 @@ const onclick = (selectedColor: string) => {
 
     &.selected {
       .option-inner {
-        position: relative;
-
         box-shadow:
           0 0 0 var(--focus-shadow-offset) var(--background-primary),
           0 0 0 calc(var(--focus-shadow-offset) + var(--focus-shadow-offset))
