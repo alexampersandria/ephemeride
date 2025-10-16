@@ -9,6 +9,8 @@ import { onMount } from 'svelte'
 import { env } from '$env/dynamic/public'
 import Alert from '$lib/components/Alert.svelte'
 import type { ServerError } from '$lib/types/error'
+import Checkbox from '$lib/components/Checkbox.svelte'
+import Label from '$lib/components/Label.svelte'
 
 let mode = $state<'login' | 'register'>('login')
 let inviteRequired = $state(false)
@@ -33,6 +35,10 @@ let model: AuthModel = $state({
     value: '',
     inputstate: 'untouched',
   },
+  terms: {
+    value: false,
+    inputstate: 'untouched',
+  },
 })
 
 const isValid = $derived.by(() => {
@@ -42,7 +48,8 @@ const isValid = $derived.by(() => {
     model.password.inputstate === 'touched' &&
     (mode === 'login' ||
       model.inviteCode.inputstate === 'touched' ||
-      !inviteRequired)
+      !inviteRequired) &&
+    (mode === 'login' || model.terms.value)
   )
 })
 
@@ -74,6 +81,9 @@ const checkValidity = () => {
     }
     if (model.inviteCode.inputstate === 'untouched') {
       model.inviteCode.inputstate = 'invalid'
+    }
+    if (!model.terms.value) {
+      model.terms.inputstate = 'invalid'
     }
 
     return
@@ -128,7 +138,7 @@ $effect(() => {
     {/if}
   </div>
 
-  {#if serverError}
+  {#if serverError === 'POST'}
     <Alert type="error" size="small">
       Failed to contact the server, please try again later or <a
         href="https://github.com/alexampersandria/ephemeride/issues/new"
@@ -142,7 +152,7 @@ $effect(() => {
         bind:value={model.name.value}
         bind:inputstate={model.name.inputstate}
         required
-        placeholder="Name" />
+        placeholder="Display Name" />
     </div>
   {/if}
   <EmailInput
@@ -161,6 +171,26 @@ $effect(() => {
     </div>
   {/if}
 
+  {#if mode === 'register'}
+    <div class="terms-field">
+      <div class="box">
+        <Checkbox
+          id="register-terms"
+          bind:value={model.terms.value}
+          bind:inputstate={model.terms.inputstate} />
+      </div>
+      <div class="details">
+        <Label for="register-terms" weight="normal" size="small">
+          Agree to the terms of use
+        </Label>
+        <div class="explainer extra-small muted">
+          By ticking this box you agree to our
+          <a href="#TODO">terms of use</a>
+        </div>
+      </div>
+    </div>
+  {/if}
+
   <Button fullwidth type="primary" {disabled} {loading} onclick={submit}>
     {#if mode === 'login'}
       Login
@@ -175,7 +205,7 @@ $effect(() => {
     </Message>
   {/if}
 
-  <p class="muted">
+  <p class="small muted">
     {#if mode === 'login'}
       Don't have an account?
       <a href="#" onclick={switchMode}>Register</a>
@@ -200,6 +230,12 @@ $effect(() => {
   .title {
     font-size: var(--font-size-xl);
     font-weight: 700;
+  }
+
+  .terms-field {
+    display: flex;
+    gap: var(--padding-s);
+    width: 100%;
   }
 }
 </style>

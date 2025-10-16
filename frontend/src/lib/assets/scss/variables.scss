@@ -123,7 +123,7 @@ $mood-bar-width: 2px;
 
   --form-gap: var(--padding-m);
   --form-field-gap: var(--padding-xs);
-  --form-field-inline-gap: var(--padding-l);
+  --form-field-inline-gap: var(--padding-m);
 
   --logo-size: #{$logo-size};
 
@@ -148,7 +148,10 @@ $mood-bar-width: 2px;
   --chip-height: 1.75rem;
   --chip-min-width: 3rem;
 
-  --interactive-transition: color 0.05s ease-out, background-color 0.05s ease-out, border-color 0.05s ease-out, box-shadow 0.05s ease-out, transform 0.05s ease-out;
+  --checkbox-size: 1.125rem;
+  --checkbox-checkmark-size: 0.875rem;
+
+  --interactive-transition: color 0.1s ease-out, background-color 0.1s ease-out, border-color 0.1s ease-out, box-shadow 0.1s ease-out, transform 0.1s ease-out;
 }
 
 #root.theme-dark {

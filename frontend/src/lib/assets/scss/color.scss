@@ -381,6 +381,16 @@ $colors: list.append($saturatedColors, 'base');
 
   --inline-code-color: var(--color-purple-50);
   --inline-code-background: transparent;
+
+  --checkbox-background-color: var(--color-base-100);
+  --checkbox-background-color-hover: var(--color-base-90);
+  --checkbox-background-color-active: var(--color-base-80);
+  --checkbox-border-color: var(--color-base-80);
+  --checkbox-checked-background-color: var(--color-base-00);
+  --checkbox-checked-background-color-hover: var(--color-base-20);
+  --checkbox-checked-background-color-active: var(--color-base-00);
+  --checkbox-checked-border-color: var(--color-base-00);
+  --checkbox-checkmark-color: var(--color-base-100);
 }
 
 #root.theme-dark {
@@ -545,4 +555,14 @@ $colors: list.append($saturatedColors, 'base');
 
   --inline-code-color: var(--color-purple-60);
   --inline-code-background: transparent;
+
+  --checkbox-background-color: var(--color-base-20);
+  --checkbox-background-color-hover: var(--color-base-30);
+  --checkbox-background-color-active: var(--color-base-20);
+  --checkbox-border-color: var(--color-base-50);
+  --checkbox-checked-background-color: var(--color-base-100);
+  --checkbox-checked-background-color-hover: var(--color-base-90);
+  --checkbox-checked-background-color-active: var(--color-base-80);
+  --checkbox-checked-border-color: var(--color-base-100);
+  --checkbox-checkmark-color: var(--color-base-00);
 }

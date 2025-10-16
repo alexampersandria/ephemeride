@@ -212,10 +212,29 @@ form,
     gap: var(--form-field-inline-gap);
 
     label {
-      flex: 0 0 auto;
       width: auto;
     }
   }
+}
+
+.extra-small {
+  font-size: var(--font-size-xs);
+}
+
+.small {
+  font-size: var(--font-size-s);
+}
+
+.medium {
+  font-size: var(--font-size-m);
+}
+
+.large {
+  font-size: var(--font-size-l);
+}
+
+.extra-large {
+  font-size: var(--font-size-xl);
 }
 
 blockquote {

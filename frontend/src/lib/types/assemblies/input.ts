@@ -1,4 +1,4 @@
-import type { InputProps } from "../components/input"
+import type { InputProps } from '../components/input'
 
 export type InputAssemblyProps = Omit<
   InputProps,
