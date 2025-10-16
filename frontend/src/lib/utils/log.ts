@@ -8,7 +8,8 @@ import type { CategoryWithTags } from '$lib/types/log'
  * @param categories - categories to sort
  */
 export const sortCategories = (categories: CategoryWithTags[]) => {
-  const sortedCategories = [...categories].sort((a, b) =>
+  const copy = JSON.parse(JSON.stringify(categories)) as CategoryWithTags[]
+  const sortedCategories = copy.sort((a, b) =>
     a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }),
   )
 
