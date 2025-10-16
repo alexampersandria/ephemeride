@@ -45,3 +45,17 @@ export const fullDate = (dateString: string) => {
 
   return `${weekday}, ${month} ${day}, ${year}`
 }
+
+/**
+ * gives the current date (YYYY-MM-DD) for the user with their local time
+ * note for this definition, the current date starts at 4am, this is because quite a lot of people go to bed after midnight
+ * the day start/end time will be customizable in the future
+ * @returns date string YYYY-MM-DD
+ */
+export const currentDate = () => {
+  const now = new Date()
+  if (now.getHours() < 4) {
+    now.setDate(now.getDate() - 1)
+  }
+  return now.toISOString().split('T')[0]
+}

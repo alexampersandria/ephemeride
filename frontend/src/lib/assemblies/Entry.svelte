@@ -27,11 +27,11 @@ import type { Category as CategoryType, CategoryWithTags } from '$lib/types/log'
 import type { InputState } from '$lib/types/input'
 import Message from '$lib/components/Message.svelte'
 import { onMount } from 'svelte'
-import { fullDate, moodColor, sortCategories } from '$lib/utils/log'
+import { currentDate, fullDate, sortCategories } from '$lib/utils/log'
 import { diff } from 'deep-object-diff'
 
 let {
-  date = new Date().toISOString().split('T')[0],
+  date = currentDate(),
   mode = $bindable('view'),
   categories = $bindable([]),
   entry = $bindable(''),
