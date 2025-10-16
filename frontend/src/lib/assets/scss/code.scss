@@ -30,7 +30,6 @@ pre[class*='language-'] {
 :not(pre) > code {
   vertical-align: middle;
   color: var(--inline-code-color);
-  padding: var(--padding-xxs) var(--padding-xs);
   border-radius: var(--radius-xs);
   background-color: var(--inline-code-background);
   white-space: nowrap;

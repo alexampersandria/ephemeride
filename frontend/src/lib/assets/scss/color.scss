@@ -379,8 +379,8 @@ $colors: list.append($saturatedColors, 'base');
   --circle-fill-color-purple: var(--color-purple-60);
   --circle-fill-color-pink: var(--color-pink-60);
 
-  --inline-code-color: var(--color-pink-50);
-  --inline-code-background: var(--color-pink-100);
+  --inline-code-color: var(--color-purple-50);
+  --inline-code-background: transparent;
 }
 
 #root.theme-dark {
@@ -543,6 +543,6 @@ $colors: list.append($saturatedColors, 'base');
   --circle-fill-color-purple: var(--color-purple-50);
   --circle-fill-color-pink: var(--color-pink-50);
 
-  --inline-code-color: var(--color-pink-60);
-  --inline-code-background: var(--color-pink-10);
+  --inline-code-color: var(--color-purple-60);
+  --inline-code-background: transparent;
 }
