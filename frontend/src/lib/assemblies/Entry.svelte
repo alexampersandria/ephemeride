@@ -8,8 +8,10 @@ import {
   Folder,
   Notebook,
   Pencil,
+  PencilOff,
   Plus,
   Save,
+  SaveOff,
   Signature,
   Smile,
   Trash,
@@ -25,7 +27,8 @@ import type { Category as CategoryType, CategoryWithTags } from '$lib/types/log'
 import type { InputState } from '$lib/types/input'
 import Message from '$lib/components/Message.svelte'
 import { onMount } from 'svelte'
-import { sortCategories } from '$lib/utils/log'
+import { fullDate, moodColor, sortCategories } from '$lib/utils/log'
+import { diff } from 'deep-object-diff'
 
 let {
   date = new Date().toISOString().split('T')[0],
@@ -209,11 +212,39 @@ const deleteCategory = () => {
 onMount(() => {
   resetEditModel()
 })
+
+const isEdited = $derived.by(() => {
+  const difference = diff(
+    {
+      mood: mood,
+      selectedTagIds: selectedTagIds,
+      entry: entry,
+      categories: sortCategories(categories),
+    },
+    {
+      mood: editModel.mood,
+      selectedTagIds: editModel.selectedTagIds,
+      entry: editModel.entry,
+      categories: editModel.categories,
+    },
+  )
+
+  return Object.keys(difference).length > 0
+})
 </script>
 
 <div class="entry">
   <div class="entry-title">
-    Entry for {date || 'unknown date'}
+    <div class="date">
+      {fullDate(date)}
+    </div>
+
+    {#if isEdited}
+      <Chip>
+        <SaveOff />
+        Unsaved changes
+      </Chip>
+    {/if}
   </div>
 
   <div class="entry-field mood-field">
@@ -381,11 +412,17 @@ onMount(() => {
         <Pencil /> Edit
       </Button>
     {:else if mode === 'edit' || mode === 'create'}
-      <Button onclick={() => cancelChanges()}>Cancel</Button>
+      <Button onclick={() => cancelChanges()}>
+        <PencilOff />
+        Cancel
+      </Button>
       <Button
         type="primary"
         onclick={() => saveChanges()}
-        disabled={errors.length > 0}>Save</Button>
+        disabled={errors.length > 0}>
+        <Save />
+        Save changes
+      </Button>
     {/if}
   </div>
 </div>
@@ -401,6 +438,15 @@ onMount(() => {
   .entry-title {
     font-weight: 600;
     font-size: var(--font-size-xl);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .date {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 
   .categories {
