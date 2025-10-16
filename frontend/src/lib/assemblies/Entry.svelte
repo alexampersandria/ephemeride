@@ -214,6 +214,10 @@ onMount(() => {
 })
 
 const isEdited = $derived.by(() => {
+  if (mode !== 'edit') {
+    return false
+  }
+
   const difference = diff(
     {
       mood: mood,
@@ -411,7 +415,7 @@ const isEdited = $derived.by(() => {
       <Button onclick={() => startEdit()}>
         <Pencil /> Edit
       </Button>
-    {:else if mode === 'edit' || mode === 'create'}
+    {:else if mode === 'edit'}
       <Button onclick={() => cancelChanges()}>
         <PencilOff />
         Cancel
@@ -422,6 +426,14 @@ const isEdited = $derived.by(() => {
         disabled={errors.length > 0}>
         <Save />
         Save changes
+      </Button>
+    {:else if mode === 'create'}
+      <Button
+        type="primary"
+        onclick={() => saveChanges()}
+        disabled={errors.length > 0}>
+        <Plus />
+        Create Entry
       </Button>
     {/if}
   </div>
