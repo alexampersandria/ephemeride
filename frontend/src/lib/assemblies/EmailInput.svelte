@@ -1,7 +1,7 @@
 <script lang="ts">
 import Message from '$lib/components/Message.svelte'
 import Input from '$lib/components/Input.svelte'
-import type { EmailInputProps } from '$lib/types/components/input'
+import type { EmailInputProps } from '$lib/types/assemblies/input'
 import { validateEmail } from '$lib/utils/validationRules'
 
 let {

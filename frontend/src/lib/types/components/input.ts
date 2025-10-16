@@ -8,11 +8,3 @@ export type InputProps = {
   live?: boolean
   validation?: ValidationRule
 } & InputFieldAttributes
-
-export type InputAssemblyProps = Omit<
-  InputProps,
-  'type' | 'placeholder' | 'validation'
->
-
-export type PasswordInputProps = InputAssemblyProps
-export type EmailInputProps = InputAssemblyProps

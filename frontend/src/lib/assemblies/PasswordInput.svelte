@@ -1,7 +1,7 @@
 <script lang="ts">
 import Alert from '$lib/components/Alert.svelte'
 import Input from '$lib/components/Input.svelte'
-import type { PasswordInputProps } from '$lib/types/components/input'
+import type { PasswordInputProps } from '$lib/types/assemblies/input'
 import { validatePassword } from '$lib/utils/validationRules'
 
 let {
