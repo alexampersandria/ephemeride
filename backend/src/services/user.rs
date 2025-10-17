@@ -63,7 +63,6 @@ pub struct UserDetails {
   pub created_at: i64,
   pub name: String,
   pub email: String,
-  pub deleted: bool,
   pub invite: Option<String>,
 }
 
@@ -73,7 +72,6 @@ fn user_details(user: User) -> UserDetails {
     created_at: user.created_at,
     name: user.name,
     email: user.email,
-    deleted: user.deleted,
     invite: user.invite,
   }
 }

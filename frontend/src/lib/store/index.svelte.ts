@@ -1,8 +1,12 @@
 import { registerStore } from './registerStore.svelte'
 import { useUiStore } from './uiStore.svelte'
+import { useUserStore } from './userStore.svelte'
 
 export const initializeStores = () => {
-  const stores = [{ key: 'ui', store: useUiStore() }]
+  const stores = [
+    { key: 'ui', store: useUiStore() },
+    { key: 'user', store: useUserStore() },
+  ]
 
   stores.forEach(store => {
     registerStore(store.key, store.store)

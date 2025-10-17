@@ -4,7 +4,19 @@ import Button from '$lib/components/Button.svelte'
 import Logo from '$lib/components/Logo.svelte'
 import Modal from '$lib/components/Modal.svelte'
 import { useUiStore } from '$lib/store/uiStore.svelte'
-import { Book, Moon, Sun, User, UserPlus } from 'lucide-svelte'
+import { useUserStore } from '$lib/store/userStore.svelte'
+import {
+  ArrowRight,
+  Book,
+  LogIn,
+  LogOut,
+  Moon,
+  Sun,
+  User,
+  UserPlus,
+} from 'lucide-svelte'
+
+let userStore = useUserStore()
 
 let authModal = $state(false)
 let authMode = $state<'login' | 'register'>('register')
@@ -37,29 +49,35 @@ const ThemeToggleIcon = $derived.by(() => {
     <Auth mode={authMode} />
   </Modal>
 
-  <div class="navigation">
+  <div class="navigation fade-in fade-in-0">
     <div class="container">
       <div class="left">
-        <a class="fade-in fade-in-8" href="/"><Logo /></a>
+        <a href="/"><Logo /></a>
       </div>
       <div class="right">
-        <div class="fade-in fade-in-10">
-          <Button type="ghost" href="/docs">
-            <Book />
-            Documentation
-          </Button>
-        </div>
-        <div class="fade-in fade-in-12">
+        <Button type="ghost" href="/docs">
+          <Book />
+          Documentation
+        </Button>
+        {#if userStore.sessionId === null}
           <Button type="ghost" onclick={() => openAuthModal('login')}>
-            <User />
+            <LogIn />
             Log in
           </Button>
-        </div>
-        <div class="fade-in fade-in-14">
-          <Button type="ghost" onclick={themeToggle} aria-label="Toggle Theme">
-            <ThemeToggleIcon />
+        {:else}
+          <Button type="ghost" href="/app">
+            <ArrowRight />
+            Go to app
           </Button>
-        </div>
+
+          <Button type="ghost" onclick={() => userStore.logOut()}>
+            <LogOut />
+            Log out
+          </Button>
+        {/if}
+        <Button type="ghost" onclick={themeToggle} aria-label="Toggle Theme">
+          <ThemeToggleIcon />
+        </Button>
       </div>
     </div>
   </div>
@@ -77,10 +95,17 @@ const ThemeToggleIcon = $derived.by(() => {
 
       <div class="actions">
         <div class="fade-in fade-in-5">
-          <Button type="primary" onclick={() => openAuthModal('register')}>
-            <UserPlus />
-            Sign up
-          </Button>
+          {#if userStore.sessionId === null}
+            <Button type="primary" onclick={() => openAuthModal('register')}>
+              <UserPlus />
+              Sign up
+            </Button>
+          {:else}
+            <Button type="primary" href="/app">
+              <ArrowRight />
+              Go to app
+            </Button>
+          {/if}
         </div>
 
         <div class="fade-in fade-in-6">

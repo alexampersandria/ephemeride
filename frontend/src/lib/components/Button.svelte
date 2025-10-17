@@ -1,4 +1,5 @@
 <script lang="ts">
+import { goto } from '$app/navigation'
 import type { ButtonProps } from '$lib/types/components/button'
 import Spinner from './Spinner.svelte'
 
@@ -16,49 +17,33 @@ let {
 let clickHandler = () => {
   if (disabled) return
   if (loading) return
+  if (href) {
+    goto(href)
+  }
   if (!onclick) return
 
   onclick()
 }
 </script>
 
-{#if href}
-  <a
-    class="button {type}"
-    {href}
-    class:loading
-    class:fullwidth
-    aria-label={ariaLabel}
-    aria-busy={loading}>
-    <div class="button-content">
-      {@render children()}
+<button
+  class="button {type}"
+  class:loading
+  class:disabled
+  class:fullwidth
+  aria-busy={loading}
+  {disabled}
+  aria-label={ariaLabel}
+  onclick={clickHandler}>
+  <div class="button-content">
+    {@render children()}
+  </div>
+  {#if loading}
+    <div class="button-spinner">
+      <Spinner />
     </div>
-    {#if loading}
-      <div class="button-spinner">
-        <Spinner />
-      </div>
-    {/if}
-  </a>
-{:else}
-  <button
-    class="button {type}"
-    class:loading
-    class:disabled
-    class:fullwidth
-    aria-busy={loading}
-    {disabled}
-    aria-label={ariaLabel}
-    onclick={clickHandler}>
-    <div class="button-content">
-      {@render children()}
-    </div>
-    {#if loading}
-      <div class="button-spinner">
-        <Spinner />
-      </div>
-    {/if}
-  </button>
-{/if}
+  {/if}
+</button>
 
 <style lang="scss">
 .button {

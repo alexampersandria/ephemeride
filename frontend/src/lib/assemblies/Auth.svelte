@@ -11,6 +11,9 @@ import Alert from '$lib/components/Alert.svelte'
 import type { ServerError } from '$lib/types/error'
 import Checkbox from '$lib/components/Checkbox.svelte'
 import Label from '$lib/components/Label.svelte'
+import { useUserStore } from '$lib/store/userStore.svelte'
+
+let userStore = useUserStore()
 
 let { mode = $bindable('login') }: AuthProps = $props()
 
@@ -93,22 +96,65 @@ const checkValidity = () => {
 
 const submit = async () => {
   checkValidity()
-  if (disabled || loading) return
+  if (disabled || loading || userStore.sessionId) return
 
   loading = true
 
   if (mode === 'login') {
-    // #TODO: Call login API
-    console.log('Logging in with', model)
+    await fetch(env.PUBLIC_VITE_API_URL + '/v1/auth/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: model.email.value,
+        password: model.password.value,
+      }),
+    })
+      .then(async res => {
+        if (!res.ok) {
+          throw new Error('Failed to log in')
+        }
+        return await res.json()
+      })
+      .then(data => {
+        console.log('Logged in user:', data)
+        userStore.logIn(data.id)
+      })
+      .catch(err => {
+        console.error('Login error:', err)
+        serverError = 'POST'
+        loading = false
+      })
   } else {
-    // #TODO: Call register API
-    console.log('Registering with', model)
+    await fetch(env.PUBLIC_VITE_API_URL + '/v1/user/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: model.name.value,
+        email: model.email.value,
+        password: model.password.value,
+        invite_code: inviteRequired ? model.inviteCode.value : undefined,
+      }),
+    })
+      .then(async res => {
+        if (!res.ok) {
+          throw new Error('Failed to register')
+        }
+        return await res.json()
+      })
+      .then(data => {
+        console.log('Registered user:', data)
+        userStore.logIn(data.id)
+      })
+      .catch(err => {
+        console.error('Registration error:', err)
+        serverError = 'POST'
+        loading = false
+      })
   }
-
-  // fake loading time
-  setTimeout(() => {
-    loading = false
-  }, 1000)
 }
 
 onMount(async () => {
