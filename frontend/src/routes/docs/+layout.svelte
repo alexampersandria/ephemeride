@@ -58,14 +58,18 @@ const ThemeToggleIcon = $derived.by(() => {
   }
 })
 
-const title = $derived(
-  [...page.url.pathname.split('/').slice(2)]
+const title = $derived.by(() => {
+  let pre = [...page.url.pathname.split('/').slice(2)]
     .filter(Boolean)
     .map(part =>
       part.replace(/-|_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
     )
-    .join('/') + ' — Ephemeride Documentation',
-)
+    .join('/')
+  if (pre === '') {
+    pre = 'Frontend'
+  }
+  return pre + ' — Ephemeride Documentation'
+})
 </script>
 
 <svelte:head>

@@ -43,6 +43,10 @@ const ThemeToggleIcon = $derived.by(() => {
 })
 </script>
 
+<svelte:head>
+  <title>Ephemeride — Your life, documented</title>
+</svelte:head>
+
 <div class="landing-page">
   <Modal bind:open={authModal}>
     <Auth mode={authMode} />
