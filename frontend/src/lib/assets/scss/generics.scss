@@ -60,7 +60,8 @@ form {
   color: var(--input-placeholder-color);
 }
 
-a {
+a,
+.link {
   color: var(--color-link);
   text-decoration: none;
 
@@ -94,6 +95,7 @@ textarea {
 
 .container {
   max-width: var(--container-width);
+  padding-inline: var(--padding-m);
   margin: 0 auto;
 }
 
@@ -246,7 +248,8 @@ blockquote {
 .dimmed {
   color: var(--text-dimmed);
 
-  a {
+  a,
+  .link {
     color: var(--text-muted);
 
     &:hover {
@@ -258,13 +261,18 @@ blockquote {
 .muted {
   color: var(--text-muted);
 
-  a {
+  a,
+  .link {
     color: var(--text-primary);
 
     &:hover {
       color: var(--text-muted);
     }
   }
+}
+
+.centered {
+  text-align: center;
 }
 
 /* lucide icon same size as text */

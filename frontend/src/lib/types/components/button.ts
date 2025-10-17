@@ -8,4 +8,6 @@ export type ButtonProps = {
   disabled?: boolean
   fullwidth?: boolean
   onclick?: () => void
+  href?: string
+  'aria-label'?: string
 }

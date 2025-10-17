@@ -12,3 +12,7 @@ export type AuthModel = {
   inviteCode: AuthModelField<string>
   terms: AuthModelField<boolean>
 }
+
+export type AuthProps = {
+  mode?: 'login' | 'register'
+}

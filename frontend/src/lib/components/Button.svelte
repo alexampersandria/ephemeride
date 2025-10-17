@@ -9,6 +9,8 @@ let {
   disabled,
   fullwidth = false,
   onclick,
+  href,
+  'aria-label': ariaLabel,
 }: ButtonProps = $props()
 
 let clickHandler = () => {
@@ -20,23 +22,43 @@ let clickHandler = () => {
 }
 </script>
 
-<button
-  class="button {type}"
-  class:loading
-  class:disabled
-  class:fullwidth
-  aria-busy={loading}
-  {disabled}
-  onclick={clickHandler}>
-  <div class="button-content">
-    {@render children()}
-  </div>
-  {#if loading}
-    <div class="button-spinner">
-      <Spinner />
+{#if href}
+  <a
+    class="button {type}"
+    {href}
+    class:loading
+    class:fullwidth
+    aria-label={ariaLabel}
+    aria-busy={loading}>
+    <div class="button-content">
+      {@render children()}
     </div>
-  {/if}
-</button>
+    {#if loading}
+      <div class="button-spinner">
+        <Spinner />
+      </div>
+    {/if}
+  </a>
+{:else}
+  <button
+    class="button {type}"
+    class:loading
+    class:disabled
+    class:fullwidth
+    aria-busy={loading}
+    {disabled}
+    aria-label={ariaLabel}
+    onclick={clickHandler}>
+    <div class="button-content">
+      {@render children()}
+    </div>
+    {#if loading}
+      <div class="button-spinner">
+        <Spinner />
+      </div>
+    {/if}
+  </button>
+{/if}
 
 <style lang="scss">
 .button {
@@ -51,6 +73,9 @@ let clickHandler = () => {
   background-color: transparent;
   border: var(--border-width) solid var(--button-border);
   background-color: var(--button-background);
+  font-size: var(--button-size);
+  appearance: button;
+  line-height: 1.15;
 
   .button-content {
     display: flex;

@@ -21,9 +21,9 @@ const title = $derived('Ephemeride')
 </svelte:head>
 
 <div id="root" class="theme-{uiStore.appliedTheme}">
-  {@render children()}
-
   {#if uiStore.loading}
     <Preloader />
+  {:else}
+    {@render children()}
   {/if}
 </div>

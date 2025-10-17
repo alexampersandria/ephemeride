@@ -185,8 +185,7 @@ $colors: list.append($saturatedColors, 'base');
   --background-secondary: var(--color-base-95);
   --background-accent: var(--color-base-90);
 
-  --background-overlay: #{color.adjust($color-base-20, $alpha: -0.33)};
-  --background-overlay-subtle: #{color.adjust($color-base-50, $alpha: -0.5)};
+  --background-overlay: #{color.adjust($color-base-50, $alpha: -0.5)};
 
   --border-color: var(--color-base-80);
 
@@ -288,7 +287,7 @@ $colors: list.append($saturatedColors, 'base');
   --alert-color: var(--text-primary);
 
   --modal-background: var(--background-primary);
-  --modal-backdrop: var(--background-overlay-subtle);
+  --modal-backdrop: var(--background-overlay);
   --modal-border: var(--border-color);
 
   --chip-base-background: var(--color-base-90);
@@ -404,8 +403,7 @@ $colors: list.append($saturatedColors, 'base');
   --background-secondary: var(--color-base-10);
   --background-accent: var(--color-base-20);
 
-  --background-overlay: #{color.adjust($color-base-00, $alpha: -0.25)};
-  --background-overlay-subtle: #{color.adjust($color-base-10, $alpha: -0.33)};
+  --background-overlay: #{color.adjust($color-base-00, $alpha: -0.3)};
 
   --border-color: var(--color-base-20);
 
@@ -462,7 +460,7 @@ $colors: list.append($saturatedColors, 'base');
   --button-destructive-color: var(--button-color);
 
   --modal-background: var(--background-primary);
-  --modal-backdrop: var(--background-overlay-subtle);
+  --modal-backdrop: var(--background-overlay);
   --modal-border: var(--border-color);
 
   --chip-base-background: var(--color-base-20);

@@ -32,12 +32,16 @@ body {
 *::before,
 *::after {
   box-sizing: border-box;
+  transform-origin: center;
 }
 
 #root {
   display: flow-root;
   background-color: var(--background-primary);
   color: var(--text-primary);
+  transition:
+    background-color 0.15s ease-out,
+    color 0.15s ease-out;
   height: 100vh;
   overflow: auto;
 }

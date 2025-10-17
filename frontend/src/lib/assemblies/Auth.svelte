@@ -3,7 +3,7 @@ import EmailInput from './EmailInput.svelte'
 import PasswordInput from './PasswordInput.svelte'
 import Input from '$lib/components/Input.svelte'
 import Button from '$lib/components/Button.svelte'
-import type { AuthModel } from '$lib/types/assemblies/auth'
+import type { AuthModel, AuthProps } from '$lib/types/assemblies/auth'
 import Message from '$lib/components/Message.svelte'
 import { onMount } from 'svelte'
 import { env } from '$env/dynamic/public'
@@ -12,7 +12,8 @@ import type { ServerError } from '$lib/types/error'
 import Checkbox from '$lib/components/Checkbox.svelte'
 import Label from '$lib/components/Label.svelte'
 
-let mode = $state<'login' | 'register'>('login')
+let { mode = $bindable('login') }: AuthProps = $props()
+
 let inviteRequired = $state(false)
 let loading = $state(false)
 
@@ -132,9 +133,9 @@ $effect(() => {
 <div class="auth-assembly">
   <div class="title">
     {#if mode === 'login'}
-      Login
+      Log in
     {:else}
-      Register
+      Sign up
     {/if}
   </div>
 
@@ -185,7 +186,7 @@ $effect(() => {
         </Label>
         <div class="explainer extra-small muted">
           By ticking this box you agree to our
-          <a href="#TODO">terms of use</a>
+          <a href="/terms-of-use">terms of use</a>
         </div>
       </div>
     </div>
@@ -193,9 +194,9 @@ $effect(() => {
 
   <Button fullwidth type="primary" {disabled} {loading} onclick={submit}>
     {#if mode === 'login'}
-      Login
+      Log in
     {:else}
-      Register
+      Sign up
     {/if}
   </Button>
 
@@ -208,10 +209,10 @@ $effect(() => {
   <p class="small muted">
     {#if mode === 'login'}
       Don't have an account?
-      <a href="#" onclick={switchMode}>Register</a>
+      <button class="link" onclick={switchMode}>Sign up</button>
     {:else}
       Already have an account?
-      <a href="#" onclick={switchMode}>Login</a>
+      <button class="link" onclick={switchMode}>Log in</button>
     {/if}
   </p>
 </div>
@@ -229,7 +230,7 @@ $effect(() => {
 
   .title {
     font-size: var(--font-size-xl);
-    font-weight: 700;
+    font-weight: 600;
   }
 
   .terms-field {

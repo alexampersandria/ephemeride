@@ -81,8 +81,8 @@ const title = $derived(
     </div>
     <div class="docs-home">
       <div class="docs-route-link">
-        <a href="/docs">
-          <Logo />
+        <a href="/">
+          <Logo text />
         </a>
       </div>
     </div>
@@ -174,8 +174,7 @@ const title = $derived(
     grid-area: 2 / 2 / 3 / 3;
   }
 
-  .docs-menu,
-  .docs-content {
+  .docs-menu {
     padding: var(--padding-m);
   }
 
@@ -229,6 +228,10 @@ const title = $derived(
     height: 100%;
     overflow: auto;
     padding-bottom: 25vh;
+  }
+
+  .docs-content {
+    padding: var(--padding-l) 0;
   }
 
   .docs-navigation {
