@@ -12,7 +12,6 @@ import {
   LogOut,
   Moon,
   Sun,
-  User,
   UserPlus,
 } from 'lucide-svelte'
 

@@ -15,12 +15,12 @@ export type UserState = {
 let sessionId: string | null = $state(null)
 let userDetails: UserDetails | null = $state(null)
 
-let logOut = () => {
+const logOut = () => {
   sessionId = null
   userDetails = null
 }
 
-let logIn = (newSessionId: string) => {
+const logIn = (newSessionId: string) => {
   console.log('Logging in with session ID:', newSessionId)
   sessionId = newSessionId
   console.log('sessionId set to:', sessionId)

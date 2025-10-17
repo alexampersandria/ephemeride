@@ -12,5 +12,5 @@ export type SessionResponse = {
   created_at: string
   accessed_at: string
   ip_address: string
-  user_agent: String
+  user_agent: string
 }
