@@ -10,6 +10,7 @@ use diesel::{
 };
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
+use validator::Validate;
 
 #[derive(Debug, Deserialize, Serialize, Insertable, Queryable)]
 #[diesel(table_name = categories)]
@@ -18,6 +19,24 @@ pub struct Category {
   pub name: String,
   pub user_id: String,
   pub created_at: i64,
+}
+
+#[derive(Debug, Deserialize, Serialize, Validate)]
+pub struct CreateCategory {
+  #[validate(length(min = 1, max = 255))]
+  pub name: String,
+  #[validate(length(min = 1, max = 255))]
+  pub user_id: String,
+}
+
+#[derive(Debug, Deserialize, Serialize, Validate)]
+pub struct EditCategory {
+  #[validate(length(min = 1, max = 255))]
+  pub id: String,
+  #[validate(length(min = 1, max = 255))]
+  pub name: String,
+  #[validate(length(min = 1, max = 255))]
+  pub user_id: String,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -40,6 +59,30 @@ pub struct Tag {
   pub category_id: String,
 }
 
+#[derive(Debug, Deserialize, Serialize, Validate)]
+pub struct CreateTag {
+  #[validate(length(min = 1, max = 255))]
+  pub name: String,
+  #[validate(length(min = 1, max = 16))]
+  pub color: String,
+  #[validate(length(min = 1, max = 255))]
+  pub category_id: String,
+  #[validate(length(min = 1, max = 255))]
+  pub user_id: String,
+}
+
+#[derive(Debug, Deserialize, Serialize, Validate)]
+pub struct EditTag {
+  #[validate(length(min = 1, max = 255))]
+  pub id: String,
+  #[validate(length(min = 1, max = 255))]
+  pub name: String,
+  #[validate(length(min = 1, max = 16))]
+  pub color: String,
+  #[validate(length(min = 1, max = 255))]
+  pub user_id: String,
+}
+
 #[derive(Debug, Deserialize, Serialize, Insertable, Queryable)]
 #[diesel(table_name = entries)]
 pub struct Entry {
@@ -49,6 +92,34 @@ pub struct Entry {
   pub created_at: i64,
   pub mood: i32,
   pub entry: Option<String>,
+}
+
+#[derive(Debug, Deserialize, Serialize, Validate)]
+pub struct CreateEntry {
+  #[validate(length(min = 1, max = 255))]
+  pub date: String,
+  #[validate(range(min = 1, max = 5))]
+  pub mood: i32,
+  #[validate(length(min = 1, max = 1000))]
+  pub entry: Option<String>,
+  pub selected_tags: Vec<String>,
+  #[validate(length(min = 1, max = 255))]
+  pub user_id: String,
+}
+
+#[derive(Debug, Deserialize, Serialize, Validate)]
+pub struct EditEntry {
+  #[validate(length(min = 1, max = 255))]
+  pub id: String,
+  #[validate(length(min = 1, max = 255))]
+  pub date: String,
+  #[validate(range(min = 1, max = 5))]
+  pub mood: i32,
+  #[validate(length(min = 1, max = 1000))]
+  pub entry: Option<String>,
+  pub selected_tags: Vec<String>,
+  #[validate(length(min = 1, max = 255))]
+  pub user_id: String,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -70,8 +141,13 @@ pub struct EntryTag {
   pub tag_id: String,
 }
 
-pub fn create_category(name: String, user_id: String) -> Result<Category, EphemerideError> {
-  let user = get_user(&user_id);
+pub fn create_category(category: CreateCategory) -> Result<Category, EphemerideError> {
+  match category.validate() {
+    Ok(_) => (),
+    Err(_) => return Err(EphemerideError::BadRequest),
+  }
+
+  let user = get_user(&category.user_id);
 
   if user.is_err() {
     return Err(EphemerideError::UserNotFound);
@@ -81,8 +157,8 @@ pub fn create_category(name: String, user_id: String) -> Result<Category, Epheme
 
   let new_category = Category {
     id: Uuid::new_v4().to_string(),
-    name,
-    user_id,
+    name: category.name,
+    user_id: category.user_id,
     created_at: util::unix_ms(),
   };
 
@@ -96,12 +172,13 @@ pub fn create_category(name: String, user_id: String) -> Result<Category, Epheme
   }
 }
 
-pub fn edit_category(
-  category_id: &str,
-  name: String,
-  user_id: &str,
-) -> Result<Category, EphemerideError> {
-  let user = get_user(user_id);
+pub fn edit_category(category: EditCategory) -> Result<Category, EphemerideError> {
+  match category.validate() {
+    Ok(_) => (),
+    Err(_) => return Err(EphemerideError::BadRequest),
+  }
+
+  let user = get_user(&category.user_id);
 
   if user.is_err() {
     return Err(EphemerideError::UserNotFound);
@@ -111,14 +188,14 @@ pub fn edit_category(
 
   let result = diesel::update(
     categories::table
-      .filter(categories::id.eq(category_id))
-      .filter(categories::user_id.eq(user_id)),
+      .filter(categories::id.eq(&category.id))
+      .filter(categories::user_id.eq(&category.user_id)),
   )
-  .set(categories::name.eq(name))
+  .set(categories::name.eq(&category.name))
   .execute(&mut conn);
 
   match result {
-    Ok(_) => get_category(category_id, user_id),
+    Ok(_) => get_category(&category.id, &category.user_id),
     Err(_) => Err(EphemerideError::DatabaseError),
   }
 }
@@ -228,34 +305,34 @@ pub fn delete_category(category_id: &str, user_id: &str) -> Result<bool, Ephemer
   }
 }
 
-pub fn create_tag(
-  name: String,
-  color: String,
-  category_id: String,
-  user_id: String,
-) -> Result<Tag, EphemerideError> {
-  let user = get_user(&user_id);
+pub fn create_tag(tag: CreateTag) -> Result<Tag, EphemerideError> {
+  match tag.validate() {
+    Ok(_) => (),
+    Err(_) => return Err(EphemerideError::BadRequest),
+  }
+
+  let user = get_user(&tag.user_id);
 
   if user.is_err() {
     return Err(EphemerideError::UserNotFound);
   }
 
-  let category = get_category(&category_id, &user_id);
+  let category = get_category(&tag.category_id, &tag.user_id);
 
   if category.is_err() {
     return Err(EphemerideError::CategoryNotFound);
   }
 
-  let color_value = Color::from(color.as_str());
+  let color_value = Color::from(tag.color.as_str());
 
   let mut conn = establish_connection();
 
   let tag = Tag {
     id: Uuid::new_v4().to_string(),
-    name,
+    name: tag.name,
     color: color_value.to_string(),
-    user_id,
-    category_id,
+    user_id: tag.user_id,
+    category_id: tag.category_id,
     created_at: util::unix_ms(),
   };
 
@@ -269,32 +346,35 @@ pub fn create_tag(
   }
 }
 
-pub fn edit_tag(
-  tag_id: &str,
-  name: String,
-  color: String,
-  user_id: &str,
-) -> Result<Tag, EphemerideError> {
-  let user = get_user(user_id);
+pub fn edit_tag(tag: EditTag) -> Result<Tag, EphemerideError> {
+  match tag.validate() {
+    Ok(_) => (),
+    Err(_) => return Err(EphemerideError::BadRequest),
+  }
+
+  let user = get_user(&tag.user_id);
 
   if user.is_err() {
     return Err(EphemerideError::UserNotFound);
   }
 
-  let color_value = Color::from(color.as_str());
+  let color_value = Color::from(tag.color.as_str());
 
   let mut conn = establish_connection();
 
   let result = diesel::update(
     tags::table
-      .filter(tags::id.eq(tag_id))
-      .filter(tags::user_id.eq(user_id)),
+      .filter(tags::id.eq(&tag.id))
+      .filter(tags::user_id.eq(&tag.user_id)),
   )
-  .set((tags::name.eq(name), tags::color.eq(color_value.to_string())))
+  .set((
+    tags::name.eq(&tag.name),
+    tags::color.eq(color_value.to_string()),
+  ))
   .execute(&mut conn);
 
   match result {
-    Ok(_) => get_tag(tag_id, user_id),
+    Ok(_) => get_tag(&tag.id, &tag.user_id),
     Err(_) => Err(EphemerideError::DatabaseError),
   }
 }
@@ -450,7 +530,10 @@ pub fn create_default_data(user_id: String) -> Result<bool, EphemerideError> {
   ];
 
   for category_name in default_categories {
-    let category = create_category(category_name.to_string(), user_id.clone());
+    let category = create_category(CreateCategory {
+      name: category_name.to_string(),
+      user_id: user_id.clone(),
+    });
 
     if category.is_err() {
       return Err(EphemerideError::DatabaseError);
@@ -460,12 +543,12 @@ pub fn create_default_data(user_id: String) -> Result<bool, EphemerideError> {
 
     for (cat_name, tag_name, color) in &default_tags {
       if *cat_name == category_name {
-        let tag = create_tag(
-          tag_name.to_string(),
-          color.to_string(),
-          category.id.clone(),
-          user_id.clone(),
-        );
+        let tag = create_tag(CreateTag {
+          name: tag_name.to_string(),
+          color: color.to_string(),
+          category_id: category.id.clone(),
+          user_id: user_id.clone(),
+        });
 
         if tag.is_err() {
           return Err(EphemerideError::DatabaseError);
@@ -477,24 +560,23 @@ pub fn create_default_data(user_id: String) -> Result<bool, EphemerideError> {
   Ok(true)
 }
 
-pub fn create_entry(
-  date: String,
-  mood: i32,
-  entry_content: Option<String>,
-  selected_tags: Vec<String>,
-  user_id: String,
-) -> Result<EntryWithTags, EphemerideError> {
+pub fn create_entry(entry: CreateEntry) -> Result<EntryWithTags, EphemerideError> {
+  match entry.validate() {
+    Ok(_) => (),
+    Err(_) => return Err(EphemerideError::BadRequest),
+  }
+
   let mut tags: Vec<Tag> = Vec::new();
 
-  for tag_id in &selected_tags {
-    let tag = get_tag(tag_id, &user_id);
+  for tag_id in &entry.selected_tags {
+    let tag = get_tag(tag_id, &entry.user_id);
 
     if tag.is_ok() {
       tags.push(tag.unwrap());
     }
   }
 
-  let user = get_user(&user_id);
+  let user = get_user(&entry.user_id);
 
   if user.is_err() {
     return Err(EphemerideError::UserNotFound);
@@ -504,11 +586,11 @@ pub fn create_entry(
 
   let new_entry = Entry {
     id: Uuid::new_v4().to_string(),
-    user_id,
-    date,
+    user_id: entry.user_id.clone(),
+    date: entry.date.clone(),
     created_at: util::unix_ms(),
-    mood,
-    entry: entry_content,
+    mood: entry.mood,
+    entry: entry.entry.clone(),
   };
 
   let result = diesel::insert_into(entries::table)
@@ -542,31 +624,29 @@ pub fn create_entry(
     created_at: new_entry.created_at,
     mood: new_entry.mood,
     entry: new_entry.entry,
-    selected_tags: selected_tags,
+    selected_tags: entry.selected_tags,
   };
 
   Ok(entry_with_tags)
 }
 
-pub fn edit_entry(
-  entry_id: &str,
-  date: String,
-  mood: i32,
-  entry_content: Option<String>,
-  selected_tags: Vec<String>,
-  user_id: &str,
-) -> Result<EntryWithTags, EphemerideError> {
+pub fn edit_entry(entry: EditEntry) -> Result<EntryWithTags, EphemerideError> {
+  match entry.validate() {
+    Ok(_) => (),
+    Err(_) => return Err(EphemerideError::BadRequest),
+  }
+
   let mut conn = establish_connection();
 
   let result = diesel::update(
     entries::table
-      .filter(entries::id.eq(entry_id))
-      .filter(entries::user_id.eq(user_id)),
+      .filter(entries::id.eq(&entry.id))
+      .filter(entries::user_id.eq(&entry.user_id)),
   )
   .set((
-    entries::date.eq(date),
-    entries::mood.eq(mood),
-    entries::entry.eq(entry_content),
+    entries::date.eq(&entry.date),
+    entries::mood.eq(entry.mood),
+    entries::entry.eq(&entry.entry),
   ))
   .execute(&mut conn);
 
@@ -575,7 +655,7 @@ pub fn edit_entry(
   }
 
   let delete_result = diesel::delete(
-    crate::schema::entry_tags::table.filter(crate::schema::entry_tags::entry_id.eq(entry_id)),
+    crate::schema::entry_tags::table.filter(crate::schema::entry_tags::entry_id.eq(&entry.id)),
   )
   .execute(&mut conn);
 
@@ -583,10 +663,10 @@ pub fn edit_entry(
     return Err(EphemerideError::DatabaseError);
   }
 
-  for tag_id in &selected_tags {
+  for tag_id in &entry.selected_tags {
     let entry_tag = EntryTag {
       id: Uuid::new_v4().to_string(),
-      entry_id: entry_id.to_string(),
+      entry_id: entry.id.to_string(),
       tag_id: tag_id.to_string(),
     };
 
@@ -599,7 +679,7 @@ pub fn edit_entry(
     }
   }
 
-  get_entry_with_tags(entry_id, user_id)
+  get_entry_with_tags(&entry.id, &entry.user_id)
 }
 
 pub fn get_entry_with_tags(

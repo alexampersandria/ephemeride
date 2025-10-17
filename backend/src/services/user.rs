@@ -120,6 +120,11 @@ pub fn get_password_hash(id: &str) -> Result<String, EphemerideError> {
 }
 
 pub fn create_user(user: CreateUser) -> Result<UserDetails, EphemerideError> {
+  match user.validate() {
+    Ok(_) => (),
+    Err(_) => return Err(EphemerideError::BadRequest),
+  }
+
   if get_user_id(&user.email).is_ok() {
     return Err(EphemerideError::EmailAlreadyInUse);
   }
@@ -177,6 +182,11 @@ pub fn delete_user(id: &str) -> Result<bool, EphemerideError> {
 }
 
 pub fn update_user(id: &str, user: UpdateUser) -> Result<bool, EphemerideError> {
+  match user.validate() {
+    Ok(_) => (),
+    Err(_) => return Err(EphemerideError::BadRequest),
+  }
+
   let mut conn = establish_connection();
 
   let result = diesel::update(schema::users::table.filter(schema::users::id.eq(id)))

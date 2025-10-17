@@ -7,19 +7,12 @@ use crate::{
 };
 use poem::{handler, http::StatusCode, web::Json, Request, Response};
 
-use validator::Validate;
-
 use dotenvy::dotenv;
 use std::env;
 
 #[handler]
 pub fn create_user(Json(user): Json<user::CreateUser>, request: &Request) -> Response {
   dotenv().ok();
-
-  match user.validate() {
-    Ok(_) => (),
-    Err(_) => return error_response(EphemerideError::BadRequest),
-  }
 
   if env::var("INVITE_REQUIRED").unwrap_or("false".to_string()) == "true" {
     match &user.invite {
