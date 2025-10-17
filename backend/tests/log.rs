@@ -19,7 +19,10 @@ fn create_test_user() -> user::UserDetails {
 fn test_create_category() {
   let user = create_test_user();
 
-  let category = log::create_category("Test Category".to_string(), user.id.clone());
+  let category = log::create_category(log::CreateCategory {
+    name: "Test Category".to_string(),
+    user_id: user.id.clone(),
+  });
 
   assert!(category.is_ok());
   let category = category.unwrap();
@@ -31,9 +34,17 @@ fn test_create_category() {
 fn test_edit_category() {
   let user = create_test_user();
 
-  let category = log::create_category("Original Name".to_string(), user.id.clone()).unwrap();
+  let category = log::create_category(log::CreateCategory {
+    name: "Original Name".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
 
-  let edited = log::edit_category(&category.id, "Updated Name".to_string(), &user.id);
+  let edited = log::edit_category(log::EditCategory {
+    id: category.id.clone(),
+    name: "Updated Name".to_string(),
+    user_id: user.id.clone(),
+  });
 
   assert!(edited.is_ok());
   let edited = edited.unwrap();
@@ -45,7 +56,11 @@ fn test_edit_category() {
 fn test_get_category() {
   let user = create_test_user();
 
-  let category = log::create_category("Get Test".to_string(), user.id.clone()).unwrap();
+  let category = log::create_category(log::CreateCategory {
+    name: "Get Test".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
 
   let found = log::get_category(&category.id, &user.id);
 
@@ -59,8 +74,16 @@ fn test_get_category() {
 fn test_get_all_categories() {
   let user = create_test_user();
 
-  log::create_category("Category 1".to_string(), user.id.clone()).unwrap();
-  log::create_category("Category 2".to_string(), user.id.clone()).unwrap();
+  log::create_category(log::CreateCategory {
+    name: "Category 1".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  log::create_category(log::CreateCategory {
+    name: "Category 2".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
 
   let categories = log::get_all_categories(&user.id);
 
@@ -73,20 +96,24 @@ fn test_get_all_categories() {
 fn test_get_category_with_tags() {
   let user = create_test_user();
 
-  let category = log::create_category("Category with Tags".to_string(), user.id.clone()).unwrap();
-  log::create_tag(
-    "Tag 1".to_string(),
-    "blue".to_string(),
-    category.id.clone(),
-    user.id.clone(),
-  )
+  let category = log::create_category(log::CreateCategory {
+    name: "Category with Tags".to_string(),
+    user_id: user.id.clone(),
+  })
   .unwrap();
-  log::create_tag(
-    "Tag 2".to_string(),
-    "red".to_string(),
-    category.id.clone(),
-    user.id.clone(),
-  )
+  log::create_tag(log::CreateTag {
+    name: "Tag 1".to_string(),
+    color: "blue".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  log::create_tag(log::CreateTag {
+    name: "Tag 2".to_string(),
+    color: "red".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
   .unwrap();
 
   let category_with_tags = log::get_category_with_tags(&category.id, &user.id);
@@ -101,22 +128,30 @@ fn test_get_category_with_tags() {
 fn test_get_user_categories_with_tags() {
   let user = create_test_user();
 
-  let cat1 = log::create_category("Category 1".to_string(), user.id.clone()).unwrap();
-  let cat2 = log::create_category("Category 2".to_string(), user.id.clone()).unwrap();
-
-  log::create_tag(
-    "Tag 1".to_string(),
-    "blue".to_string(),
-    cat1.id.clone(),
-    user.id.clone(),
-  )
+  let cat1 = log::create_category(log::CreateCategory {
+    name: "Category 1".to_string(),
+    user_id: user.id.clone(),
+  })
   .unwrap();
-  log::create_tag(
-    "Tag 2".to_string(),
-    "red".to_string(),
-    cat2.id.clone(),
-    user.id.clone(),
-  )
+  let cat2 = log::create_category(log::CreateCategory {
+    name: "Category 2".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  log::create_tag(log::CreateTag {
+    name: "Tag 1".to_string(),
+    color: "blue".to_string(),
+    category_id: cat1.id.clone(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  log::create_tag(log::CreateTag {
+    name: "Tag 2".to_string(),
+    color: "red".to_string(),
+    category_id: cat2.id.clone(),
+    user_id: user.id.clone(),
+  })
   .unwrap();
 
   let categories_with_tags = log::get_user_categories_with_tags(&user.id);
@@ -136,13 +171,17 @@ fn test_get_user_categories_with_tags() {
 fn test_delete_category() {
   let user = create_test_user();
 
-  let category = log::create_category("To Delete".to_string(), user.id.clone()).unwrap();
-  log::create_tag(
-    "Tag".to_string(),
-    "blue".to_string(),
-    category.id.clone(),
-    user.id.clone(),
-  )
+  let category = log::create_category(log::CreateCategory {
+    name: "To Delete".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  log::create_tag(log::CreateTag {
+    name: "Tag".to_string(),
+    color: "blue".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
   .unwrap();
 
   let deleted = log::delete_category(&category.id, &user.id);
@@ -157,14 +196,18 @@ fn test_delete_category() {
 #[test]
 fn test_create_tag() {
   let user = create_test_user();
-  let category = log::create_category("Test Category".to_string(), user.id.clone()).unwrap();
+  let category = log::create_category(log::CreateCategory {
+    name: "Test Category".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
 
-  let tag = log::create_tag(
-    "Test Tag".to_string(),
-    "blue".to_string(),
-    category.id.clone(),
-    user.id.clone(),
-  );
+  let tag = log::create_tag(log::CreateTag {
+    name: "Test Tag".to_string(),
+    color: "blue".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  });
 
   assert!(tag.is_ok());
   let tag = tag.unwrap();
@@ -176,16 +219,25 @@ fn test_create_tag() {
 #[test]
 fn test_edit_tag() {
   let user = create_test_user();
-  let category = log::create_category("Test Category".to_string(), user.id.clone()).unwrap();
-  let tag = log::create_tag(
-    "Original".to_string(),
-    "blue".to_string(),
-    category.id.clone(),
-    user.id.clone(),
-  )
+  let category = log::create_category(log::CreateCategory {
+    name: "Test Category".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  let tag = log::create_tag(log::CreateTag {
+    name: "Original".to_string(),
+    color: "blue".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
   .unwrap();
 
-  let edited = log::edit_tag(&tag.id, "Updated".to_string(), "red".to_string(), &user.id);
+  let edited = log::edit_tag(log::EditTag {
+    id: tag.id.clone(),
+    name: "Updated".to_string(),
+    color: "red".to_string(),
+    user_id: user.id.clone(),
+  });
 
   assert!(edited.is_ok());
   let edited = edited.unwrap();
@@ -196,13 +248,17 @@ fn test_edit_tag() {
 #[test]
 fn test_get_tag() {
   let user = create_test_user();
-  let category = log::create_category("Test Category".to_string(), user.id.clone()).unwrap();
-  let tag = log::create_tag(
-    "Test Tag".to_string(),
-    "blue".to_string(),
-    category.id.clone(),
-    user.id.clone(),
-  )
+  let category = log::create_category(log::CreateCategory {
+    name: "Test Category".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  let tag = log::create_tag(log::CreateTag {
+    name: "Test Tag".to_string(),
+    color: "blue".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
   .unwrap();
 
   let found = log::get_tag(&tag.id, &user.id);
@@ -216,20 +272,24 @@ fn test_get_tag() {
 #[test]
 fn test_get_tags() {
   let user = create_test_user();
-  let category = log::create_category("Test Category".to_string(), user.id.clone()).unwrap();
-  let tag1 = log::create_tag(
-    "Tag 1".to_string(),
-    "blue".to_string(),
-    category.id.clone(),
-    user.id.clone(),
-  )
+  let category = log::create_category(log::CreateCategory {
+    name: "Test Category".to_string(),
+    user_id: user.id.clone(),
+  })
   .unwrap();
-  let tag2 = log::create_tag(
-    "Tag 2".to_string(),
-    "red".to_string(),
-    category.id.clone(),
-    user.id.clone(),
-  )
+  let tag1 = log::create_tag(log::CreateTag {
+    name: "Tag 1".to_string(),
+    color: "blue".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  let tag2 = log::create_tag(log::CreateTag {
+    name: "Tag 2".to_string(),
+    color: "red".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
   .unwrap();
 
   let tag_ids = vec![tag1.id.as_str(), tag2.id.as_str()];
@@ -243,20 +303,24 @@ fn test_get_tags() {
 #[test]
 fn test_get_category_tags() {
   let user = create_test_user();
-  let category = log::create_category("Test Category".to_string(), user.id.clone()).unwrap();
-  log::create_tag(
-    "Tag 1".to_string(),
-    "blue".to_string(),
-    category.id.clone(),
-    user.id.clone(),
-  )
+  let category = log::create_category(log::CreateCategory {
+    name: "Test Category".to_string(),
+    user_id: user.id.clone(),
+  })
   .unwrap();
-  log::create_tag(
-    "Tag 2".to_string(),
-    "red".to_string(),
-    category.id.clone(),
-    user.id.clone(),
-  )
+  log::create_tag(log::CreateTag {
+    name: "Tag 1".to_string(),
+    color: "blue".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  log::create_tag(log::CreateTag {
+    name: "Tag 2".to_string(),
+    color: "red".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
   .unwrap();
 
   let tags = log::get_category_tags(&category.id, &user.id);
@@ -269,13 +333,17 @@ fn test_get_category_tags() {
 #[test]
 fn test_delete_tag() {
   let user = create_test_user();
-  let category = log::create_category("Test Category".to_string(), user.id.clone()).unwrap();
-  let tag = log::create_tag(
-    "To Delete".to_string(),
-    "blue".to_string(),
-    category.id.clone(),
-    user.id.clone(),
-  )
+  let category = log::create_category(log::CreateCategory {
+    name: "Test Category".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  let tag = log::create_tag(log::CreateTag {
+    name: "To Delete".to_string(),
+    color: "blue".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
   .unwrap();
 
   let deleted = log::delete_tag(&tag.id, &user.id);
@@ -290,20 +358,24 @@ fn test_delete_tag() {
 #[test]
 fn test_delete_all_category_tags() {
   let user = create_test_user();
-  let category = log::create_category("Test Category".to_string(), user.id.clone()).unwrap();
-  log::create_tag(
-    "Tag 1".to_string(),
-    "blue".to_string(),
-    category.id.clone(),
-    user.id.clone(),
-  )
+  let category = log::create_category(log::CreateCategory {
+    name: "Test Category".to_string(),
+    user_id: user.id.clone(),
+  })
   .unwrap();
-  log::create_tag(
-    "Tag 2".to_string(),
-    "red".to_string(),
-    category.id.clone(),
-    user.id.clone(),
-  )
+  log::create_tag(log::CreateTag {
+    name: "Tag 1".to_string(),
+    color: "blue".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  log::create_tag(log::CreateTag {
+    name: "Tag 2".to_string(),
+    color: "red".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
   .unwrap();
 
   let deleted = log::delete_all_category_tags(&category.id, &user.id);
@@ -319,22 +391,26 @@ fn test_delete_all_category_tags() {
 #[test]
 fn test_create_entry() {
   let user = create_test_user();
-  let category = log::create_category("Test Category".to_string(), user.id.clone()).unwrap();
-  let tag = log::create_tag(
-    "Test Tag".to_string(),
-    "blue".to_string(),
-    category.id.clone(),
-    user.id.clone(),
-  )
+  let category = log::create_category(log::CreateCategory {
+    name: "Test Category".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  let tag = log::create_tag(log::CreateTag {
+    name: "Test Tag".to_string(),
+    color: "blue".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
   .unwrap();
 
-  let entry = log::create_entry(
-    "2025-10-17".to_string(),
-    5,
-    Some("Test entry content".to_string()),
-    vec![tag.id.clone()],
-    user.id.clone(),
-  );
+  let entry = log::create_entry(log::CreateEntry {
+    date: "2025-10-17".to_string(),
+    mood: 5,
+    entry: Some("Test entry content".to_string()),
+    selected_tags: vec![tag.id.clone()],
+    user_id: user.id.clone(),
+  });
 
   assert!(entry.is_ok());
   let entry = entry.unwrap();
@@ -349,7 +425,13 @@ fn test_create_entry() {
 fn test_create_entry_without_content() {
   let user = create_test_user();
 
-  let entry = log::create_entry("2025-10-17".to_string(), 3, None, vec![], user.id.clone());
+  let entry = log::create_entry(log::CreateEntry {
+    date: "2025-10-17".to_string(),
+    mood: 3,
+    entry: None,
+    selected_tags: vec![],
+    user_id: user.id.clone(),
+  });
 
   assert!(entry.is_ok());
   let entry = entry.unwrap();
@@ -360,39 +442,43 @@ fn test_create_entry_without_content() {
 #[test]
 fn test_edit_entry() {
   let user = create_test_user();
-  let category = log::create_category("Test Category".to_string(), user.id.clone()).unwrap();
-  let tag1 = log::create_tag(
-    "Tag 1".to_string(),
-    "blue".to_string(),
-    category.id.clone(),
-    user.id.clone(),
-  )
+  let category = log::create_category(log::CreateCategory {
+    name: "Test Category".to_string(),
+    user_id: user.id.clone(),
+  })
   .unwrap();
-  let tag2 = log::create_tag(
-    "Tag 2".to_string(),
-    "red".to_string(),
-    category.id.clone(),
-    user.id.clone(),
-  )
+  let tag1 = log::create_tag(log::CreateTag {
+    name: "Tag 1".to_string(),
+    color: "blue".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
   .unwrap();
-
-  let entry = log::create_entry(
-    "2025-10-17".to_string(),
-    3,
-    Some("Original content".to_string()),
-    vec![tag1.id.clone()],
-    user.id.clone(),
-  )
+  let tag2 = log::create_tag(log::CreateTag {
+    name: "Tag 2".to_string(),
+    color: "red".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
   .unwrap();
 
-  let edited = log::edit_entry(
-    &entry.id,
-    "2025-10-18".to_string(),
-    4,
-    Some("Updated content".to_string()),
-    vec![tag2.id.clone()],
-    &user.id,
-  );
+  let entry = log::create_entry(log::CreateEntry {
+    date: "2025-10-17".to_string(),
+    mood: 3,
+    entry: Some("Original content".to_string()),
+    selected_tags: vec![tag1.id.clone()],
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let edited = log::edit_entry(log::EditEntry {
+    id: entry.id.clone(),
+    date: "2025-10-18".to_string(),
+    mood: 4,
+    entry: Some("Updated content".to_string()),
+    selected_tags: vec![tag2.id.clone()],
+    user_id: user.id.clone(),
+  });
 
   assert!(edited.is_ok());
   let edited = edited.unwrap();
@@ -406,22 +492,26 @@ fn test_edit_entry() {
 #[test]
 fn test_get_entry_with_tags() {
   let user = create_test_user();
-  let category = log::create_category("Test Category".to_string(), user.id.clone()).unwrap();
-  let tag = log::create_tag(
-    "Test Tag".to_string(),
-    "blue".to_string(),
-    category.id.clone(),
-    user.id.clone(),
-  )
+  let category = log::create_category(log::CreateCategory {
+    name: "Test Category".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  let tag = log::create_tag(log::CreateTag {
+    name: "Test Tag".to_string(),
+    color: "blue".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
   .unwrap();
 
-  let entry = log::create_entry(
-    "2025-10-17".to_string(),
-    5,
-    Some("Test entry".to_string()),
-    vec![tag.id.clone()],
-    user.id.clone(),
-  )
+  let entry = log::create_entry(log::CreateEntry {
+    date: "2025-10-17".to_string(),
+    mood: 5,
+    entry: Some("Test entry".to_string()),
+    selected_tags: vec![tag.id.clone()],
+    user_id: user.id.clone(),
+  })
   .unwrap();
 
   let found = log::get_entry_with_tags(&entry.id, &user.id);
@@ -459,4 +549,451 @@ fn test_create_default_data() {
     let tag_list = log::get_category_tags(&tags.id, &user.id).unwrap();
     assert!(tag_list.len() >= 3);
   }
+}
+
+// Validation tests
+
+#[test]
+fn test_create_category_empty_name() {
+  let user = create_test_user();
+
+  let category = log::create_category(log::CreateCategory {
+    name: "".to_string(),
+    user_id: user.id.clone(),
+  });
+
+  assert!(category.is_err());
+}
+
+#[test]
+fn test_create_category_name_too_long() {
+  let user = create_test_user();
+
+  let long_name = "a".repeat(256);
+  let category = log::create_category(log::CreateCategory {
+    name: long_name,
+    user_id: user.id.clone(),
+  });
+
+  assert!(category.is_err());
+}
+
+#[test]
+fn test_edit_category_empty_name() {
+  let user = create_test_user();
+  let category = log::create_category(log::CreateCategory {
+    name: "Original Name".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let edited = log::edit_category(log::EditCategory {
+    id: category.id.clone(),
+    name: "".to_string(),
+    user_id: user.id.clone(),
+  });
+
+  assert!(edited.is_err());
+}
+
+#[test]
+fn test_edit_category_name_too_long() {
+  let user = create_test_user();
+  let category = log::create_category(log::CreateCategory {
+    name: "Original Name".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let long_name = "a".repeat(256);
+  let edited = log::edit_category(log::EditCategory {
+    id: category.id.clone(),
+    name: long_name,
+    user_id: user.id.clone(),
+  });
+
+  assert!(edited.is_err());
+}
+
+#[test]
+fn test_create_tag_empty_name() {
+  let user = create_test_user();
+  let category = log::create_category(log::CreateCategory {
+    name: "Test Category".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let tag = log::create_tag(log::CreateTag {
+    name: "".to_string(),
+    color: "blue".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  });
+
+  assert!(tag.is_err());
+}
+
+#[test]
+fn test_create_tag_name_too_long() {
+  let user = create_test_user();
+  let category = log::create_category(log::CreateCategory {
+    name: "Test Category".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let long_name = "a".repeat(256);
+  let tag = log::create_tag(log::CreateTag {
+    name: long_name,
+    color: "blue".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  });
+
+  assert!(tag.is_err());
+}
+
+#[test]
+fn test_create_tag_empty_color() {
+  let user = create_test_user();
+  let category = log::create_category(log::CreateCategory {
+    name: "Test Category".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let tag = log::create_tag(log::CreateTag {
+    name: "Test Tag".to_string(),
+    color: "".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  });
+
+  assert!(tag.is_err());
+}
+
+#[test]
+fn test_create_tag_color_too_long() {
+  let user = create_test_user();
+  let category = log::create_category(log::CreateCategory {
+    name: "Test Category".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let long_color = "a".repeat(17);
+  let tag = log::create_tag(log::CreateTag {
+    name: "Test Tag".to_string(),
+    color: long_color,
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  });
+
+  assert!(tag.is_err());
+}
+
+#[test]
+fn test_edit_tag_empty_name() {
+  let user = create_test_user();
+  let category = log::create_category(log::CreateCategory {
+    name: "Test Category".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  let tag = log::create_tag(log::CreateTag {
+    name: "Original".to_string(),
+    color: "blue".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let edited = log::edit_tag(log::EditTag {
+    id: tag.id.clone(),
+    name: "".to_string(),
+    color: "red".to_string(),
+    user_id: user.id.clone(),
+  });
+
+  assert!(edited.is_err());
+}
+
+#[test]
+fn test_edit_tag_name_too_long() {
+  let user = create_test_user();
+  let category = log::create_category(log::CreateCategory {
+    name: "Test Category".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  let tag = log::create_tag(log::CreateTag {
+    name: "Original".to_string(),
+    color: "blue".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let long_name = "a".repeat(256);
+  let edited = log::edit_tag(log::EditTag {
+    id: tag.id.clone(),
+    name: long_name,
+    color: "red".to_string(),
+    user_id: user.id.clone(),
+  });
+
+  assert!(edited.is_err());
+}
+
+#[test]
+fn test_edit_tag_empty_color() {
+  let user = create_test_user();
+  let category = log::create_category(log::CreateCategory {
+    name: "Test Category".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  let tag = log::create_tag(log::CreateTag {
+    name: "Original".to_string(),
+    color: "blue".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let edited = log::edit_tag(log::EditTag {
+    id: tag.id.clone(),
+    name: "Updated".to_string(),
+    color: "".to_string(),
+    user_id: user.id.clone(),
+  });
+
+  assert!(edited.is_err());
+}
+
+#[test]
+fn test_edit_tag_color_too_long() {
+  let user = create_test_user();
+  let category = log::create_category(log::CreateCategory {
+    name: "Test Category".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  let tag = log::create_tag(log::CreateTag {
+    name: "Original".to_string(),
+    color: "blue".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let long_color = "a".repeat(17);
+  let edited = log::edit_tag(log::EditTag {
+    id: tag.id.clone(),
+    name: "Updated".to_string(),
+    color: long_color,
+    user_id: user.id.clone(),
+  });
+
+  assert!(edited.is_err());
+}
+
+#[test]
+fn test_create_entry_empty_date() {
+  let user = create_test_user();
+
+  let entry = log::create_entry(log::CreateEntry {
+    date: "".to_string(),
+    mood: 3,
+    entry: Some("Test content".to_string()),
+    selected_tags: vec![],
+    user_id: user.id.clone(),
+  });
+
+  assert!(entry.is_err());
+}
+
+#[test]
+fn test_create_entry_date_too_long() {
+  let user = create_test_user();
+
+  let long_date = "a".repeat(256);
+  let entry = log::create_entry(log::CreateEntry {
+    date: long_date,
+    mood: 3,
+    entry: Some("Test content".to_string()),
+    selected_tags: vec![],
+    user_id: user.id.clone(),
+  });
+
+  assert!(entry.is_err());
+}
+
+#[test]
+fn test_create_entry_mood_too_low() {
+  let user = create_test_user();
+
+  let entry = log::create_entry(log::CreateEntry {
+    date: "2025-10-17".to_string(),
+    mood: 0,
+    entry: Some("Test content".to_string()),
+    selected_tags: vec![],
+    user_id: user.id.clone(),
+  });
+
+  assert!(entry.is_err());
+}
+
+#[test]
+fn test_create_entry_mood_too_high() {
+  let user = create_test_user();
+
+  let entry = log::create_entry(log::CreateEntry {
+    date: "2025-10-17".to_string(),
+    mood: 6,
+    entry: Some("Test content".to_string()),
+    selected_tags: vec![],
+    user_id: user.id.clone(),
+  });
+
+  assert!(entry.is_err());
+}
+
+#[test]
+fn test_create_entry_content_too_long() {
+  let user = create_test_user();
+
+  let long_content = "a".repeat(1001);
+  let entry = log::create_entry(log::CreateEntry {
+    date: "2025-10-17".to_string(),
+    mood: 3,
+    entry: Some(long_content),
+    selected_tags: vec![],
+    user_id: user.id.clone(),
+  });
+
+  assert!(entry.is_err());
+}
+
+#[test]
+fn test_edit_entry_empty_date() {
+  let user = create_test_user();
+  let entry = log::create_entry(log::CreateEntry {
+    date: "2025-10-17".to_string(),
+    mood: 3,
+    entry: Some("Original content".to_string()),
+    selected_tags: vec![],
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let edited = log::edit_entry(log::EditEntry {
+    id: entry.id.clone(),
+    date: "".to_string(),
+    mood: 4,
+    entry: Some("Updated content".to_string()),
+    selected_tags: vec![],
+    user_id: user.id.clone(),
+  });
+
+  assert!(edited.is_err());
+}
+
+#[test]
+fn test_edit_entry_date_too_long() {
+  let user = create_test_user();
+  let entry = log::create_entry(log::CreateEntry {
+    date: "2025-10-17".to_string(),
+    mood: 3,
+    entry: Some("Original content".to_string()),
+    selected_tags: vec![],
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let long_date = "a".repeat(256);
+  let edited = log::edit_entry(log::EditEntry {
+    id: entry.id.clone(),
+    date: long_date,
+    mood: 4,
+    entry: Some("Updated content".to_string()),
+    selected_tags: vec![],
+    user_id: user.id.clone(),
+  });
+
+  assert!(edited.is_err());
+}
+
+#[test]
+fn test_edit_entry_mood_too_low() {
+  let user = create_test_user();
+  let entry = log::create_entry(log::CreateEntry {
+    date: "2025-10-17".to_string(),
+    mood: 3,
+    entry: Some("Original content".to_string()),
+    selected_tags: vec![],
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let edited = log::edit_entry(log::EditEntry {
+    id: entry.id.clone(),
+    date: "2025-10-18".to_string(),
+    mood: 0,
+    entry: Some("Updated content".to_string()),
+    selected_tags: vec![],
+    user_id: user.id.clone(),
+  });
+
+  assert!(edited.is_err());
+}
+
+#[test]
+fn test_edit_entry_mood_too_high() {
+  let user = create_test_user();
+  let entry = log::create_entry(log::CreateEntry {
+    date: "2025-10-17".to_string(),
+    mood: 3,
+    entry: Some("Original content".to_string()),
+    selected_tags: vec![],
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let edited = log::edit_entry(log::EditEntry {
+    id: entry.id.clone(),
+    date: "2025-10-18".to_string(),
+    mood: 6,
+    entry: Some("Updated content".to_string()),
+    selected_tags: vec![],
+    user_id: user.id.clone(),
+  });
+
+  assert!(edited.is_err());
+}
+
+#[test]
+fn test_edit_entry_content_too_long() {
+  let user = create_test_user();
+  let entry = log::create_entry(log::CreateEntry {
+    date: "2025-10-17".to_string(),
+    mood: 3,
+    entry: Some("Original content".to_string()),
+    selected_tags: vec![],
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let long_content = "a".repeat(1001);
+  let edited = log::edit_entry(log::EditEntry {
+    id: entry.id.clone(),
+    date: "2025-10-18".to_string(),
+    mood: 4,
+    entry: Some(long_content),
+    selected_tags: vec![],
+    user_id: user.id.clone(),
+  });
+
+  assert!(edited.is_err());
 }
