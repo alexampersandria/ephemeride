@@ -13,6 +13,8 @@ let {
   href,
   target,
   'aria-label': ariaLabel,
+  left,
+  right,
 }: ButtonProps = $props()
 
 let clickHandler = () => {
@@ -37,6 +39,8 @@ let clickHandler = () => {
   class:loading
   class:disabled
   class:fullwidth
+  class:left
+  class:right
   aria-busy={loading}
   {disabled}
   aria-label={ariaLabel}
@@ -58,6 +62,7 @@ let clickHandler = () => {
   align-items: center;
   justify-content: center;
   padding: var(--button-padding);
+  height: var(--button-height);
   border-radius: var(--button-radius);
   color: var(--button-color);
   border: none;
@@ -65,23 +70,33 @@ let clickHandler = () => {
   border: var(--border-width) solid var(--button-border);
   background-color: var(--button-background);
   font-size: var(--button-size);
-  appearance: button;
-  line-height: 1.15;
+  overflow: hidden;
+  white-space: nowrap;
 
   .button-content {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: var(--button-content-gap);
+    overflow: hidden;
   }
 
   &.fullwidth {
     width: 100%;
   }
 
+  &.left {
+    justify-content: flex-start;
+  }
+
+  &.right {
+    justify-content: flex-end;
+  }
+
   :global(.lucide-icon) {
     width: 1em;
     height: 1em;
+    flex-shrink: 0;
   }
 
   .button-spinner {

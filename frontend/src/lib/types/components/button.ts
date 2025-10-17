@@ -11,4 +11,6 @@ export type ButtonProps = {
   href?: string
   target?: string
   'aria-label'?: string
+  left?: boolean
+  right?: boolean
 }

@@ -1,49 +1,29 @@
 <script lang="ts">
-import Button from '$lib/components/Button.svelte'
 import { useUserStore } from '$lib/store/userStore.svelte'
-import { ArrowLeft, Book, LogOut } from 'lucide-svelte'
+import { currentDate } from '$lib/utils/log'
 
 let userStore = useUserStore()
 </script>
 
 <div class="container">
-  <div class="app">
-    <div class="links small muted">
-      <a href="/"><ArrowLeft /> landing page</a>
-      <a href="/docs"><Book /> documentation</a>
+  {#if userStore.userDetails !== null}
+    <div class="hello">
+      <div class="large name">
+        Welcome back {userStore.userDetails.name}
+      </div>
+      <div class="small muted date">
+        Today is {currentDate()}
+      </div>
     </div>
-    <div class="dog">🐶</div>
-
-    <div class="user">
-      <code
-        ><pre>sessionId: {JSON.stringify(userStore.sessionId)}
-userDetails: {JSON.stringify(userStore.userDetails, null, 2)}</pre></code>
-
-      {#if userStore.sessionId !== null}
-        <Button onclick={() => userStore.logOut()}>
-          <LogOut />
-          Log out
-        </Button>
-      {/if}
-    </div>
-  </div>
+  {/if}
 </div>
 
 <style lang="scss">
-.app {
+.hello {
+  padding: var(--padding-xl);
+  text-align: center;
   display: flex;
   flex-direction: column;
-  gap: var(--padding-l);
-  padding: var(--padding-l);
-
-  .dog {
-    font-size: 2rem;
-    text-align: center;
-  }
-
-  .links {
-    display: flex;
-    justify-content: space-between;
-  }
+  gap: var(--padding-s);
 }
 </style>

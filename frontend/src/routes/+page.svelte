@@ -3,17 +3,9 @@ import Auth from '$lib/assemblies/Auth.svelte'
 import Button from '$lib/components/Button.svelte'
 import Logo from '$lib/components/Logo.svelte'
 import Modal from '$lib/components/Modal.svelte'
-import { useUiStore } from '$lib/store/uiStore.svelte'
+import ThemeToggle from '$lib/components/ThemeToggle.svelte'
 import { useUserStore } from '$lib/store/userStore.svelte'
-import {
-  ArrowRight,
-  Book,
-  Github,
-  LogIn,
-  Moon,
-  Sun,
-  UserPlus,
-} from 'lucide-svelte'
+import { ArrowRight, Book, Github, LogIn, UserPlus } from 'lucide-svelte'
 
 let userStore = useUserStore()
 
@@ -23,24 +15,6 @@ const openAuthModal = (mode: 'login' | 'register' = 'login') => {
   authModal = true
   authMode = mode
 }
-
-let uiStore = useUiStore()
-
-const themeToggle = () => {
-  if (uiStore.appliedTheme === 'dark') {
-    uiStore.theme = 'light'
-  } else {
-    uiStore.theme = 'dark'
-  }
-}
-
-const ThemeToggleIcon = $derived.by(() => {
-  if (uiStore.appliedTheme === 'dark') {
-    return Sun
-  } else {
-    return Moon
-  }
-})
 </script>
 
 <svelte:head>
@@ -83,9 +57,7 @@ const ThemeToggleIcon = $derived.by(() => {
           Docs
         </Button>
 
-        <Button type="ghost" onclick={themeToggle} aria-label="Toggle Theme">
-          <ThemeToggleIcon />
-        </Button>
+        <ThemeToggle />
       </div>
     </div>
   </div>

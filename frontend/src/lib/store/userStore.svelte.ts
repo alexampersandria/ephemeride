@@ -18,6 +18,7 @@ let userDetails: UserDetails | null = $state(null)
 const logOut = () => {
   sessionId = null
   userDetails = null
+  goto('/')
 }
 
 const logIn = (newSessionId: string) => {

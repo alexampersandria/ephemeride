@@ -279,6 +279,12 @@ blockquote {
   text-align: center;
 }
 
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* lucide icon same size as text */
 .lucide-icon {
   width: 1em;
