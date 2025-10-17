@@ -11,6 +11,7 @@ let {
   fullwidth = false,
   onclick,
   href,
+  target,
   'aria-label': ariaLabel,
 }: ButtonProps = $props()
 
@@ -18,7 +19,12 @@ let clickHandler = () => {
   if (disabled) return
   if (loading) return
   if (href) {
-    goto(href)
+    if (href.startsWith('http')) {
+      window.open(href, target || '_self')
+    } else {
+      goto(href)
+    }
+    return
   }
   if (!onclick) return
 

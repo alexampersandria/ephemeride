@@ -9,5 +9,6 @@ export type ButtonProps = {
   fullwidth?: boolean
   onclick?: () => void
   href?: string
+  target?: string
   'aria-label'?: string
 }

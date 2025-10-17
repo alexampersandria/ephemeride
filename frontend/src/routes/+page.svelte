@@ -8,8 +8,8 @@ import { useUserStore } from '$lib/store/userStore.svelte'
 import {
   ArrowRight,
   Book,
+  Github,
   LogIn,
-  LogOut,
   Moon,
   Sun,
   UserPlus,
@@ -54,14 +54,10 @@ const ThemeToggleIcon = $derived.by(() => {
 
   <div class="navigation fade-in fade-in-0">
     <div class="container">
-      <div class="left">
+      <div class="left muted">
         <a href="/"><Logo /></a>
       </div>
       <div class="right">
-        <Button type="ghost" href="/docs">
-          <Book />
-          Documentation
-        </Button>
         {#if userStore.sessionId === null}
           <Button type="ghost" onclick={() => openAuthModal('login')}>
             <LogIn />
@@ -72,12 +68,21 @@ const ThemeToggleIcon = $derived.by(() => {
             <ArrowRight />
             Go to app
           </Button>
-
-          <Button type="ghost" onclick={() => userStore.logOut()}>
-            <LogOut />
-            Log out
-          </Button>
         {/if}
+
+        <Button
+          type="ghost"
+          href="https://github.com/alexampersandria/ephemeride"
+          target="_blank">
+          <Github />
+          GitHub
+        </Button>
+
+        <Button type="ghost" href="/docs">
+          <Book />
+          Docs
+        </Button>
+
         <Button type="ghost" onclick={themeToggle} aria-label="Toggle Theme">
           <ThemeToggleIcon />
         </Button>
@@ -112,9 +117,12 @@ const ThemeToggleIcon = $derived.by(() => {
         </div>
 
         <div class="fade-in fade-in-6">
-          <Button type="ghost" href="/docs">
-            <Book />
-            Documentation
+          <Button
+            type="ghost"
+            href="https://github.com/alexampersandria/ephemeride"
+            target="_blank">
+            <Github />
+            GitHub
           </Button>
         </div>
       </div>
