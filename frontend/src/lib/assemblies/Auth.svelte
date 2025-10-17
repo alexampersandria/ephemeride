@@ -21,6 +21,7 @@ let inviteRequired = $state(false)
 let loading = $state(false)
 
 let serverError: ServerError | undefined = $state()
+let errorMessage: string | undefined = $state()
 
 let model: AuthModel = $state({
   name: {
@@ -99,6 +100,8 @@ const submit = async () => {
   if (disabled || loading || userStore.sessionId) return
 
   loading = true
+  errorMessage = undefined
+  serverError = undefined
 
   if (mode === 'login') {
     await fetch(env.PUBLIC_VITE_API_URL + '/v1/auth/', {
@@ -113,6 +116,8 @@ const submit = async () => {
     })
       .then(async res => {
         if (!res.ok) {
+          const errorData = await res.json()
+          errorMessage = errorData.message || 'Failed to log in'
           throw new Error('Failed to log in')
         }
         return await res.json()
@@ -186,10 +191,14 @@ $effect(() => {
   </div>
 
   {#if serverError === 'POST'}
-    <Alert type="error" size="small">
-      Failed to contact the server, please try again later or <a
-        href="https://github.com/alexampersandria/ephemeride/issues/new"
-        target="_blank">create an issue</a> if the problem persists.
+    <Alert type="error" size="small" solid>
+      {#if errorMessage}
+        {errorMessage}
+      {:else}
+        Failed to contact the server, please try again later or <a
+          href="https://github.com/alexampersandria/ephemeride/issues/new"
+          target="_blank">create an issue</a> if the problem persists.
+      {/if}
     </Alert>
   {/if}
 
