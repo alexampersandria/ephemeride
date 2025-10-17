@@ -1,10 +1,11 @@
 <script lang="ts">
 import { goto } from '$app/navigation'
 import Button from '$lib/components/Button.svelte'
+import Modal from '$lib/components/Modal.svelte'
 import ThemeToggle from '$lib/components/ThemeToggle.svelte'
 import { useUiStore } from '$lib/store/uiStore.svelte'
 import { useUserStore } from '$lib/store/userStore.svelte'
-import { currentDate } from '$lib/utils/log'
+import { currentDate, fullDate } from '$lib/utils/log'
 import {
   CalendarDays,
   ChartColumnIncreasing,
@@ -30,6 +31,7 @@ onMount(() => {
 })
 
 let isDragging = $state(false)
+let userDetailsModal = $state(false)
 
 const startDrag = () => {
   isDragging = true
@@ -70,10 +72,35 @@ const startDrag = () => {
 
     <div class="right">
       {#if userStore.userDetails}
-        <Button>
+        <Button onclick={() => (userDetailsModal = true)}>
           <User />
           {userStore.userDetails.name}
         </Button>
+
+        <Modal bind:open={userDetailsModal}>
+          <div class="user-details">
+            <div class="title">User Details</div>
+            <div class="name">
+              Display Name: {userStore.userDetails.name}
+            </div>
+            <div class="email">
+              Email: {userStore.userDetails.email}
+            </div>
+            <div class="member-since">
+              Member since: {fullDate(userStore.userDetails.created_at)}
+            </div>
+
+            <div class="logout">
+              <Button
+                onclick={() => {
+                  userStore.logOut()
+                }}
+                fullwidth>
+                Log out
+              </Button>
+            </div>
+          </div>
+        </Modal>
       {/if}
 
       <ThemeToggle />
@@ -309,6 +336,21 @@ const startDrag = () => {
         height: 100%;
       }
     }
+  }
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-xs);
+
+  .title {
+    font-size: var(--font-size-l);
+    font-weight: 600;
+  }
+
+  .logout {
+    margin-top: var(--padding-m);
   }
 }
 </style>
