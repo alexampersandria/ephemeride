@@ -1,35 +1,34 @@
 <script lang="ts">
-const emojis = ['😿', '🤖', '💔', '🙇‍♀️', '⚠️']
-const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)]
+import { page } from '$app/state'
+import Message from '$lib/components/Message.svelte'
+import { ArrowLeft } from 'lucide-svelte'
 </script>
 
 <div class="error">
-  <div class="error-content">
-    <div class="emoji">{randomEmoji}</div>
-    <div class="message">
-      Womp womp, something went wrong.<br />
-      Please try again later or go <a href="/">home</a>
+  <div class="container">
+    <Message type="error" size="small">
+      Error {page.status}: {page.error?.message || 'Unknown error'}
+    </Message>
+    <br />
+    <div class="muted small">
+      If you believe this to be an error <a
+        href="http://github.com/alexampersandria/ephemeride/issues/new"
+        target="_blank"
+        rel="noopener noreferrer">please report it</a
+      >.
+      <br />
+      <a href="/">
+        <ArrowLeft />
+        Go back to the homepage
+      </a>
     </div>
   </div>
 </div>
 
 <style lang="scss">
 .error {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   height: 100vh;
   width: 100vw;
-
-  background-color: var(--color-base-10);
-  color: var(--color-base-60);
-  font-size: 1.5rem;
-  font-weight: 700;
-
-  .emoji {
-    text-align: center;
-    font-size: 3rem;
-    padding: var(--padding-m);
-  }
+  padding: var(--padding-xl) 0;
 }
 </style>
