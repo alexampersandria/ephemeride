@@ -4,7 +4,6 @@ import { onMount } from 'svelte'
 import {
   CalendarDays,
   ChartColumnIncreasing,
-  Github,
   LogOut,
   Menu,
   Pencil,
@@ -15,11 +14,12 @@ import {
 
 import Button from '$lib/components/Button.svelte'
 import Modal from '$lib/components/Modal.svelte'
-import ThemeToggle from '$lib/components/ThemeToggle.svelte'
 import { useUiStore } from '$lib/store/uiStore.svelte'
 import { useUserStore } from '$lib/store/userStore.svelte'
 import { currentDate, fullDate } from '$lib/utils/log'
 import Chip from '$lib/components/Chip.svelte'
+import ThemeToggle from '$lib/components/ThemeToggle.svelte'
+import Label from '$lib/components/Label.svelte'
 
 let { children } = $props()
 
@@ -148,7 +148,7 @@ const handleLogout = () => {
 
 {#if userStore.userDetails}
   <Modal bind:open={userDetailsModal}>
-    <div class="user-details">
+    <div class="app-modal user-details">
       <div class="title">User Details</div>
       <div class="name">Display Name: {userStore.userDetails.name}</div>
       <div class="email">Email: {userStore.userDetails.email}</div>
@@ -165,6 +165,17 @@ const handleLogout = () => {
     </div>
   </Modal>
 {/if}
+
+<Modal bind:open={settingsModal}>
+  <div class="app-modal settings-modal">
+    <div class="title">Settings</div>
+
+    <div class="form-field inline">
+      <Label weight="normal">Theme</Label>
+      <ThemeToggle />
+    </div>
+  </div>
+</Modal>
 
 <style lang="scss">
 .app {
@@ -377,7 +388,7 @@ const handleLogout = () => {
   }
 }
 
-.user-details {
+.app-modal {
   display: flex;
   flex-direction: column;
   gap: var(--padding-xs);
