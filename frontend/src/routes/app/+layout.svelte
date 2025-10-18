@@ -5,7 +5,8 @@ import {
   CalendarDays,
   ChartColumnIncreasing,
   LogOut,
-  Menu,
+  PanelLeftClose,
+  PanelLeftOpen,
   Pencil,
   Plus,
   Settings,
@@ -75,7 +76,11 @@ const handleLogout = () => {
   <div class="top-bar">
     <div class="left">
       <Button type="ghost" onclick={toggleLeftMenu} aria-label="Toggle Menu">
-        <Menu />
+        {#if uiStore.leftMenuOpen}
+          <PanelLeftClose />
+        {:else}
+          <PanelLeftOpen />
+        {/if}
       </Button>
     </div>
 
@@ -253,6 +258,8 @@ const handleLogout = () => {
     flex-direction: column;
     padding-bottom: var(--padding-m);
     overflow-x: visible;
+    width: calc(100% + var(--padding-s));
+    height: calc(100% + (var(--padding-s) * 2));
 
     .ellipsis {
       animation: fadeInEllipsis 0.1s ease-out forwards;
@@ -265,7 +272,9 @@ const handleLogout = () => {
       flex-direction: column;
       justify-content: space-between;
       gap: var(--padding-s);
-      padding-left: var(--padding-s);
+      padding: var(--padding-s);
+      position: relative;
+      top: calc(-1 * var(--padding-s));
       height: 100%;
       overflow: auto;
 
@@ -278,7 +287,6 @@ const handleLogout = () => {
       .footer {
         display: flex;
         gap: var(--padding-s);
-        overflow: hidden;
         flex-shrink: 0;
 
         .settings {
@@ -294,11 +302,10 @@ const handleLogout = () => {
       --drag-area-width: calc(var(--padding-s) * 2);
       position: absolute;
       top: 0;
-      right: calc(
-        -1 * var(--padding-s) - var(--drag-area-width) / 2 - var(--border-width)
-      );
+      right: calc(var(--drag-area-width) * -0.5);
+
       width: var(--drag-area-width);
-      height: calc(100% - var(--padding-s));
+      height: calc(100% - (var(--padding-s) * 3));
       cursor: ew-resize;
 
       button {
@@ -392,6 +399,76 @@ const handleLogout = () => {
     100% {
       opacity: 1;
       display: block;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .app {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    .top-bar {
+      height: var(--app-top-bar-height);
+      flex-shrink: 0;
+    }
+
+    .content {
+      margin: 0;
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+      border-bottom: none;
+      flex-grow: 1;
+    }
+
+    .left-menu {
+      background-color: var(--background-secondary);
+      position: absolute;
+      top: calc(var(--app-top-bar-height) - var(--border-width));
+      left: 0;
+      width: 100%;
+      height: calc(100dvh - var(--app-top-bar-height) + var(--border-width));
+      z-index: 10;
+
+      transform: translateX(-2rem);
+      filter: blur(4px);
+      opacity: 0;
+      pointer-events: none;
+      transition:
+        transform 0.15s ease-out,
+        filter 0.15s ease-out,
+        opacity 0.15s ease-out;
+
+      .items {
+        padding: var(--padding-s);
+        top: 0;
+
+        .actions,
+        .footer {
+          .ellipsis {
+            animation: none;
+          }
+        }
+
+        .footer {
+          flex-direction: row;
+
+          .settings {
+            animation: none !important;
+          }
+        }
+      }
+    }
+
+    &.left-menu-open {
+      .left-menu {
+        transform: translateX(0);
+        filter: blur(0);
+        opacity: 1;
+        pointer-events: auto;
+      }
     }
   }
 }

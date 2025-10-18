@@ -1,7 +1,10 @@
 <script lang="ts">
 import { page } from '$app/state'
 import Message from '$lib/components/Message.svelte'
+import { useUserStore } from '$lib/store/userStore.svelte'
 import { ArrowLeft } from 'lucide-svelte'
+
+let userStore = useUserStore()
 </script>
 
 <div class="error">
@@ -14,13 +17,19 @@ import { ArrowLeft } from 'lucide-svelte'
       If you believe this to be an error <a
         href="http://github.com/alexampersandria/ephemeride/issues/new"
         target="_blank"
-        rel="noopener noreferrer">please report it</a
-      >.
+        rel="noopener noreferrer">create an issue</a>
       <br />
-      <a href="/">
-        <ArrowLeft />
-        Go back to the homepage
-      </a>
+      {#if userStore.userDetails}
+        <a href="/app">
+          <ArrowLeft />
+          Dashboard
+        </a>
+      {:else}
+        <a href="/">
+          <ArrowLeft />
+          Landing page
+        </a>
+      {/if}
     </div>
   </div>
 </div>
@@ -29,6 +38,8 @@ import { ArrowLeft } from 'lucide-svelte'
 .error {
   height: 100vh;
   width: 100vw;
-  padding: var(--padding-xl) 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
