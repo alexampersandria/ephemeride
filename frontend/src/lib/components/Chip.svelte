@@ -123,6 +123,11 @@ onMount(() => {
   .chip {
     height: var(--chip-inside-button-height);
     min-width: var(--chip-inside-button-min-width);
+
+    &.single-character {
+      min-width: var(--chip-inside-button-height);
+      width: var(--chip-inside-button-height);
+    }
   }
 }
 
