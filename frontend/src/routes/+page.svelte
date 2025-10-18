@@ -102,6 +102,7 @@ const openAuthModal = (mode: 'login' | 'register' = 'login') => {
   </div>
 </div>
 
+<!-- svelte-ignore css_unused_selector -->
 <style lang="scss">
 .landing-page {
   background: linear-gradient(
