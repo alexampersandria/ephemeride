@@ -1,11 +1,6 @@
 <script lang="ts">
 import { goto } from '$app/navigation'
-import Button from '$lib/components/Button.svelte'
-import Modal from '$lib/components/Modal.svelte'
-import ThemeToggle from '$lib/components/ThemeToggle.svelte'
-import { useUiStore } from '$lib/store/uiStore.svelte'
-import { useUserStore } from '$lib/store/userStore.svelte'
-import { currentDate, fullDate } from '$lib/utils/log'
+import { onMount } from 'svelte'
 import {
   CalendarDays,
   ChartColumnIncreasing,
@@ -13,25 +8,33 @@ import {
   LogOut,
   Menu,
   Pencil,
+  Plus,
+  Settings,
   User,
 } from 'lucide-svelte'
-import { onMount } from 'svelte'
+
+import Button from '$lib/components/Button.svelte'
+import Modal from '$lib/components/Modal.svelte'
+import ThemeToggle from '$lib/components/ThemeToggle.svelte'
+import { useUiStore } from '$lib/store/uiStore.svelte'
+import { useUserStore } from '$lib/store/userStore.svelte'
+import { currentDate, fullDate } from '$lib/utils/log'
+import Chip from '$lib/components/Chip.svelte'
 
 let { children } = $props()
 
 let userStore = useUserStore()
 let uiStore = useUiStore()
 
-const title = 'Ephemeride'
+let isDragging = $state(false)
+let userDetailsModal = $state(false)
+let settingsModal = $state(false)
 
 onMount(() => {
   if (!userStore.sessionId) {
     goto('/')
   }
 })
-
-let isDragging = $state(false)
-let userDetailsModal = $state(false)
 
 const startDrag = () => {
   isDragging = true
@@ -49,10 +52,19 @@ const startDrag = () => {
   window.addEventListener('mousemove', onMouseMove)
   window.addEventListener('mouseup', onMouseUp)
 }
+
+const toggleLeftMenu = () => {
+  uiStore.leftMenuOpen = !uiStore.leftMenuOpen
+}
+
+const handleLogout = () => {
+  userDetailsModal = false
+  userStore.logOut()
+}
 </script>
 
 <svelte:head>
-  <title>{title}</title>
+  <title>Ephemeride</title>
 </svelte:head>
 
 <div
@@ -62,48 +74,19 @@ const startDrag = () => {
   style="--app-left-menu-width: {uiStore.leftMenuWidth}px">
   <div class="top-bar">
     <div class="left">
-      <Button
-        type="ghost"
-        onclick={() => (uiStore.leftMenuOpen = !uiStore.leftMenuOpen)}
-        aria-label="Toggle Menu">
+      <Button type="ghost" onclick={toggleLeftMenu} aria-label="Toggle Menu">
         <Menu />
       </Button>
     </div>
 
     <div class="right">
-      {#if userStore.userDetails}
-        <Button onclick={() => (userDetailsModal = true)}>
-          <User />
-          {userStore.userDetails.name}
-        </Button>
-
-        <Modal bind:open={userDetailsModal}>
-          <div class="user-details">
-            <div class="title">User Details</div>
-            <div class="name">
-              Display Name: {userStore.userDetails.name}
-            </div>
-            <div class="email">
-              Email: {userStore.userDetails.email}
-            </div>
-            <div class="member-since">
-              Member since: {fullDate(userStore.userDetails.created_at)}
-            </div>
-
-            <div class="logout">
-              <Button
-                onclick={() => {
-                  userStore.logOut()
-                }}
-                fullwidth>
-                Log out
-              </Button>
-            </div>
-          </div>
-        </Modal>
-      {/if}
-
-      <ThemeToggle />
+      <Button href="/app/entry/{currentDate()}">
+        <Plus />
+        New Entry
+        <Chip>
+          {currentDate()}
+        </Chip>
+      </Button>
     </div>
   </div>
 
@@ -127,19 +110,28 @@ const startDrag = () => {
       </div>
 
       <div class="footer">
-        <Button
-          type="ghost"
-          href="https://github.com/alexampersandria/ephemeride"
-          target="_blank"
-          left>
-          <Github />
-          <div class="ellipsis">GitHub</div>
-        </Button>
-
-        <Button type="ghost" onclick={() => userStore.logOut()} left>
-          <LogOut />
-          <div class="ellipsis">Log out</div>
-        </Button>
+        {#if userStore.userDetails}
+          <Button
+            type="ghost"
+            fullwidth
+            onclick={() => (userDetailsModal = true)}
+            left>
+            <User />
+            <div class="ellipsis">
+              {userStore.userDetails.name}
+            </div>
+          </Button>
+          <div class="settings">
+            <Button
+              type="ghost"
+              onclick={() => {
+                settingsModal = true
+              }}
+              left>
+              <Settings />
+            </Button>
+          </div>
+        {/if}
       </div>
     </div>
 
@@ -154,45 +146,43 @@ const startDrag = () => {
   </div>
 </div>
 
+{#if userStore.userDetails}
+  <Modal bind:open={userDetailsModal}>
+    <div class="user-details">
+      <div class="title">User Details</div>
+      <div class="name">Display Name: {userStore.userDetails.name}</div>
+      <div class="email">Email: {userStore.userDetails.email}</div>
+      <div class="member-since">
+        Member since: {fullDate(userStore.userDetails.created_at)}
+      </div>
+
+      <div class="logout">
+        <Button onclick={handleLogout} fullwidth>
+          <LogOut />
+          Log out
+        </Button>
+      </div>
+    </div>
+  </Modal>
+{/if}
+
 <style lang="scss">
 .app {
-  --min-left-menu-width: 3.75rem;
   height: 100dvh;
   overflow: hidden;
   display: grid;
   grid-template-areas:
     'top-bar top-bar'
     'left-menu content';
-
   grid-template-rows: var(--app-top-bar-height) calc(
       100dvh - var(--app-top-bar-height)
     );
-  grid-template-columns: var(--min-left-menu-width) 1fr;
-
+  grid-template-columns: var(--app-left-menu-minimized-width) 1fr;
+  background-color: var(--background-secondary);
   transition:
     grid-template-columns 0.15s ease-out,
     background-color 0.1s ease-out,
     border-color 0.1s ease-out;
-
-  ::-webkit-scrollbar {
-    background-color: transparent;
-    width: 0.5rem;
-    height: 0.5rem;
-  }
-
-  ::-webkit-scrollbar-track {
-    background-color: var(--background-primary);
-    border-radius: 9999px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background-color: var(--background-accent);
-    border-radius: 9999px;
-  }
-
-  ::-webkit-scrollbar-corner {
-    background-color: transparent;
-  }
 
   &.left-menu-open {
     grid-template-columns:
@@ -200,63 +190,11 @@ const startDrag = () => {
       1fr;
   }
 
-  @keyframes fadeOutEllipsis {
-    0% {
-      opacity: 1;
-      display: block;
-    }
-    99% {
-      opacity: 0;
-      display: block;
-    }
-    100% {
-      opacity: 0;
-      display: none;
-    }
-  }
-
-  @keyframes fadeInEllipsis {
-    0% {
-      opacity: 0;
-      display: none;
-    }
-    1% {
-      opacity: 0;
-      display: block;
-    }
-    100% {
-      opacity: 1;
-      display: block;
-    }
-  }
-
-  .items {
-    .ellipsis {
-      animation: fadeInEllipsis 0.1s ease-out;
-      animation-fill-mode: forwards;
-    }
-  }
-
-  &:not(.left-menu-open) {
-    .items {
-      .ellipsis {
-        animation: fadeOutEllipsis 0.1s ease-out;
-        animation-fill-mode: forwards;
-      }
-    }
-
-    .drag-area {
-      display: none;
-    }
-  }
-
   &.left-menu-dragging {
     transition: none;
     cursor: ew-resize;
     user-select: none;
   }
-
-  background-color: var(--background-secondary);
 
   .content,
   .left-menu,
@@ -296,24 +234,40 @@ const startDrag = () => {
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     padding-bottom: var(--padding-m);
     overflow-x: visible;
+
+    .ellipsis {
+      animation: fadeInEllipsis 0.1s ease-out forwards;
+      animation-delay: 0.05s;
+      animation-fill-mode: backwards;
+    }
 
     .items {
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
       gap: var(--padding-s);
       padding-left: var(--padding-s);
-      overflow: auto;
-      justify-content: space-between;
       height: 100%;
+      overflow: auto;
 
-      .actions,
-      .footer {
+      .actions {
         display: flex;
         flex-direction: column;
         gap: var(--padding-s);
+      }
+
+      .footer {
+        display: flex;
+        gap: var(--padding-s);
+        overflow: hidden;
+
+        .settings {
+          animation: fadeInEllipsis 0.1s ease-out forwards;
+          animation-delay: 0.1s;
+          animation-fill-mode: backwards;
+        }
       }
     }
 
@@ -326,7 +280,6 @@ const startDrag = () => {
       );
       width: var(--drag-area-width);
       height: calc(100% - var(--padding-s));
-      border-radius: 9999px;
       cursor: ew-resize;
 
       button {
@@ -335,6 +288,91 @@ const startDrag = () => {
         width: 100%;
         height: 100%;
       }
+    }
+  }
+
+  &:not(.left-menu-open) {
+    .left-menu {
+      .ellipsis {
+        animation: fadeOutEllipsis 0.1s ease-out forwards;
+      }
+
+      .drag-area {
+        display: none;
+      }
+
+      .footer {
+        flex-direction: column-reverse;
+
+        .settings {
+          animation: none;
+          animation: fadeIn 0.1s ease-out forwards;
+          animation-delay: 0.05s;
+          animation-fill-mode: backwards;
+        }
+
+        @keyframes fadeIn {
+          0% {
+            opacity: 0;
+          }
+          1% {
+            opacity: 0;
+          }
+          100% {
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+
+  ::-webkit-scrollbar {
+    background-color: transparent;
+    width: 0.5rem;
+    height: 0.5rem;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: var(--background-primary);
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--background-accent);
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-corner {
+    background-color: transparent;
+  }
+
+  @keyframes fadeOutEllipsis {
+    0% {
+      opacity: 1;
+      display: block;
+    }
+    99% {
+      opacity: 0;
+      display: block;
+    }
+    100% {
+      opacity: 0;
+      display: none;
+    }
+  }
+
+  @keyframes fadeInEllipsis {
+    0% {
+      opacity: 0;
+      display: none;
+    }
+    1% {
+      opacity: 0;
+      display: block;
+    }
+    100% {
+      opacity: 1;
+      display: block;
     }
   }
 }

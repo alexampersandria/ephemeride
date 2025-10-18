@@ -119,6 +119,13 @@ onMount(() => {
   cursor: pointer;
 }
 
+:global(.button:has(.chip)) {
+  .chip {
+    height: var(--chip-inside-button-height);
+    min-width: var(--chip-inside-button-min-width);
+  }
+}
+
 :global(a:has(.chip)),
 :global(button:not(.button):has(.chip)) {
   line-height: 1;

@@ -148,11 +148,14 @@ $mood-bar-width: 2px;
 
   --chip-height: 1.75rem;
   --chip-min-width: 3rem;
+  --chip-inside-button-height: 1.5rem;
+  --chip-inside-button-min-width: 2rem;
 
   --checkbox-size: 1.125rem;
   --checkbox-checkmark-size: 0.875rem;
 
-  --app-top-bar-height: 4rem;
+  --app-top-bar-height: 3.75rem;
+  --app-left-menu-minimized-width: 3.75rem;
 
   --interactive-transition: color 0.1s ease-out, background-color 0.1s ease-out, border-color 0.1s ease-out, box-shadow 0.1s ease-out, transform 0.1s ease-out;
 }

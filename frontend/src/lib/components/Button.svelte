@@ -61,12 +61,10 @@ let clickHandler = () => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: var(--button-padding);
+  padding: 0;
   height: var(--button-height);
   border-radius: var(--button-radius);
   color: var(--button-color);
-  border: none;
-  background-color: transparent;
   border: var(--border-width) solid var(--button-border);
   background-color: var(--button-background);
   font-size: var(--button-size);
@@ -74,6 +72,7 @@ let clickHandler = () => {
   white-space: nowrap;
 
   .button-content {
+    padding: var(--button-padding);
     display: flex;
     align-items: center;
     justify-content: center;
