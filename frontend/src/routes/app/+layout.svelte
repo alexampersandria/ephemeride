@@ -21,6 +21,7 @@ import { currentDate, fullDate } from '$lib/utils/log'
 import Chip from '$lib/components/Chip.svelte'
 import ThemeToggle from '$lib/components/ThemeToggle.svelte'
 import Label from '$lib/components/Label.svelte'
+import Logo from '$lib/components/Logo.svelte'
 
 let { children } = $props()
 
@@ -75,6 +76,12 @@ const handleLogout = () => {
   style="--app-left-menu-width: {uiStore.leftMenuWidth}px">
   <div class="top-bar">
     <div class="left">
+      <div class="logo">
+        <Button type="ghost" href="/">
+          <Logo />
+        </Button>
+      </div>
+
       <Button type="ghost" onclick={toggleLeftMenu} aria-label="Toggle Menu">
         {#if uiStore.leftMenuOpen}
           <PanelLeftClose />
@@ -85,12 +92,14 @@ const handleLogout = () => {
     </div>
 
     <div class="right">
-      <Button href="/app/entry/{currentDate()}">
+      <Button href="/app/entry/{currentDate()}" left>
         <Plus />
         New Entry
-        <Chip>
-          {currentDate()}
-        </Chip>
+        <div class="new-entry-chip">
+          <Chip>
+            {currentDate()}
+          </Chip>
+        </div>
       </Button>
     </div>
   </div>
@@ -226,6 +235,24 @@ const handleLogout = () => {
       border-color 0.1s ease-out;
   }
 
+  .left-menu,
+  .top-bar {
+    :global(.button.ghost) {
+      color: var(--text-muted);
+
+      &:not(:disabled) {
+        &:hover {
+          color: var(--text-primary);
+          background-color: var(--background-accent);
+        }
+
+        &:active {
+          background-color: var(--background-primary);
+        }
+      }
+    }
+  }
+
   .content {
     grid-area: content;
     background-color: var(--background-primary);
@@ -242,12 +269,18 @@ const handleLogout = () => {
     display: flex;
     justify-content: space-between;
     padding: 0 var(--padding-s);
+    gap: var(--padding-s);
 
     .left,
     .right {
       display: flex;
       align-items: center;
-      gap: var(--padding-m);
+      gap: calc(var(--padding-xs) - var(--border-width));
+    }
+
+    .right {
+      flex-shrink: 1;
+      overflow: hidden;
     }
   }
 
@@ -263,7 +296,7 @@ const handleLogout = () => {
 
     .ellipsis {
       animation: fadeInEllipsis 0.1s ease-out forwards;
-      animation-delay: 0.05s;
+      animation-delay: 0.1s;
       animation-fill-mode: backwards;
     }
 
@@ -281,12 +314,10 @@ const handleLogout = () => {
       .actions {
         display: flex;
         flex-direction: column;
-        gap: var(--padding-s);
       }
 
       .footer {
         display: flex;
-        gap: var(--padding-s);
         flex-shrink: 0;
 
         .settings {
@@ -333,7 +364,7 @@ const handleLogout = () => {
         .settings {
           animation: none;
           animation: fadeIn 0.1s ease-out forwards;
-          animation-delay: 0.05s;
+          animation-delay: 0.1s;
           animation-fill-mode: backwards;
         }
 
@@ -412,14 +443,22 @@ const handleLogout = () => {
     .top-bar {
       height: var(--app-top-bar-height);
       flex-shrink: 0;
+
+      .logo {
+        display: none;
+      }
+
+      .new-entry-chip {
+        display: none;
+      }
     }
 
     .content {
       margin: 0;
       border-radius: 0;
-      border-left: none;
-      border-right: none;
-      border-bottom: none;
+      border-left-width: 0;
+      border-right-width: 0;
+      border-bottom-width: 0;
       flex-grow: 1;
     }
 

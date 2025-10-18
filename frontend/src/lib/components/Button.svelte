@@ -86,10 +86,18 @@ let clickHandler = () => {
 
   &.left {
     justify-content: flex-start;
+
+    .button-content {
+      justify-content: flex-start;
+    }
   }
 
   &.right {
     justify-content: flex-end;
+
+    .button-content {
+      justify-content: flex-end;
+    }
   }
 
   :global(.lucide-icon) {
