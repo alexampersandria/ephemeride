@@ -1,16 +1,14 @@
 <script lang="ts">
 import { page } from '$app/state'
 import { active } from '$lib/actions/active.svelte'
-import { useUiStore } from '$lib/store/uiStore.svelte'
 import {
   getRoutes,
   componentNameFromRoute,
   titleFromRoute,
 } from '$lib/utils/routes.svelte'
 import Logo from '$lib/components/Logo.svelte'
-import { Github, Menu, Moon, Sun, X } from 'lucide-svelte'
-
-let uiStore = useUiStore()
+import { Menu, X } from 'lucide-svelte'
+import ThemeToggle from '$lib/components/ThemeToggle.svelte'
 
 const design = getRoutes(/\/docs\/design\/[^/]+\//)
 const components = getRoutes(/\/docs\/components\/[^/]+\//)
@@ -42,22 +40,6 @@ const SidebarIcon = $derived.by(() => {
   }
 })
 
-const themeToggle = () => {
-  if (uiStore.appliedTheme === 'dark') {
-    uiStore.theme = 'light'
-  } else {
-    uiStore.theme = 'dark'
-  }
-}
-
-const ThemeToggleIcon = $derived.by(() => {
-  if (uiStore.appliedTheme === 'dark') {
-    return Sun
-  } else {
-    return Moon
-  }
-})
-
 const title = $derived.by(() => {
   let pre = [...page.url.pathname.split('/').slice(2)]
     .filter(Boolean)
@@ -86,20 +68,12 @@ const title = $derived.by(() => {
     <div class="docs-home">
       <div class="docs-route-link">
         <a href="/">
-          <Logo text />
+          <Logo />
         </a>
       </div>
     </div>
     <div class="docs-icon-actions">
-      <button class="theme-changer" onclick={themeToggle}>
-        <ThemeToggleIcon />
-      </button>
-      <a
-        class="github-link"
-        href="https://github.com/alexampersandria/ephemeride"
-        target="_blank">
-        <Github />
-      </a>
+      <ThemeToggle />
     </div>
   </div>
 
@@ -157,7 +131,7 @@ const title = $derived.by(() => {
 .docs {
   display: grid;
   grid-template-columns: 16rem 1fr;
-  grid-template-rows: 6rem 1fr;
+  grid-template-rows: 4rem 1fr;
   grid-column-gap: var(--border-width);
   grid-row-gap: var(--border-width);
   height: 100vh;
@@ -218,7 +192,6 @@ const title = $derived.by(() => {
       align-items: center;
       gap: var(--padding-s);
       margin-left: auto;
-      padding-right: var(--padding-s);
     }
 
     .docs-sidebar-toggle {
@@ -226,16 +199,16 @@ const title = $derived.by(() => {
     }
   }
 
+  .docs-content {
+    padding: var(--padding-l) 0;
+  }
+
   .docs-navigation,
   .docs-content {
     background-color: var(--background-primary);
     height: 100%;
     overflow: auto;
-    padding-bottom: 25vh;
-  }
-
-  .docs-content {
-    padding: var(--padding-l) 0;
+    padding-bottom: max(var(--padding-xl), 5vh);
   }
 
   .docs-navigation {
@@ -251,12 +224,13 @@ const title = $derived.by(() => {
 
       .docs-route-link a,
       .docs-route-title {
+        font-size: var(--font-size-s);
         display: block;
-        padding: var(--padding-xs) var(--padding-m);
+        padding: calc(var(--padding-xs) / 2) var(--padding-m);
       }
 
       .docs-route-title {
-        font-weight: 700;
+        font-weight: 600;
       }
     }
   }
@@ -265,7 +239,6 @@ const title = $derived.by(() => {
     color: var(--text-dimmed);
 
     &:hover {
-      background-color: var(--background-secondary);
       color: var(--text-muted);
     }
 
