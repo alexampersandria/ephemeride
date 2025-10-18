@@ -31,6 +31,7 @@ let uiStore = useUiStore()
 let isDragging = $state(false)
 let userDetailsModal = $state(false)
 let settingsModal = $state(false)
+let leftMenuOpenMobile = $state(false)
 
 onMount(() => {
   if (!userStore.sessionId) {
@@ -59,6 +60,10 @@ const toggleLeftMenu = () => {
   uiStore.leftMenuOpen = !uiStore.leftMenuOpen
 }
 
+const toggleLeftMenuMobile = () => {
+  leftMenuOpenMobile = !leftMenuOpenMobile
+}
+
 const handleLogout = () => {
   userDetailsModal = false
   userStore.logOut()
@@ -72,6 +77,7 @@ const handleLogout = () => {
 <div
   class="app"
   class:left-menu-open={uiStore.leftMenuOpen}
+  class:left-menu-open-mobile={leftMenuOpenMobile}
   class:left-menu-dragging={isDragging}
   style="--app-left-menu-width: {uiStore.leftMenuWidth}px">
   <div class="top-bar">
@@ -82,13 +88,28 @@ const handleLogout = () => {
         </Button>
       </div>
 
-      <Button type="ghost" onclick={toggleLeftMenu} aria-label="Toggle Menu">
-        {#if uiStore.leftMenuOpen}
-          <PanelLeftClose />
-        {:else}
-          <PanelLeftOpen />
-        {/if}
-      </Button>
+      <div class="left-menu-toggle desktop">
+        <Button type="ghost" onclick={toggleLeftMenu} aria-label="Toggle Menu">
+          {#if uiStore.leftMenuOpen}
+            <PanelLeftClose />
+          {:else}
+            <PanelLeftOpen />
+          {/if}
+        </Button>
+      </div>
+
+      <div class="left-menu-toggle mobile">
+        <Button
+          type="ghost"
+          onclick={toggleLeftMenuMobile}
+          aria-label="Toggle Menu">
+          {#if leftMenuOpenMobile}
+            <PanelLeftClose />
+          {:else}
+            <PanelLeftOpen />
+          {/if}
+        </Button>
+      </div>
     </div>
 
     <div class="right">
@@ -219,6 +240,12 @@ const handleLogout = () => {
         var(--app-left-menu-min-width)
       )
       1fr;
+  }
+
+  .left-menu-toggle {
+    &.mobile {
+      display: none;
+    }
   }
 
   &.left-menu-dragging {
@@ -440,6 +467,16 @@ const handleLogout = () => {
     flex-direction: column;
     position: relative;
 
+    .left-menu-toggle {
+      &.mobile {
+        display: block;
+      }
+
+      &.desktop {
+        display: none;
+      }
+    }
+
     .top-bar {
       height: var(--app-top-bar-height);
       flex-shrink: 0;
@@ -501,7 +538,7 @@ const handleLogout = () => {
       }
     }
 
-    &.left-menu-open {
+    &.left-menu-open-mobile {
       .left-menu {
         transform: translateX(0);
         filter: blur(0);

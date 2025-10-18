@@ -16,8 +16,8 @@ const mountedAt: number = new Date().getTime()
 
 let theme: Theme = $state('system')
 let loading = $state(true)
-let leftMenuOpen = $state(false)
-let leftMenuWidth = $state(320)
+let leftMenuOpen = $state(true)
+let leftMenuWidth = $state(280)
 
 const appliedTheme: Theme = $derived.by(() => {
   if (browser) {
