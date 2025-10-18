@@ -273,8 +273,10 @@ const handleLogout = () => {
         display: flex;
         gap: var(--padding-s);
         overflow: hidden;
+        flex-shrink: 0;
 
         .settings {
+          display: flex;
           animation: fadeInEllipsis 0.1s ease-out forwards;
           animation-delay: 0.1s;
           animation-fill-mode: backwards;
