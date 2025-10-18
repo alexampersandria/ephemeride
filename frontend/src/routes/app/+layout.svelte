@@ -40,7 +40,7 @@ const startDrag = () => {
   isDragging = true
 
   const onMouseMove = (event: MouseEvent) => {
-    uiStore.leftMenuWidth = Math.max(event.clientX, 128)
+    uiStore.leftMenuWidth = event.clientX
   }
 
   const onMouseUp = () => {
@@ -197,7 +197,13 @@ const handleLogout = () => {
 
   &.left-menu-open {
     grid-template-columns:
-      min(calc(var(--app-left-menu-width) - var(--padding-s)), 50vw)
+      max(
+        min(
+          calc(var(--app-left-menu-width) - var(--padding-s)),
+          var(--app-left-menu-max-width)
+        ),
+        var(--app-left-menu-min-width)
+      )
       1fr;
   }
 

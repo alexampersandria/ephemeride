@@ -156,6 +156,8 @@ $mood-bar-width: 2px;
 
   --app-top-bar-height: 3.75rem;
   --app-left-menu-minimized-width: 3.75rem;
+  --app-left-menu-min-width: 12rem;
+  --app-left-menu-max-width: 50vw;
 
   --interactive-transition: color 0.1s ease-out, background-color 0.1s ease-out, border-color 0.1s ease-out, box-shadow 0.1s ease-out, transform 0.1s ease-out;
 }
