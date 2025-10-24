@@ -254,7 +254,7 @@ const title = $derived.by(() => {
 
     .docs-navigation-backdrop {
       position: fixed;
-      top: calc(6rem + var(--border-width));
+      top: calc(4rem + var(--border-width));
       left: 0;
       width: 100%;
       height: 100vh;
@@ -273,7 +273,7 @@ const title = $derived.by(() => {
 
     .docs-navigation {
       position: fixed;
-      top: calc(6rem + var(--border-width));
+      top: calc(4rem + var(--border-width));
       border-right: var(--border-width) solid var(--border-color);
       left: calc(-100% - var(--border-width));
       width: 100%;
@@ -283,6 +283,13 @@ const title = $derived.by(() => {
 
       &.sidebarOpen {
         left: 0;
+      }
+
+      .docs-routes {
+        .docs-route-link a,
+        .docs-route-title {
+          font-size: var(--font-size-m);
+        }
       }
     }
 
