@@ -29,6 +29,7 @@ const {
   border-radius: var(--radius-s);
   border: var(--border-width) solid var(--border-color);
   overflow-x: auto;
+  background-color: var(--background-primary);
 
   &.left {
     justify-content: flex-start;

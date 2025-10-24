@@ -2,12 +2,13 @@
 import { goto } from '$app/navigation'
 import { onMount } from 'svelte'
 import {
+  Book,
   CalendarDays,
-  ChartColumnIncreasing,
+  ChartLine,
+  House,
   LogOut,
   PanelLeftClose,
   PanelLeftOpen,
-  Pencil,
   Plus,
   Settings,
   User,
@@ -82,14 +83,11 @@ const handleLogout = () => {
   style="--app-left-menu-width: {uiStore.leftMenuWidth}px">
   <div class="top-bar">
     <div class="left">
-      <div class="logo">
-        <Button type="ghost" href="/">
-          <Logo />
-        </Button>
-      </div>
-
       <div class="left-menu-toggle desktop">
-        <Button type="ghost" onclick={toggleLeftMenu} aria-label="Toggle Menu">
+        <Button
+          type="navigation"
+          onclick={toggleLeftMenu}
+          aria-label="Toggle Menu">
           {#if uiStore.leftMenuOpen}
             <PanelLeftClose />
           {:else}
@@ -100,7 +98,7 @@ const handleLogout = () => {
 
       <div class="left-menu-toggle mobile">
         <Button
-          type="ghost"
+          type="navigation"
           onclick={toggleLeftMenuMobile}
           aria-label="Toggle Menu">
           {#if leftMenuOpenMobile}
@@ -128,18 +126,18 @@ const handleLogout = () => {
   <div class="left-menu">
     <div class="items">
       <div class="actions">
-        <Button type="ghost" href="/app/entry/{currentDate()}" left>
-          <Pencil />
-          <div class="ellipsis">Today</div>
+        <Button type="navigation" href="/app/" left>
+          <House />
+          <div class="ellipsis">Home</div>
         </Button>
 
-        <Button type="ghost" href="/app/calendar" left>
+        <Button type="navigation" href="/app/calendar" left>
           <CalendarDays />
           <div class="ellipsis">Calendar</div>
         </Button>
 
-        <Button type="ghost" href="/app/stats" left>
-          <ChartColumnIncreasing />
+        <Button type="navigation" href="/app/stats" left>
+          <ChartLine />
           <div class="ellipsis">Stats</div>
         </Button>
       </div>
@@ -147,7 +145,7 @@ const handleLogout = () => {
       <div class="footer">
         {#if userStore.userDetails}
           <Button
-            type="ghost"
+            type="navigation"
             fullwidth
             onclick={() => (userDetailsModal = true)}
             left>
@@ -158,7 +156,7 @@ const handleLogout = () => {
           </Button>
           <div class="settings">
             <Button
-              type="ghost"
+              type="navigation"
               onclick={() => {
                 settingsModal = true
               }}
@@ -209,6 +207,16 @@ const handleLogout = () => {
       <Label weight="normal">Theme</Label>
       <ThemeToggle />
     </div>
+
+    <hr />
+
+    <Button href="/docs">
+      <Book /> Documentation
+    </Button>
+
+    <Button href="/">
+      <Logo /> Landing Page
+    </Button>
   </div>
 </Modal>
 
@@ -262,24 +270,6 @@ const handleLogout = () => {
       border-color 0.1s ease-out;
   }
 
-  .left-menu,
-  .top-bar {
-    :global(.button.ghost) {
-      color: var(--text-muted);
-
-      &:not(:disabled) {
-        &:hover {
-          color: var(--text-primary);
-          background-color: var(--background-accent);
-        }
-
-        &:active {
-          background-color: var(--background-primary);
-        }
-      }
-    }
-  }
-
   .content {
     grid-area: content;
     background-color: var(--background-primary);
@@ -307,7 +297,6 @@ const handleLogout = () => {
 
     .right {
       flex-shrink: 1;
-      overflow: hidden;
     }
   }
 
@@ -337,6 +326,11 @@ const handleLogout = () => {
       top: calc(-1 * var(--padding-s));
       height: 100%;
       overflow: auto;
+
+      .actions,
+      .footer {
+        gap: var(--padding-xxs);
+      }
 
       .actions {
         display: flex;

@@ -1,7 +1,12 @@
 export type InputState = 'untouched' | 'touched' | 'invalid'
 export type InputType = 'text' | 'password' | 'email' | 'number' | 'tel' | 'url'
 
-export type ButtonType = 'primary' | 'secondary' | 'ghost' | 'destructive'
+export type ButtonType =
+  | 'primary'
+  | 'secondary'
+  | 'ghost'
+  | 'destructive'
+  | 'navigation'
 
 export type InputFieldAttributes = {
   disabled?: boolean

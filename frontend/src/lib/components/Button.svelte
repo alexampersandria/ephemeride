@@ -1,5 +1,5 @@
 <script lang="ts">
-import { goto } from '$app/navigation'
+import { active } from '$lib/actions/active.svelte'
 import type { ButtonProps } from '$lib/types/components/button'
 import Spinner from './Spinner.svelte'
 
@@ -18,33 +18,28 @@ let {
 }: ButtonProps = $props()
 
 let clickHandler = () => {
-  if (disabled) return
-  if (loading) return
-  if (href) {
-    if (href.startsWith('http')) {
-      window.open(href, target || '_self')
-    } else {
-      goto(href)
-    }
-    return
+  if (!disabled && !loading && onclick && !href) {
+    onclick()
   }
-  if (!onclick) return
-
-  onclick()
 }
 </script>
 
-<button
+<svelte:element
+  this={href ? 'a' : 'button'}
   class="button {type}"
   class:loading
   class:disabled
   class:fullwidth
   class:left
   class:right
+  use:active
   aria-busy={loading}
   {disabled}
   aria-label={ariaLabel}
-  onclick={clickHandler}>
+  role={href ? 'link' : 'button'}
+  onclick={clickHandler}
+  {href}
+  {target}>
   <div class="button-content">
     {@render children()}
   </div>
@@ -53,7 +48,7 @@ let clickHandler = () => {
       <Spinner />
     </div>
   {/if}
-</button>
+</svelte:element>
 
 <style lang="scss">
 .button {
@@ -68,6 +63,7 @@ let clickHandler = () => {
   border: var(--border-width) solid var(--button-border);
   background-color: var(--button-background);
   font-size: var(--button-size);
+  line-height: 2; // ensure consistent line height depending on element type and no overflow from text
   overflow: hidden;
   white-space: nowrap;
 
@@ -101,6 +97,7 @@ let clickHandler = () => {
   }
 
   :global(.lucide-icon) {
+    font-size: var(--font-size-m);
     width: 1em;
     height: 1em;
     flex-shrink: 0;
@@ -192,6 +189,35 @@ let clickHandler = () => {
       &:active {
         background-color: var(--button-background-active);
         border-color: transparent;
+      }
+    }
+  }
+
+  &.navigation {
+    background-color: transparent;
+    border-color: transparent;
+    color: var(--text-muted);
+
+    &:not(:disabled, .loading) {
+      &:hover {
+        background-color: var(--background-accent);
+        color: var(--text-primary);
+        border-color: transparent;
+      }
+
+      &:active {
+        background-color: var(--background-primary);
+        color: var(--text-primary);
+        border-color: transparent;
+      }
+
+      &.active {
+        color: var(--text-primary);
+        background-color: var(--background-accent);
+
+        &:hover {
+          background-color: var(--background-accent);
+        }
       }
     }
   }

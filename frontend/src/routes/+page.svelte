@@ -26,24 +26,12 @@ const openAuthModal = (mode: 'login' | 'register' = 'login') => {
     <Auth mode={authMode} />
   </Modal>
 
-  <div class="navigation fade-in fade-in-0">
+  <div class="navigation">
     <div class="container">
       <div class="left muted">
         <a href="/"><Logo /></a>
       </div>
       <div class="right">
-        {#if userStore.sessionId === null}
-          <Button type="ghost" onclick={() => openAuthModal('login')}>
-            <LogIn />
-            Log in
-          </Button>
-        {:else}
-          <Button type="ghost" href="/app">
-            <ArrowRight />
-            Go to app
-          </Button>
-        {/if}
-
         <Button
           type="ghost"
           href="https://github.com/alexampersandria/ephemeride"
@@ -57,6 +45,18 @@ const openAuthModal = (mode: 'login' | 'register' = 'login') => {
           Docs
         </Button>
 
+        {#if userStore.sessionId === null}
+          <Button type="ghost" onclick={() => openAuthModal('login')}>
+            <LogIn />
+            Log in
+          </Button>
+        {:else}
+          <Button type="ghost" href="/app">
+            <ArrowRight />
+            Go to app
+          </Button>
+        {/if}
+
         <ThemeToggle />
       </div>
     </div>
@@ -65,16 +65,16 @@ const openAuthModal = (mode: 'login' | 'register' = 'login') => {
   <div class="container">
     <div class="header">
       <div class="text">
-        <div class="fade-in fade-in-1 header-title instrument">
+        <div class="fade-in fade-in-0 header-title instrument">
           Your life, documented
         </div>
-        <div class="fade-in fade-in-2 muted small">
+        <div class="fade-in fade-in-1 muted small">
           Capture your life, day by day, and gain insights into how you live
         </div>
       </div>
 
       <div class="actions">
-        <div class="fade-in fade-in-5">
+        <div class="fade-in fade-in-2 call-to-action">
           {#if userStore.sessionId === null}
             <Button type="primary" onclick={() => openAuthModal('register')}>
               <UserPlus />
@@ -88,7 +88,7 @@ const openAuthModal = (mode: 'login' | 'register' = 'login') => {
           {/if}
         </div>
 
-        <div class="fade-in fade-in-6">
+        <div class="fade-in fade-in-3">
           <Button
             type="ghost"
             href="https://github.com/alexampersandria/ephemeride"
@@ -152,16 +152,55 @@ const openAuthModal = (mode: 'login' | 'register' = 'login') => {
     .actions {
       display: flex;
       gap: var(--padding-s);
+
+      .call-to-action {
+        position: relative;
+        z-index: 1;
+
+        &:after {
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: -1;
+          content: '';
+          display: block;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(
+            45deg,
+            var(--color-pink-60),
+            var(--color-blue-60)
+          );
+          background-size: 200% 200%;
+          background-position: 33% 50%;
+          filter: blur(12px);
+          transform: translateY(6px);
+          transition:
+            transform 0.2s ease-out,
+            filter 0.2s ease-out,
+            opacity 0.5s ease-out,
+            background-position 0.5s ease-out;
+          opacity: 0.5;
+        }
+
+        &:hover {
+          &:after {
+            filter: blur(18px);
+            opacity: 0.75;
+            background-position: 66% 50%;
+          }
+        }
+      }
     }
   }
 
   .fade-in {
-    animation: fade-in 0.66s ease-out;
+    animation: fade-in 0.3s ease-out;
     animation-fill-mode: backwards;
 
-    @for $i from 1 through 99 {
+    @for $i from 0 through 99 {
       &.fade-in-#{$i} {
-        animation-delay: calc($i * 0.1s + 0.25s);
+        animation-delay: calc($i * 0.1s + 0.3s);
       }
     }
   }
@@ -169,7 +208,7 @@ const openAuthModal = (mode: 'login' | 'register' = 'login') => {
   @keyframes fade-in {
     0% {
       opacity: 0;
-      transform: translateY(0.33rem);
+      transform: translateY(0.2rem);
       filter: blur(4px);
     }
     100% {
