@@ -174,7 +174,8 @@ const setValue = (mood: number) => () => {
           height: var(--mood-bar-width);
           background-color: var(--mood-color-chosen-tertiary);
           border-radius: var(--mood-bar-width);
-          transition: background-color var(--animation-length-l) var(--better-ease-out);
+          transition: background-color var(--animation-length-l)
+            var(--better-ease-out);
           z-index: -1;
         }
 
@@ -191,7 +192,8 @@ const setValue = (mood: number) => () => {
         .mood-bar-segment {
           .mood-bar-segment-bar {
             background-color: var(--mood-color-chosen-primary);
-            transition: background-color var(--animation-length-l) var(--better-ease-out);
+            transition: background-color var(--animation-length-l)
+              var(--better-ease-out);
 
             &:not(:first-child, :last-child) {
               background-color: var(--mood-color-chosen-secondary);

@@ -86,7 +86,8 @@ const sortedColors = $derived.by(() => {
         aspect-ratio: 1 / 1;
         border-radius: 9999px;
         background-color: transparent;
-        transition: background-color var(--animation-length-m) var(--better-ease-out);
+        transition: background-color var(--animation-length-m)
+          var(--better-ease-out);
       }
     }
 

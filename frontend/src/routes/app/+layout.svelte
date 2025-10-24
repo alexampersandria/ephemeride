@@ -311,7 +311,8 @@ const handleLogout = () => {
     height: calc(100% + (var(--padding-s) * 2));
 
     .ellipsis {
-      animation: fadeInEllipsis var(--animation-length-s) var(--better-ease-out) forwards;
+      animation: fadeInEllipsis var(--animation-length-s) var(--better-ease-out)
+        forwards;
       animation-delay: var(--animation-length-s);
       animation-fill-mode: backwards;
     }
@@ -343,7 +344,8 @@ const handleLogout = () => {
 
         .settings {
           display: flex;
-          animation: fadeInEllipsis var(--animation-length-s) var(--better-ease-out) forwards;
+          animation: fadeInEllipsis var(--animation-length-s)
+            var(--better-ease-out) forwards;
           animation-delay: var(--animation-length-s);
           animation-fill-mode: backwards;
         }
@@ -372,7 +374,8 @@ const handleLogout = () => {
   &:not(.left-menu-open) {
     .left-menu {
       .ellipsis {
-        animation: fadeOutEllipsis var(--animation-length-s) var(--better-ease-out) forwards;
+        animation: fadeOutEllipsis var(--animation-length-s)
+          var(--better-ease-out) forwards;
       }
 
       .drag-area {
@@ -384,7 +387,8 @@ const handleLogout = () => {
 
         .settings {
           animation: none;
-          animation: fadeIn var(--animation-length-s) var(--better-ease-out) forwards;
+          animation: fadeIn var(--animation-length-s) var(--better-ease-out)
+            forwards;
           animation-delay: var(--animation-length-s);
           animation-fill-mode: backwards;
         }

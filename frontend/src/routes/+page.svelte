@@ -179,7 +179,8 @@ const openAuthModal = (mode: 'login' | 'register' = 'login') => {
             transform var(--animation-length-m) var(--better-ease-out),
             filter var(--animation-length-m) var(--better-ease-out),
             opacity var(--animation-length-xl) var(--better-ease-out),
-            background-position var(--animation-length-xl) var(--better-ease-out);
+            background-position var(--animation-length-xl)
+              var(--better-ease-out);
           opacity: 0.5;
         }
 
@@ -200,7 +201,9 @@ const openAuthModal = (mode: 'login' | 'register' = 'login') => {
 
     @for $i from 0 through 99 {
       &.fade-in-#{$i} {
-        animation-delay: calc($i * var(--animation-length-s) + var(--animation-length-l));
+        animation-delay: calc(
+          $i * var(--animation-length-s) + var(--animation-length-l)
+        );
       }
     }
   }
