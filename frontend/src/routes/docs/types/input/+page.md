@@ -12,7 +12,7 @@ The type of the button. Default should always be `'secondary'`.
 ### Definition
 
 ```ts
-type ButtonType = 'primary' | 'secondary' | 'ghost' | 'destructive'
+type ButtonType = 'primary' | 'secondary' | 'ghost' | 'destructive' | 'navigation'
 ```
 
 ## InputState
@@ -54,10 +54,7 @@ A function that returns `InputState` based on input value and optionally state.
 #### Definition
 
 ```ts
-type ValidationFunction = (
-  value: string,
-  inputstate?: InputState,
-) => InputState
+type ValidationFunction = (value: string, inputstate?: InputState) => InputState
 ```
 
 See [Input Validation](/docs/components/input#validation) for more information.
@@ -69,5 +66,5 @@ Numerical value from 1-5
 ### Definition
 
 ```ts
-type MoodValue = 1 | 2 | 3 | 4 | 5;
+type MoodValue = 1 | 2 | 3 | 4 | 5
 ```
