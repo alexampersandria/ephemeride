@@ -74,7 +74,7 @@ let {
     width: auto;
 
     .slow {
-      transition: fill 0.15s ease-out;
+      transition: fill var(--animation-length-xl) var(--better-ease-out);
     }
   }
 }

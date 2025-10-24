@@ -176,10 +176,10 @@ const openAuthModal = (mode: 'login' | 'register' = 'login') => {
           filter: blur(12px);
           transform: translateY(6px);
           transition:
-            transform 0.2s ease-out,
-            filter 0.2s ease-out,
-            opacity 0.5s ease-out,
-            background-position 0.5s ease-out;
+            transform var(--animation-length-m) var(--better-ease-out),
+            filter var(--animation-length-m) var(--better-ease-out),
+            opacity var(--animation-length-xl) var(--better-ease-out),
+            background-position var(--animation-length-xl) var(--better-ease-out);
           opacity: 0.5;
         }
 
@@ -195,12 +195,12 @@ const openAuthModal = (mode: 'login' | 'register' = 'login') => {
   }
 
   .fade-in {
-    animation: fade-in 0.3s ease-out;
+    animation: fade-in var(--animation-length-l) var(--better-ease-out);
     animation-fill-mode: backwards;
 
     @for $i from 0 through 99 {
       &.fade-in-#{$i} {
-        animation-delay: calc($i * 0.1s + 0.3s);
+        animation-delay: calc($i * var(--animation-length-s) + var(--animation-length-l));
       }
     }
   }

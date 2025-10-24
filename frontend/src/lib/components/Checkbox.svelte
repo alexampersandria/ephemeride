@@ -71,9 +71,9 @@ const onClick = () => {
     color: var(--checkbox-checkmark-color);
 
     transition:
-      opacity 0.1s ease-out,
-      transform 0.15s ease-out,
-      filter 0.2s ease-out;
+      opacity var(--animation-length-s) var(--better-ease-out),
+      transform var(--animation-length-s) var(--better-ease-out),
+      filter var(--animation-length-m) var(--better-ease-out);
   }
 
   &:not(.checked) {

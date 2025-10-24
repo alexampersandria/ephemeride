@@ -51,7 +51,7 @@ pre[class*='language-'] {
 
 .token.string,
 .token.attr-value {
-  color: var(--color-pink-60);
+  color: var(--color-pink-50);
 }
 
 .token.punctuation,
@@ -79,19 +79,19 @@ pre[class*='language-'] {
 .token.keyword,
 .token.attr-name,
 .language-autohotkey .token.selector {
-  color: var(--color-green-70);
+  color: var(--color-green-60);
 }
 
 .token.function,
 .token.deleted,
 .language-autohotkey .token.tag {
-  color: var(--color-purple-70);
+  color: var(--color-pink-60);
 }
 
 .token.tag,
 .token.selector,
 .language-autohotkey .token.keyword {
-  color: var(--color-blue-70);
+  color: var(--color-blue-60);
 }
 
 .docs-example {

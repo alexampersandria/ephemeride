@@ -159,7 +159,13 @@ $mood-bar-width: 2px;
   --app-left-menu-min-width: 12rem;
   --app-left-menu-max-width: 50vw;
 
-  --interactive-transition: color 0.1s ease-out, background-color 0.1s ease-out, border-color 0.1s ease-out, box-shadow 0.1s ease-out, transform 0.1s ease-out;
+  --better-ease-out: cubic-bezier(0.09, 0.04, 0.3, 0.93);
+  --animation-length-xs: 75ms;
+  --animation-length-s: 150ms;
+  --animation-length-m: 250ms;
+  --animation-length-l: 400ms;
+  --animation-length-xl: 600ms;
+  --interactive-transition: color var(--animation-length-s) var(--better-ease-out), background-color var(--animation-length-s) var(--better-ease-out), border-color var(--animation-length-s) var(--better-ease-out), box-shadow var(--animation-length-s) var(--better-ease-out), transform var(--animation-length-s) var(--better-ease-out);
 }
 
 #root.theme-dark {

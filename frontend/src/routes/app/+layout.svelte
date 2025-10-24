@@ -234,9 +234,9 @@ const handleLogout = () => {
   grid-template-columns: var(--app-left-menu-minimized-width) 1fr;
   background-color: var(--background-secondary);
   transition:
-    grid-template-columns 0.15s ease-out,
-    background-color 0.1s ease-out,
-    border-color 0.1s ease-out;
+    grid-template-columns var(--animation-length-s) var(--better-ease-out),
+    background-color var(--animation-length-s) var(--better-ease-out),
+    border-color var(--animation-length-s) var(--better-ease-out);
 
   &.left-menu-open {
     grid-template-columns:
@@ -266,8 +266,8 @@ const handleLogout = () => {
   .left-menu,
   .top-bar {
     transition:
-      background-color 0.1s ease-out,
-      border-color 0.1s ease-out;
+      background-color var(--animation-length-s) var(--better-ease-out),
+      border-color var(--animation-length-s) var(--better-ease-out);
   }
 
   .content {
@@ -311,8 +311,8 @@ const handleLogout = () => {
     height: calc(100% + (var(--padding-s) * 2));
 
     .ellipsis {
-      animation: fadeInEllipsis 0.1s ease-out forwards;
-      animation-delay: 0.1s;
+      animation: fadeInEllipsis var(--animation-length-s) var(--better-ease-out) forwards;
+      animation-delay: var(--animation-length-s);
       animation-fill-mode: backwards;
     }
 
@@ -343,8 +343,8 @@ const handleLogout = () => {
 
         .settings {
           display: flex;
-          animation: fadeInEllipsis 0.1s ease-out forwards;
-          animation-delay: 0.1s;
+          animation: fadeInEllipsis var(--animation-length-s) var(--better-ease-out) forwards;
+          animation-delay: var(--animation-length-s);
           animation-fill-mode: backwards;
         }
       }
@@ -372,7 +372,7 @@ const handleLogout = () => {
   &:not(.left-menu-open) {
     .left-menu {
       .ellipsis {
-        animation: fadeOutEllipsis 0.1s ease-out forwards;
+        animation: fadeOutEllipsis var(--animation-length-s) var(--better-ease-out) forwards;
       }
 
       .drag-area {
@@ -384,8 +384,8 @@ const handleLogout = () => {
 
         .settings {
           animation: none;
-          animation: fadeIn 0.1s ease-out forwards;
-          animation-delay: 0.1s;
+          animation: fadeIn var(--animation-length-s) var(--better-ease-out) forwards;
+          animation-delay: var(--animation-length-s);
           animation-fill-mode: backwards;
         }
 
@@ -507,9 +507,9 @@ const handleLogout = () => {
       opacity: 0;
       pointer-events: none;
       transition:
-        transform 0.15s ease-out,
-        filter 0.15s ease-out,
-        opacity 0.15s ease-out;
+        transform var(--animation-length-s) var(--better-ease-out),
+        filter var(--animation-length-s) var(--better-ease-out),
+        opacity var(--animation-length-s) var(--better-ease-out);
 
       .items {
         padding: var(--padding-s);

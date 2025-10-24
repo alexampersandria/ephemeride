@@ -71,7 +71,7 @@ const sortedColors = $derived.by(() => {
       aspect-ratio: 1 / 1;
       border-radius: var(--radius-xxs);
       background-color: var(--color-picker-option-color);
-      transition: box-shadow 0.1s ease-out;
+      transition: box-shadow var(--animation-length-s) var(--better-ease-out);
 
       box-shadow:
         0 0 0 0 var(--background-primary),
@@ -86,7 +86,7 @@ const sortedColors = $derived.by(() => {
         aspect-ratio: 1 / 1;
         border-radius: 9999px;
         background-color: transparent;
-        transition: background-color 0.2s ease-out;
+        transition: background-color var(--animation-length-m) var(--better-ease-out);
       }
     }
 

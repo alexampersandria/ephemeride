@@ -82,7 +82,7 @@ const setValue = (mood: number) => () => {
     .mood-button {
       height: calc(var(--mood-button-height) + var(--mood-bar-height-primary));
       flex: 1 1 0;
-      transition: color 0.1s ease-out;
+      transition: color var(--animation-length-s) var(--better-ease-out);
 
       .mood-button-inner {
         height: var(--mood-button-height);
@@ -163,7 +163,7 @@ const setValue = (mood: number) => () => {
       &.filled {
         z-index: 1;
         clip-path: rect(0 0 100% 0);
-        transition: clip-path 0.2s ease-out;
+        transition: clip-path var(--animation-length-m) var(--better-ease-out);
 
         &:after {
           content: '';
@@ -174,7 +174,7 @@ const setValue = (mood: number) => () => {
           height: var(--mood-bar-width);
           background-color: var(--mood-color-chosen-tertiary);
           border-radius: var(--mood-bar-width);
-          transition: background-color 0.3s ease-out;
+          transition: background-color var(--animation-length-l) var(--better-ease-out);
           z-index: -1;
         }
 
@@ -191,7 +191,7 @@ const setValue = (mood: number) => () => {
         .mood-bar-segment {
           .mood-bar-segment-bar {
             background-color: var(--mood-color-chosen-primary);
-            transition: background-color 0.3s ease-out;
+            transition: background-color var(--animation-length-l) var(--better-ease-out);
 
             &:not(:first-child, :last-child) {
               background-color: var(--mood-color-chosen-secondary);

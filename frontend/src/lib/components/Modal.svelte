@@ -151,18 +151,19 @@ $effect(() => {
   &.closed {
     pointer-events: none;
     .modal-backdrop {
-      animation: closeBackdrop 0.3s ease-out;
+      animation: closeBackdrop var(--animation-length-l) var(--better-ease-out);
       animation-fill-mode: forwards;
 
       &:after {
-        animation: closeBackdropAfter 0.15s ease-out;
+        animation: closeBackdropAfter var(--animation-length-s)
+          var(--better-ease-out);
         animation-delay: 0;
         animation-fill-mode: forwards;
       }
     }
 
     .modal {
-      animation: closeModal 0.15s ease-out;
+      animation: closeModal var(--animation-length-s) var(--better-ease-out);
       animation-delay: 0;
       animation-fill-mode: forwards;
     }
@@ -177,7 +178,7 @@ $effect(() => {
     backdrop-filter: var(--modal-filter);
     background-color: var(--modal-backdrop);
 
-    animation: openBackdrop 0.3s ease-out;
+    animation: openBackdrop var(--animation-length-m) var(--better-ease-out);
     animation-fill-mode: backwards;
 
     &:after {
@@ -190,8 +191,9 @@ $effect(() => {
       height: 100%;
       opacity: 0.02;
 
-      animation: openBackdropAfter 0.5s ease-out;
-      animation-delay: 0.15s;
+      animation: openBackdropAfter var(--animation-length-l)
+        var(--better-ease-out);
+      animation-delay: var(--animation-length-s);
       animation-fill-mode: backwards;
     }
   }
@@ -209,8 +211,7 @@ $effect(() => {
     min-height: calc(var(--modal-padding) * 2 + 2lh);
     overflow: auto;
 
-    animation: openModal 0.1s ease-out;
-    animation-delay: 0.05s;
+    animation: openModal var(--animation-length-s) var(--better-ease-out);
     animation-fill-mode: backwards;
 
     display: flex;

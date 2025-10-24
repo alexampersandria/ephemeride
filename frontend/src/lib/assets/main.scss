@@ -40,8 +40,8 @@ body {
   background-color: var(--background-primary);
   color: var(--text-primary);
   transition:
-    background-color 0.15s ease-out,
-    color 0.15s ease-out;
+    background-color var(--animation-length-s) var(--better-ease-out),
+    color var(--animation-length-s) var(--better-ease-out);
   height: 100vh;
   overflow: auto;
 }

@@ -260,8 +260,8 @@ const title = $derived.by(() => {
       height: 100vh;
       background-color: transparent;
       transition:
-        background-color 0.15s ease-out,
-        backdrop-filter 0.3s ease-out;
+        background-color var(--animation-length-s) var(--better-ease-out),
+        backdrop-filter var(--animation-length-l) var(--better-ease-out);
       pointer-events: none;
       z-index: 1311;
 
@@ -279,7 +279,7 @@ const title = $derived.by(() => {
       width: 100%;
       z-index: 1312;
 
-      transition: left 0.3s;
+      transition: left var(--animation-length-l);
 
       &.sidebarOpen {
         left: 0;
