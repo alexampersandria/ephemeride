@@ -59,3 +59,81 @@ export const currentDate = () => {
   }
   return now.toISOString().split('T')[0]
 }
+
+/**
+ * gets the current year and month as numbers using the currentDate function
+ * @returns the current year and month as numbers using the currentDate function
+ */
+export const calendarDefaults = (): { year: number; month: number } => {
+  const date = currentDate()
+  const [year, month] = date.split('-').map(Number)
+  return { year, month }
+}
+
+export const formatMonth = (month: number) => {
+  switch (month) {
+    case 1:
+      return 'January'
+    case 2:
+      return 'February'
+    case 3:
+      return 'March'
+    case 4:
+      return 'April'
+    case 5:
+      return 'May'
+    case 6:
+      return 'June'
+    case 7:
+      return 'July'
+    case 8:
+      return 'August'
+    case 9:
+      return 'September'
+    case 10:
+      return 'October'
+    case 11:
+      return 'November'
+    case 12:
+      return 'December'
+    default:
+      return ''
+  }
+}
+
+/**
+ * Returns an array, with the weeks of the month
+ * each week is an array of either null (for days outside the month) or the day number
+ * week starts on monday
+ * @param year - The year of the month
+ * @param month - The month (1-12)
+ */
+export const calendarDaysInMonth = (year: number, month: number) => {
+  const daysInMonth = new Date(year, month, 0).getDate()
+  const firstDayOfMonth = new Date(year, month - 1, 1).getDay()
+  const weeks: (number | null)[][] = []
+  let currentWeek: (number | null)[] = []
+
+  // Fill initial nulls for days before the first of the month
+  for (let i = 1; i < firstDayOfMonth; i++) {
+    currentWeek.push(null)
+  }
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    currentWeek.push(day)
+    if (currentWeek.length === 7) {
+      weeks.push(currentWeek)
+      currentWeek = []
+    }
+  }
+
+  // Fill remaining nulls for days after the last of the month
+  while (currentWeek.length < 7 && currentWeek.length > 0) {
+    currentWeek.push(null)
+  }
+  if (currentWeek.length > 0) {
+    weeks.push(currentWeek)
+  }
+
+  return weeks
+}

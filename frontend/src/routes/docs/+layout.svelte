@@ -159,7 +159,7 @@ const title = $derived.by(() => {
   .docs-menu {
     display: flex;
     align-items: center;
-    background-color: var(--background-secondary);
+    background-color: var(--background-primary);
 
     .docs-home {
       a {
@@ -167,10 +167,8 @@ const title = $derived.by(() => {
       }
     }
 
-    .docs-icon-actions,
     .docs-sidebar-toggle {
-      button,
-      a {
+      button {
         background-color: transparent;
         border: none;
         font-size: 1.5rem;

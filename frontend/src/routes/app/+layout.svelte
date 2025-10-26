@@ -479,10 +479,6 @@ const handleLogout = () => {
       height: var(--app-top-bar-height);
       flex-shrink: 0;
 
-      .logo {
-        display: none;
-      }
-
       .new-entry-chip {
         display: none;
       }
