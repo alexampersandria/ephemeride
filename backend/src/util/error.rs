@@ -17,6 +17,7 @@ pub enum EphemerideError {
   InvalidPassword,
   InviteUsed,
   BadRequest,
+  EntryAlreadyExistsForDate,
 }
 
 #[derive(Serialize)]
@@ -38,6 +39,7 @@ fn error_message(error: EphemerideError) -> String {
     EphemerideError::InvalidPassword => "Invalid password",
     EphemerideError::InviteUsed => "Invite already used",
     EphemerideError::BadRequest => "Bad request",
+    EphemerideError::EntryAlreadyExistsForDate => "An entry already exists for the given date",
     _ => "An error occurred",
   }
   .to_string()
@@ -56,6 +58,7 @@ fn status_code(error: EphemerideError) -> StatusCode {
     EphemerideError::InvalidPassword => StatusCode::UNAUTHORIZED,
     EphemerideError::InviteUsed => StatusCode::CONFLICT,
     EphemerideError::BadRequest => StatusCode::BAD_REQUEST,
+    EphemerideError::EntryAlreadyExistsForDate => StatusCode::CONFLICT,
     _ => StatusCode::INTERNAL_SERVER_ERROR,
   }
 }

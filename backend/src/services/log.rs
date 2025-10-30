@@ -577,6 +577,10 @@ pub fn create_entry(entry: CreateEntry) -> Result<EntryWithTags, EphemerideError
     Err(_) => return Err(EphemerideError::BadRequest),
   };
 
+  if get_entry_by_date(naive_date, &entry.user_id).is_ok() {
+    return Err(EphemerideError::EntryAlreadyExistsForDate);
+  }
+
   let mut tags: Vec<Tag> = Vec::new();
 
   for tag_id in &entry.selected_tags {
@@ -652,6 +656,10 @@ pub fn edit_entry(entry: EditEntry) -> Result<EntryWithTags, EphemerideError> {
     Err(_) => return Err(EphemerideError::BadRequest),
   };
 
+  if get_entry_by_date(naive_date, &entry.user_id).is_ok() {
+    return Err(EphemerideError::EntryAlreadyExistsForDate);
+  }
+
   let mut conn = establish_connection();
 
   let result = diesel::update(
@@ -698,6 +706,20 @@ pub fn edit_entry(entry: EditEntry) -> Result<EntryWithTags, EphemerideError> {
   get_entry_with_tags(&entry.id, &entry.user_id)
 }
 
+pub fn get_entry_by_date(date: chrono::NaiveDate, user_id: &str) -> Result<Entry, EphemerideError> {
+  let mut conn = establish_connection();
+
+  let result = entries::table
+    .filter(entries::date.eq(date))
+    .filter(entries::user_id.eq(user_id))
+    .first::<Entry>(&mut conn);
+
+  match result {
+    Ok(entry) => Ok(entry),
+    Err(_) => Err(EphemerideError::EntryNotFound),
+  }
+}
+
 pub fn get_entry_with_tags(
   entry_id: &str,
   user_id: &str,
@@ -737,6 +759,28 @@ pub fn get_entry_with_tags(
   };
 
   Ok(entry_with_tags)
+}
+
+pub fn delete_entry(entry_id: &str, user_id: &str) -> Result<bool, EphemerideError> {
+  let user = get_user(user_id);
+
+  if user.is_err() {
+    return Err(EphemerideError::UserNotFound);
+  }
+
+  let mut conn = establish_connection();
+
+  let result = diesel::delete(
+    entries::table
+      .filter(entries::id.eq(entry_id))
+      .filter(entries::user_id.eq(user_id)),
+  )
+  .execute(&mut conn);
+
+  match result {
+    Ok(_) => Ok(true),
+    Err(_) => Err(EphemerideError::DatabaseError),
+  }
 }
 
 pub fn delete_all_user_data(user_id: &str) -> Result<bool, EphemerideError> {

@@ -186,6 +186,10 @@ pub fn update_user(id: &str, user: UpdateUser) -> Result<bool, EphemerideError> 
     Err(_) => return Err(EphemerideError::BadRequest),
   }
 
+  if get_user_id(&user.email).is_ok() {
+    return Err(EphemerideError::EmailAlreadyInUse);
+  }
+
   let mut conn = establish_connection();
 
   let result = diesel::update(schema::users::table.filter(schema::users::id.eq(id)))
