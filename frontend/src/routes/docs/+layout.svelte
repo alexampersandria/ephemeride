@@ -14,6 +14,7 @@ const design = getRoutes(/\/docs\/design\/[^/]+\//)
 const components = getRoutes(/\/docs\/components\/[^/]+\//)
 const assemblies = getRoutes(/\/docs\/assemblies\/[^/]+\//)
 const types = getRoutes(/\/docs\/types\/[^/]+\//)
+const api = getRoutes(/\/docs\/api\/[^/]+\//)
 
 let { children } = $props()
 
@@ -80,6 +81,26 @@ const title = $derived.by(() => {
   <div class="docs-navigation-backdrop"></div>
   <div class="docs-navigation" class:sidebarOpen>
     <div class="docs-routes">
+      <div class="docs-route-title">Get Started</div>
+      <div class="docs-route-link">
+        <a href="/docs/" use:active>Readme</a>
+        <a href="https://github.com/alexampersandria/ephemeride" target="_blank"
+          >GitHub</a>
+      </div>
+    </div>
+
+    <div class="docs-routes">
+      <div class="docs-route-title">API</div>
+      {#each api as route}
+        <div class="docs-route-link">
+          <a href={route} use:active>
+            {titleFromRoute(route)}
+          </a>
+        </div>
+      {/each}
+    </div>
+
+    <div class="docs-routes">
       <div class="docs-route-title">Design</div>
       {#each design as route}
         <div class="docs-route-link">
@@ -89,6 +110,7 @@ const title = $derived.by(() => {
         </div>
       {/each}
     </div>
+
     <div class="docs-routes">
       <div class="docs-route-title">Components</div>
       {#each components as route}
@@ -99,6 +121,7 @@ const title = $derived.by(() => {
         </div>
       {/each}
     </div>
+
     <div class="docs-routes">
       <div class="docs-route-title">Assemblies</div>
       {#each assemblies as route}
@@ -120,6 +143,7 @@ const title = $derived.by(() => {
       {/each}
     </div>
   </div>
+
   <div class="docs-content" bind:this={content}>
     <div class="container">
       {@render children()}
