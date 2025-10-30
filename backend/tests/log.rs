@@ -414,7 +414,10 @@ fn test_create_entry() {
 
   assert!(entry.is_ok());
   let entry = entry.unwrap();
-  assert_eq!(entry.date, "2025-10-17");
+  assert_eq!(
+    entry.date,
+    chrono::NaiveDate::from_ymd_opt(2025, 10, 17).unwrap()
+  );
   assert_eq!(entry.mood, 5);
   assert_eq!(entry.entry, Some("Test entry content".to_string()));
   assert_eq!(entry.selected_tags.len(), 1);
@@ -482,7 +485,10 @@ fn test_edit_entry() {
 
   assert!(edited.is_ok());
   let edited = edited.unwrap();
-  assert_eq!(edited.date, "2025-10-18");
+  assert_eq!(
+    edited.date,
+    chrono::NaiveDate::from_ymd_opt(2025, 10, 18).unwrap()
+  );
   assert_eq!(edited.mood, 4);
   assert_eq!(edited.entry, Some("Updated content".to_string()));
   assert_eq!(edited.selected_tags.len(), 1);

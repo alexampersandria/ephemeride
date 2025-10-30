@@ -18,12 +18,11 @@ diesel::table! {
         id -> Varchar,
         #[max_length = 255]
         user_id -> Varchar,
-        #[max_length = 255]
-        date -> Varchar,
         created_at -> Int8,
         mood -> Int4,
         #[max_length = 1023]
         entry -> Nullable<Varchar>,
+        date -> Date,
     }
 }
 

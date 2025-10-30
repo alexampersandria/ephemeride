@@ -1,3 +1,5 @@
+use std::sync::LazyLock;
+
 use crate::{
   establish_connection,
   schema::{categories, entries, entry_tags, tags},
@@ -8,9 +10,13 @@ use diesel::{
   prelude::{Insertable, Queryable},
   ExpressionMethods, QueryDsl, RunQueryDsl,
 };
+use regex::Regex;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 use validator::Validate;
+
+pub static DATE_REGEX: LazyLock<Regex> =
+  LazyLock::new(|| Regex::new(r"^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$").unwrap());
 
 #[derive(Debug, Deserialize, Serialize, Insertable, Queryable)]
 #[diesel(table_name = categories)]
@@ -88,15 +94,15 @@ pub struct EditTag {
 pub struct Entry {
   pub id: String,
   pub user_id: String,
-  pub date: String,
   pub created_at: i64,
   pub mood: i32,
   pub entry: Option<String>,
+  pub date: chrono::NaiveDate,
 }
 
 #[derive(Debug, Deserialize, Serialize, Validate)]
 pub struct CreateEntry {
-  #[validate(length(min = 1, max = 255))]
+  #[validate(regex(path = *DATE_REGEX))]
   pub date: String,
   #[validate(range(min = 1, max = 5))]
   pub mood: i32,
@@ -111,7 +117,7 @@ pub struct CreateEntry {
 pub struct EditEntry {
   #[validate(length(min = 1, max = 255))]
   pub id: String,
-  #[validate(length(min = 1, max = 255))]
+  #[validate(regex(path = *DATE_REGEX))]
   pub date: String,
   #[validate(range(min = 1, max = 5))]
   pub mood: i32,
@@ -126,7 +132,7 @@ pub struct EditEntry {
 pub struct EntryWithTags {
   pub id: String,
   pub user_id: String,
-  pub date: String,
+  pub date: chrono::NaiveDate,
   pub created_at: i64,
   pub mood: i32,
   pub entry: Option<String>,
@@ -566,6 +572,11 @@ pub fn create_entry(entry: CreateEntry) -> Result<EntryWithTags, EphemerideError
     Err(_) => return Err(EphemerideError::BadRequest),
   }
 
+  let naive_date = match chrono::NaiveDate::parse_from_str(&entry.date, "%Y-%m-%d") {
+    Ok(date) => date,
+    Err(_) => return Err(EphemerideError::BadRequest),
+  };
+
   let mut tags: Vec<Tag> = Vec::new();
 
   for tag_id in &entry.selected_tags {
@@ -587,7 +598,7 @@ pub fn create_entry(entry: CreateEntry) -> Result<EntryWithTags, EphemerideError
   let new_entry = Entry {
     id: Uuid::new_v4().to_string(),
     user_id: entry.user_id.clone(),
-    date: entry.date.clone(),
+    date: naive_date,
     created_at: util::unix_ms(),
     mood: entry.mood,
     entry: entry.entry.clone(),
@@ -636,6 +647,11 @@ pub fn edit_entry(entry: EditEntry) -> Result<EntryWithTags, EphemerideError> {
     Err(_) => return Err(EphemerideError::BadRequest),
   }
 
+  let naive_date = match chrono::NaiveDate::parse_from_str(&entry.date, "%Y-%m-%d") {
+    Ok(date) => date,
+    Err(_) => return Err(EphemerideError::BadRequest),
+  };
+
   let mut conn = establish_connection();
 
   let result = diesel::update(
@@ -644,7 +660,7 @@ pub fn edit_entry(entry: EditEntry) -> Result<EntryWithTags, EphemerideError> {
       .filter(entries::user_id.eq(&entry.user_id)),
   )
   .set((
-    entries::date.eq(&entry.date),
+    entries::date.eq(&naive_date),
     entries::mood.eq(entry.mood),
     entries::entry.eq(&entry.entry),
   ))
@@ -688,16 +704,16 @@ pub fn get_entry_with_tags(
 ) -> Result<EntryWithTags, EphemerideError> {
   let mut conn = establish_connection();
 
-  let entry_result = entries::table
+  let result = entries::table
     .filter(entries::id.eq(entry_id))
     .filter(entries::user_id.eq(user_id))
     .first::<Entry>(&mut conn);
 
-  if entry_result.is_err() {
+  if result.is_err() {
     return Err(EphemerideError::EntryNotFound);
   }
 
-  let entry = entry_result.unwrap();
+  let entry = result.unwrap();
 
   let entry_tags_result = crate::schema::entry_tags::table
     .filter(crate::schema::entry_tags::entry_id.eq(entry_id))
