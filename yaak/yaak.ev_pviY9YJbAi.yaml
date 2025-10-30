@@ -1,0 +1,29 @@
+type: environment
+model: environment
+id: ev_pviY9YJbAi
+workspaceId: wk_BESCzWuhSE
+createdAt: 2025-10-30T15:13:35.129809
+updatedAt: 2025-10-30T17:06:39.445536
+name: Global Variables
+public: true
+base: true
+parentModel: workspace
+parentId: null
+variables:
+- enabled: true
+  name: email
+  value: yaakuser@example.com
+  id: DNMbeDvNir
+- enabled: true
+  name: name
+  value: Yaak User
+  id: NbNvBHtmga
+- enabled: true
+  name: password
+  value: yaakPass1
+  id: Q9BF7UNY0K
+- enabled: true
+  name: session
+  value: 34b672b5-c630-4c5e-a27b-e3722d9d6fb9
+  id: DcIDHC9tQy
+color: null

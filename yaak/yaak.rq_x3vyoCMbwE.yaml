@@ -1,0 +1,31 @@
+type: http_request
+model: http_request
+id: rq_x3vyoCMbwE
+createdAt: 2025-10-30T15:30:34.063391
+updatedAt: 2025-10-30T17:00:46.523219
+workspaceId: wk_BESCzWuhSE
+folderId: null
+authentication: {}
+authenticationType: null
+body:
+  text: |-
+    {
+      "email": "${[ email ]}",
+      "password": "${[ password ]}"
+    }
+bodyType: application/json
+description: ''
+headers:
+- enabled: true
+  name: Content-Type
+  value: application/json
+  id: F5FnJGHQtk
+method: POST
+name: log in
+sortPriority: 4000.0001
+url: http://localhost:3000/api/v1/auth
+urlParameters:
+- enabled: true
+  name: ''
+  value: ''
+  id: udYKaQfI5I

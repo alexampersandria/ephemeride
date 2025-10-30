@@ -1,0 +1,32 @@
+type: http_request
+model: http_request
+id: rq_PdEsLDQjNT
+createdAt: 2025-10-30T15:33:26.034339
+updatedAt: 2025-10-30T15:59:25.141808
+workspaceId: wk_BESCzWuhSE
+folderId: null
+authentication: {}
+authenticationType: null
+body:
+  text: |-
+    {
+      "name": "${[ name ]}",
+      "email": "test",
+      "password": "${[ password ]}"
+    }
+bodyType: application/json
+description: ''
+headers:
+- enabled: true
+  name: Content-Type
+  value: application/json
+  id: F5FnJGHQtk
+method: POST
+name: create user invalid
+sortPriority: 3000.0
+url: http://localhost:3000/api/v1/user
+urlParameters:
+- enabled: true
+  name: ''
+  value: ''
+  id: udYKaQfI5I

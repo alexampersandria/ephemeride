@@ -1,0 +1,14 @@
+type: workspace
+model: workspace
+id: wk_BESCzWuhSE
+createdAt: 2025-10-30T15:13:35.111425
+updatedAt: 2025-10-30T15:13:35.111426
+authentication: {}
+authenticationType: null
+description: ''
+headers: []
+name: Ephemeride
+encryptionKeyChallenge: null
+settingValidateCertificates: true
+settingFollowRedirects: true
+settingRequestTimeout: 0
