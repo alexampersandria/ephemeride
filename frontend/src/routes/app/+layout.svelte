@@ -23,6 +23,7 @@ import Chip from '$lib/components/Chip.svelte'
 import ThemeToggle from '$lib/components/ThemeToggle.svelte'
 import Label from '$lib/components/Label.svelte'
 import Logo from '$lib/components/Logo.svelte'
+import Calendar from '$lib/components/Calendar.svelte'
 
 let { children } = $props()
 
@@ -140,6 +141,10 @@ const handleLogout = () => {
           <ChartLine />
           <div class="ellipsis">Stats</div>
         </Button>
+      </div>
+
+      <div class="calendar">
+        <Calendar />
       </div>
 
       <div class="footer">
@@ -350,6 +355,14 @@ const handleLogout = () => {
           animation-fill-mode: backwards;
         }
       }
+
+      .calendar {
+        margin-top: auto;
+        padding: var(--padding-xxs);
+        animation: fadeInEllipsis var(--animation-length-s)
+          var(--better-ease-out) backwards;
+        animation-delay: var(--animation-length-s);
+      }
     }
 
     .drag-area {
@@ -404,6 +417,11 @@ const handleLogout = () => {
             opacity: 1;
           }
         }
+      }
+
+      .calendar {
+        animation: none;
+        display: none;
       }
     }
   }

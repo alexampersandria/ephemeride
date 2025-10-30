@@ -3,7 +3,7 @@ import type { Color } from '../color'
 /**
  * mode of determining the functionality of the calendar
  */
-export type CalendarMode = 'single' | 'range' | 'multiple'
+export type CalendarMode = 'navigation' | 'datepicker'
 /**
  * a day in the calendar with an optional color, used for stats
  */
