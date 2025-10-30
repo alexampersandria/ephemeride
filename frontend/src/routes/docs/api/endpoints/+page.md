@@ -63,6 +63,31 @@ returns either a session or an error
 }
 ```
 
+## GET /v1/user
+
+gets the current user's information with a bearer token (session id)
+
+### 200 ok
+
+```json
+{
+  "id": "9876-abcd-1234-lgbt", // string, user id
+  "created_at": 12345, // integer, timestamp
+  "name": "string", // string, display name
+  "email": "string", // string, email address
+  "invite": "string" // string, invite code, possibly null if none was used
+}
+```
+
+### 404 not found
+
+```json
+{
+  "code": "SessionNotFound",
+  "message": "Session not found"
+}
+```
+
 ## POST /v1/auth
 
 creates a new session (log in)
