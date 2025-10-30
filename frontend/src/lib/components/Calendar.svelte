@@ -38,6 +38,12 @@ const colorForDay = (day: number | null): Color | null => {
   const dayEntry = days.find(d => d.date === date)
   return dayEntry ? dayEntry.color : null
 }
+
+const entryLink = (day: number): string => {
+  const paddedMonth = String(month).padStart(2, '0')
+  const paddedDay = String(day).padStart(2, '0')
+  return `/entry/${year}-${paddedMonth}-${paddedDay}`
+}
 </script>
 
 <div class="calendar">
@@ -76,9 +82,7 @@ const colorForDay = (day: number | null): Color | null => {
         {#each week as day}
           <div class="day {colorForDay(day)}">
             {#if day !== null}
-              <a
-                href={`/entry/${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`}
-                class="day-button">{day}</a>
+              <a href={entryLink(day)} class="day-button">{day}</a>
             {/if}
           </div>
         {/each}

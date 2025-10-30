@@ -5,6 +5,7 @@ import {
   Book,
   CalendarDays,
   ChartLine,
+  Github,
   House,
   LogOut,
   PanelLeftClose,
@@ -215,12 +216,21 @@ const handleLogout = () => {
 
     <hr />
 
-    <Button href="/docs">
-      <Book /> Documentation
-    </Button>
+    <div class="internal">
+      <Button href="/" fullwidth>
+        <Logo /> Landing Page
+      </Button>
 
-    <Button href="/">
-      <Logo /> Landing Page
+      <Button href="/docs" fullwidth>
+        <Book /> Docs
+      </Button>
+    </div>
+
+    <Button
+      href="https://github.com/alexampersandria/ephemeride"
+      target="_blank"
+      fullwidth>
+      <Github /> GitHub
     </Button>
   </div>
 </Modal>
@@ -573,6 +583,11 @@ const handleLogout = () => {
 
   .logout {
     margin-top: var(--padding-m);
+  }
+
+  .internal {
+    display: flex;
+    gap: var(--padding-xs);
   }
 }
 </style>
