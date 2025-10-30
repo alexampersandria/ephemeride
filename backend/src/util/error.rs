@@ -37,7 +37,8 @@ fn error_message(error: EphemerideError) -> String {
     EphemerideError::EmailAlreadyInUse => "Email already in use",
     EphemerideError::InvalidPassword => "Invalid password",
     EphemerideError::InviteUsed => "Invite already used",
-    _ => "",
+    EphemerideError::BadRequest => "Bad request",
+    _ => "An error occurred",
   }
   .to_string()
 }
