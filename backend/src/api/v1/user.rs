@@ -1,5 +1,5 @@
 use crate::{
-  services::{auth, authorize_request, invite, user, UserCredentials},
+  services::{auth, authorize_request, invite, log, user, UserCredentials},
   util::{
     error::{error_response, EphemerideError},
     response,
@@ -57,4 +57,73 @@ pub fn get_current_user(request: &Request) -> Response {
     Ok(user) => response(StatusCode::OK, &user),
     Err(error) => error_response(error),
   }
+}
+
+#[handler]
+pub fn delete_user(request: &Request) -> Response {
+  let session = match authorize_request(request) {
+    Ok(session) => session,
+    Err(error) => return error_response(error),
+  };
+
+  let deleted = match user::delete_user(&session.user_id) {
+    Ok(deleted) => deleted,
+    Err(error) => return error_response(error),
+  };
+
+  match deleted {
+    true => response(StatusCode::NO_CONTENT, &()),
+    false => error_response(EphemerideError::UserNotFound),
+  }
+}
+
+#[handler]
+pub fn update_user(Json(user): Json<user::UpdateUser>, request: &Request) -> Response {
+  let session = match authorize_request(request) {
+    Ok(session) => session,
+    Err(error) => return error_response(error),
+  };
+
+  let updated_user = match user::update_user(&session.user_id, user) {
+    Ok(user) => user,
+    Err(error) => return error_response(error),
+  };
+
+  match updated_user {
+    true => response(StatusCode::NO_CONTENT, &()),
+    false => error_response(EphemerideError::UserNotFound),
+  }
+}
+
+#[handler]
+pub fn update_password(Json(password): Json<user::UpdatePassword>, request: &Request) -> Response {
+  let session = match authorize_request(request) {
+    Ok(session) => session,
+    Err(error) => return error_response(error),
+  };
+
+  let updated_password = match user::update_password(&session.user_id, password) {
+    Ok(updated) => updated,
+    Err(error) => return error_response(error),
+  };
+
+  match updated_password {
+    true => response(StatusCode::NO_CONTENT, &()),
+    false => error_response(EphemerideError::UserNotFound),
+  }
+}
+
+#[handler]
+pub fn get_user_categories_with_tags(request: &Request) -> Response {
+  let session = match authorize_request(request) {
+    Ok(session) => session,
+    Err(error) => return error_response(error),
+  };
+
+  let categories = match log::get_user_categories_with_tags(&session.user_id) {
+    Ok(categories) => categories,
+    Err(error) => return error_response(error),
+  };
+
+  response(StatusCode::OK, &categories)
 }

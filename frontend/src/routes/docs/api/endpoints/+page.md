@@ -63,6 +63,41 @@ returns either a session or an error
 }
 ```
 
+## PATCH /v1/user
+
+updates the current user's information with a bearer token (session id)
+
+can update name and/or email, both fields are required even if only updating one
+
+### request body
+
+```json
+{
+  "name": "string", // string, display name
+  "email": "string" // string, email address
+}
+```
+
+### response
+
+see `POST /v1/user` for details on `400` and `404` responses
+
+#### 204 no content
+
+returns no content on success
+
+## DELETE /v1/user
+
+deletes the current user
+
+### response
+
+see `POST /v1/user` for details on `400` and `404` responses
+
+#### 204 no content
+
+returns no content on success
+
 ## GET /v1/user
 
 gets the current user's information with a bearer token (session id)

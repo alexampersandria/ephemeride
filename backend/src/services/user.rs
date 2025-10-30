@@ -1,7 +1,7 @@
 use crate::{
   establish_connection,
   schema::{self, users},
-  services::create_default_data,
+  services::{create_default_data, log},
   util::{self, error::EphemerideError},
 };
 use diesel::{
@@ -162,6 +162,11 @@ pub fn delete_user(id: &str) -> Result<bool, EphemerideError> {
   let mut conn = establish_connection();
 
   match delete_all_user_sessions(id) {
+    Ok(_) => (),
+    Err(_) => return Err(EphemerideError::DatabaseError),
+  };
+
+  match log::delete_all_user_data(id) {
     Ok(_) => (),
     Err(_) => return Err(EphemerideError::DatabaseError),
   };

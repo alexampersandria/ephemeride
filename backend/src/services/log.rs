@@ -722,3 +722,36 @@ pub fn get_entry_with_tags(
 
   Ok(entry_with_tags)
 }
+
+pub fn delete_all_user_data(user_id: &str) -> Result<bool, EphemerideError> {
+  let user = get_user(user_id);
+
+  if user.is_err() {
+    return Err(EphemerideError::UserNotFound);
+  }
+
+  let mut conn = establish_connection();
+
+  let delete_entries =
+    diesel::delete(entries::table.filter(entries::user_id.eq(user_id))).execute(&mut conn);
+
+  if delete_entries.is_err() {
+    return Err(EphemerideError::DatabaseError);
+  }
+
+  let delete_tags =
+    diesel::delete(tags::table.filter(tags::user_id.eq(user_id))).execute(&mut conn);
+
+  if delete_tags.is_err() {
+    return Err(EphemerideError::DatabaseError);
+  }
+
+  let delete_categories =
+    diesel::delete(categories::table.filter(categories::user_id.eq(user_id))).execute(&mut conn);
+
+  if delete_categories.is_err() {
+    return Err(EphemerideError::DatabaseError);
+  }
+
+  Ok(true)
+}
