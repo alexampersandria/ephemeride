@@ -2,12 +2,11 @@ type: http_request
 model: http_request
 id: rq_RNuzpvo3dn
 createdAt: 2025-10-30T16:58:16.311248
-updatedAt: 2025-10-30T17:01:26.743152
+updatedAt: 2025-10-30T19:02:18.534318
 workspaceId: wk_BESCzWuhSE
 folderId: null
-authentication:
-  token: ${[ session ]}
-authenticationType: bearer
+authentication: {}
+authenticationType: null
 body:
   text: |-
     {
@@ -19,7 +18,7 @@ description: ''
 headers: []
 method: DELETE
 name: delete user
-sortPriority: 6000.002300000001
+sortPriority: 9000.0
 url: http://localhost:3000/api/v1/user
 urlParameters:
 - enabled: true

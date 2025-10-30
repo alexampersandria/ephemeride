@@ -2,12 +2,11 @@ type: http_request
 model: http_request
 id: rq_5Tw8XExiMh
 createdAt: 2025-10-30T16:50:55.488419
-updatedAt: 2025-10-30T16:53:48.717580
+updatedAt: 2025-10-30T19:02:18.532595
 workspaceId: wk_BESCzWuhSE
 folderId: null
-authentication:
-  token: ${[ session ]}
-authenticationType: bearer
+authentication: {}
+authenticationType: null
 body:
   text: |-
     {
@@ -20,7 +19,7 @@ description: ''
 headers: []
 method: GET
 name: get user categories
-sortPriority: 6000.0011
+sortPriority: 7000.0
 url: http://localhost:3000/api/v1/user/categories
 urlParameters:
 - enabled: true

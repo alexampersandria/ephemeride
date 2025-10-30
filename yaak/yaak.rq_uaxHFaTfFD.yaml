@@ -1,0 +1,26 @@
+type: http_request
+model: http_request
+id: rq_uaxHFaTfFD
+createdAt: 2025-10-30T19:02:09.300563
+updatedAt: 2025-10-30T19:02:26.683735
+workspaceId: wk_BESCzWuhSE
+folderId: null
+authentication: {}
+authenticationType: null
+body:
+  text: |-
+    {
+      "id": "41263305-e2ae-48b1-ac29-431278570121"
+    }
+bodyType: application/json
+description: ''
+headers:
+- enabled: true
+  name: Content-Type
+  value: application/json
+  id: ME3p6vfH7U
+method: DELETE
+name: delete tag
+sortPriority: 15000.0
+url: http://localhost:3000/api/v1/tag
+urlParameters: []

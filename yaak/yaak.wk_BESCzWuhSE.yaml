@@ -2,9 +2,10 @@ type: workspace
 model: workspace
 id: wk_BESCzWuhSE
 createdAt: 2025-10-30T15:13:35.111425
-updatedAt: 2025-10-30T15:13:35.111426
-authentication: {}
-authenticationType: null
+updatedAt: 2025-10-30T18:54:50.097883
+authentication:
+  token: ${[ session ]}
+authenticationType: bearer
 description: ''
 headers: []
 name: Ephemeride

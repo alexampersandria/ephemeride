@@ -1,0 +1,26 @@
+type: http_request
+model: http_request
+id: rq_8LGYieo97A
+createdAt: 2025-10-30T18:55:34.109589
+updatedAt: 2025-10-30T19:02:18.535014
+workspaceId: wk_BESCzWuhSE
+folderId: null
+authentication: {}
+authenticationType: null
+body:
+  text: |-
+    {
+      "name": "a new category"
+    }
+bodyType: application/json
+description: ''
+headers:
+- enabled: true
+  name: Content-Type
+  value: application/json
+  id: ME3p6vfH7U
+method: POST
+name: new category
+sortPriority: 10000.0
+url: http://localhost:3000/api/v1/category
+urlParameters: []

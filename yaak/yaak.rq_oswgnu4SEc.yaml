@@ -1,0 +1,30 @@
+type: http_request
+model: http_request
+id: rq_oswgnu4SEc
+createdAt: 2025-10-30T19:02:17.163338
+updatedAt: 2025-10-30T19:12:14.543859
+workspaceId: wk_BESCzWuhSE
+folderId: null
+authentication: {}
+authenticationType: null
+body:
+  text: |-
+    {
+      "mood": 5,
+      "date": "2025-07-24",
+      "selected_tags": [
+        "123"
+      ]
+    }
+bodyType: application/json
+description: ''
+headers:
+- enabled: true
+  name: Content-Type
+  value: application/json
+  id: ME3p6vfH7U
+method: POST
+name: new entry
+sortPriority: 16000.0001
+url: http://localhost:3000/api/v1/entry
+urlParameters: []

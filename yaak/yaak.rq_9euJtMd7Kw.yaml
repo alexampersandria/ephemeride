@@ -1,0 +1,26 @@
+type: http_request
+model: http_request
+id: rq_9euJtMd7Kw
+createdAt: 2025-10-30T18:58:54.411260
+updatedAt: 2025-10-30T19:02:18.536215
+workspaceId: wk_BESCzWuhSE
+folderId: null
+authentication: {}
+authenticationType: null
+body:
+  text: |-
+    {
+      "id": "57f699b8-ab0e-41a7-8d8d-943adbc1d4b8"
+    }
+bodyType: application/json
+description: ''
+headers:
+- enabled: true
+  name: Content-Type
+  value: application/json
+  id: ME3p6vfH7U
+method: DELETE
+name: delete category
+sortPriority: 12000.0
+url: http://localhost:3000/api/v1/category
+urlParameters: []
