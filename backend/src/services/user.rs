@@ -53,7 +53,6 @@ pub struct User {
   pub name: String,
   pub email: String,
   pub password: String,
-  pub deleted: bool,
   pub invite: Option<String>,
 }
 
@@ -81,7 +80,6 @@ pub fn get_user_id(email: &str) -> Result<String, EphemerideError> {
 
   let result = schema::users::table
     .filter(schema::users::email.eq(email))
-    .filter(schema::users::deleted.eq(false))
     .select(schema::users::id)
     .first(&mut conn);
 
@@ -96,7 +94,6 @@ pub fn get_user(id: &str) -> Result<UserDetails, EphemerideError> {
 
   let result = schema::users::table
     .filter(schema::users::id.eq(&id))
-    .filter(schema::users::deleted.eq(false))
     .first(&mut conn);
 
   match result {
@@ -110,7 +107,6 @@ pub fn get_password_hash(id: &str) -> Result<String, EphemerideError> {
 
   let result = schema::users::table
     .filter(schema::users::id.eq(&id))
-    .filter(schema::users::deleted.eq(false))
     .first::<User>(&mut conn);
 
   match result {
@@ -142,7 +138,6 @@ pub fn create_user(user: CreateUser) -> Result<UserDetails, EphemerideError> {
     name: user.name,
     email: user.email,
     password: password_hash,
-    deleted: false,
     invite: user.invite,
   };
 
@@ -171,9 +166,8 @@ pub fn delete_user(id: &str) -> Result<bool, EphemerideError> {
     Err(_) => return Err(EphemerideError::DatabaseError),
   };
 
-  let result = diesel::update(schema::users::table.filter(schema::users::id.eq(id)))
-    .set(schema::users::deleted.eq(true))
-    .execute(&mut conn);
+  let result =
+    diesel::delete(schema::users::table.filter(schema::users::id.eq(id))).execute(&mut conn);
 
   match result {
     Ok(rows_affected) => Ok(rows_affected > 0),

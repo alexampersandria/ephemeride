@@ -91,7 +91,6 @@ diesel::table! {
         email -> Varchar,
         #[max_length = 255]
         password -> Varchar,
-        deleted -> Bool,
         #[max_length = 255]
         invite -> Nullable<Varchar>,
     }
