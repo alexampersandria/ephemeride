@@ -1,8 +1,8 @@
 type: http_request
 model: http_request
-id: rq_yYmFSPWHb9
-createdAt: 2025-10-30T18:58:15.340882
-updatedAt: 2025-10-30T19:20:13.832992
+id: rq_jT3ZeJpzRd
+createdAt: 2025-10-30T19:23:53.853226
+updatedAt: 2025-10-30T19:23:58.887913
 workspaceId: wk_BESCzWuhSE
 folderId: null
 authentication: {}
@@ -10,8 +10,7 @@ authenticationType: null
 body:
   text: |-
     {
-      "id": "c97c96ad-1e3d-4b8a-842b-e14daa61f47a",
-      "name": "we changed the name 🐶"
+      "id": "d757cb40-c6fa-4e27-b228-7da7db3a8b9d"
     }
 bodyType: application/json
 description: ''
@@ -20,8 +19,8 @@ headers:
   name: Content-Type
   value: application/json
   id: ME3p6vfH7U
-method: PATCH
-name: update category
-sortPriority: 11000.0
-url: http://localhost:3000/api/v1/category
+method: DELETE
+name: update entry
+sortPriority: 16000.0022
+url: http://localhost:3000/api/v1/entry
 urlParameters: []

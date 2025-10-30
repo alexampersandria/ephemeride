@@ -1,6 +1,6 @@
 # API Endpoints
 
-## GET /api/
+## GET /api
 
 returns package information and version
 
@@ -160,3 +160,201 @@ gets auth config which tells the frontend whether an invite code is required
   "invite_required": true // boolean, whether an invite code is required to create an account
 }
 ```
+
+## POST /v1/category
+
+creates a new category
+
+### request body
+
+```json
+{
+  "name": "string" // string, category name
+}
+```
+
+### response
+
+returns either the created category or an error
+
+#### 201 created
+
+```json
+{
+  "id": "1234-ffff-5678-aaaa", // string, category id
+  "name": "string", // string, category name
+  "user_id": "9876-abcd-1234-lgbt", // string, user id
+  "created_at": 12345 // integer, timestamp
+}
+```
+
+## PATCH /v1/category/
+
+updates an existing category
+
+### request body
+
+```json
+{
+  "id": "1234-ffff-5678-aaaa", // string, category id
+  "name": "string" // string, category name
+}
+```
+
+### response
+
+returns either the updated category or an error
+
+#### 200 ok
+
+body same as `POST /v1/category` response
+
+## DELETE /v1/category/
+
+deletes an existing category
+
+### request body
+
+```json
+{
+  "id": "1234-ffff-5678-aaaa" // string, category id
+}
+```
+
+### response
+
+returns either a success message or an error
+
+#### 204 no content
+
+returns no content on success
+
+## POST /v1/tag
+
+creates a new tag
+
+### request body
+
+```json
+{
+  "name": "string", // string, tag name
+  "color": "string", // string, tag color
+  "category_id": "string" // string, category id
+}
+```
+
+see [Design/Color](/docs/design/color) for details on colors
+
+### response
+
+returns either the created tag or an error
+
+#### 201 created
+
+```json
+{
+  "id": "1234-ffff-5678-aaaa", // string, tag id
+  "name": "string", // string, tag name
+  "color": "string", // string, tag color
+  "category_id": "1234-ffff-5678-aaaa", // string, category id
+  "user_id": "9876-abcd-1234-lgbt", // string, user id
+  "created_at": 12345 // integer, timestamp
+}
+```
+
+## DELETE /v1/tag
+
+deletes an existing tag
+
+### request body
+
+```json
+{
+  "id": "1234-ffff-5678-aaaa" // string, tag id
+}
+```
+
+### response
+
+returns either a success message or an error
+
+#### 204 no content
+
+returns no content on success
+
+## POST /v1/entry
+
+creates a new entry
+
+### request body
+
+```json
+{
+  "mood": 5, // integer, mood rating from 1-5
+  "date": "YYYY-MM-DD", // string, date of the entry
+  "entry": "string", // string, content of the entry, optional
+  "selected_tags": ["tag_id1", "tag_id2"] // array of strings, selected tag ids
+}
+```
+
+### response
+
+returns either the created entry or an error
+
+#### 201 created
+
+```json
+{
+  "id": "1234-ffff-5678-aaaa", // string, entry id
+  "mood": 5, // integer, mood rating from 1-5
+  "date": "YYYY-MM-DD", // string, date of the entry
+  "entry": "string", // string, content of the entry
+  "selected_tags": ["tag_id1", "tag_id2"], // array of strings, selected tag ids
+  "user_id": "9876-abcd-1234-lgbt", // string, user id
+  "created_at": 12345 // integer, timestamp
+}
+```
+
+## PATCH /v1/entry
+
+updates an existing entry
+
+### request body
+
+```json
+{
+  "id": "1234-ffff-5678-aaaa", // string, entry id
+  "mood": 5, // integer, mood rating from 1-5
+  "date": "YYYY-MM-DD", // string, date of the entry
+  "entry": "string", // string, content of the entry, optional
+  "selected_tags": ["tag_id1", "tag_id2"] // array of strings, selected tag ids
+}
+```
+
+### response
+
+returns either the updated entry or an error
+
+#### 200 ok
+
+body same as `POST /v1/entry` response
+
+## DELETE /v1/entry
+
+deletes an existing entry
+
+### request body
+
+```json
+{
+  "id": "1234-ffff-5678-aaaa" // string, entry id
+}
+```
+
+### response
+
+returns either a success message or an error
+
+#### 204 no content
+
+returns no content on success
