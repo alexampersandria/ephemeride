@@ -41,7 +41,7 @@ const formatDay = (day: number): string => {
 }
 
 const entryLink = (day: number): string => {
-  return `/entry/${formatDay(day)}`
+  return `/app/entry/${formatDay(day)}`
 }
 
 const dayMood = (day: number | null) => {

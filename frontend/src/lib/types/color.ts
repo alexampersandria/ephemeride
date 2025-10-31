@@ -1,5 +1,3 @@
-import type { MoodValue } from './components/moodinput'
-
 export const saturatedColors = [
   'blue',
   'green',

@@ -18,6 +18,7 @@ export type DataState = {
   loaded: boolean
   fetchCategories: () => Promise<void>
   fetchEntries: (from?: string, to?: string) => Promise<void>
+  getEntry: (date: string) => Promise<Entry | null>
   deleteData: () => void
 }
 
@@ -27,12 +28,7 @@ let loaded: boolean = $state(false)
 
 const fetchCategories = async () => {
   if (userStore && userStore.sessionId) {
-    console.log(
-      'dataStore: Fetching categories with session ID:',
-      userStore.sessionId,
-    )
-
-    fetch(`${env.PUBLIC_VITE_API_URL}/v1/user/categories`, {
+    await fetch(`${env.PUBLIC_VITE_API_URL}/v1/user/categories`, {
       headers: { Authorization: `Bearer ${userStore.sessionId}` },
     })
       .then(res => {
@@ -42,12 +38,10 @@ const fetchCategories = async () => {
         return res.json()
       })
       .then((data: CategoryWithTags[]) => {
-        console.log('dataStore: Fetched categories:', data)
-
         categories = data
       })
       .catch(err => {
-        console.error('Error fetching categories:', err)
+        console.error('Error fetching user categories:', err)
         categories = null
       })
   }
@@ -60,13 +54,7 @@ const fetchEntries = async (from?: string, to?: string) => {
     to = to || lastDate
     const dates = datesInRange(from, to)
 
-    console.log(
-      'dataStore: Fetching entries with session ID:',
-      userStore.sessionId,
-    )
-    console.log('dataStore: From:', from, 'To:', to)
-
-    fetch(`${env.PUBLIC_VITE_API_URL}/v1/entries/${from}/${to}`, {
+    await fetch(`${env.PUBLIC_VITE_API_URL}/v1/entries/${from}/${to}`, {
       headers: { Authorization: `Bearer ${userStore.sessionId}` },
     })
       .then(res => {
@@ -76,14 +64,16 @@ const fetchEntries = async (from?: string, to?: string) => {
         return res.json()
       })
       .then((data: Entry[]) => {
-        console.log('dataStore: Fetched entries:', data)
         const entriesByDate: DataEntries = {}
         dates.forEach(date => {
-          const entry = data.find(e => e.date === date) || null
-          console.log(`dataStore: Processing date ${date}:`, entry)
+          let entry = data.find(e => e.date === date) || null
+          // do not overwrite existing entry with null
+          if (entry === null && entriesByDate[date] !== null) {
+            entry = entriesByDate[date]
+          }
           entriesByDate[date] = entry
         })
-        entries = entriesByDate
+        entries = { ...entries, ...entriesByDate }
       })
       .catch(err => {
         console.error('Error fetching user details:', err)
@@ -92,8 +82,23 @@ const fetchEntries = async (from?: string, to?: string) => {
   }
 }
 
+const getEntry = async (date: string) => {
+  if (entries) {
+    if (date in entries) {
+      return entries[date]
+    } else {
+      await fetchEntries(date, date)
+      if (date in entries) {
+        return entries[date]
+      } else {
+        console.error('dataStore: Entry not found for date after fetch:', date)
+      }
+    }
+  }
+  return null
+}
+
 const deleteData = () => {
-  console.log('dataStore: Deleting all data')
   categories = null
   entries = null
 }
@@ -107,14 +112,8 @@ export const useDataStore: () => DataState = () => {
 
   $effect(() => {
     if (userStore && userStore.sessionId && !loaded) {
-      console.log(
-        'dataStore: User is logged in with session ID:',
-        userStore.sessionId,
-      )
-
       fetchCategories()
       fetchEntries()
-
       loaded = true
     }
   })
@@ -140,6 +139,9 @@ export const useDataStore: () => DataState = () => {
     },
     get fetchEntries() {
       return fetchEntries
+    },
+    get getEntry() {
+      return getEntry
     },
     get deleteData() {
       return deleteData

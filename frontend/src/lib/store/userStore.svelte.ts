@@ -25,9 +25,7 @@ const logOut = () => {
 }
 
 const logIn = (newSessionId: string) => {
-  console.log('Logging in with session ID:', newSessionId)
   sessionId = newSessionId
-  console.log('sessionId set to:', sessionId)
   goto('/app')
 }
 

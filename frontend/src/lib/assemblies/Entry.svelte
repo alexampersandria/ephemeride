@@ -272,63 +272,6 @@ const isEdited = $derived.by(() => {
       mode={mode === 'view' ? 'view' : 'edit'} />
   </div>
 
-  <div class="entry-field entry-field-text">
-    <div class="entry-field-title">
-      <div class="inner">
-        <Notebook />
-        Entry
-      </div>
-      {#if mode === 'edit' || mode === 'create'}
-        <button
-          onclick={() => (entryTextModal = true)}
-          aria-label="Show entry text formatting help">
-          <Chip>
-            <Signature />
-          </Chip>
-        </button>
-
-        <Modal bind:open={entryTextModal}>
-          <p>
-            Entry text supports markdown formatting, it uses
-            <a
-              href="https://ssssota.github.io/svelte-exmarkdown/"
-              target="_blank">
-              svelte-exmarkdown
-            </a>
-            for formatting
-          </p>
-          <p>
-            See general markdown documentation <a
-              href="https://www.markdownguide.org/cheat-sheet/"
-              target="_blank">
-              here
-            </a>
-          </p>
-        </Modal>
-      {/if}
-    </div>
-
-    {#if mode === 'edit' || mode === 'create'}
-      <div class="entry-textarea">
-        <Textarea
-          bind:value={editModel.entry}
-          maxlength={entryMaxLength}
-          placeholder="Write your thoughts here..."
-          fullwidth />
-      </div>
-    {:else}
-      <div class="entry-text">
-        {#if entry}
-          <div class="entry-text-content">
-            <Markdown md={entry} />
-          </div>
-        {:else}
-          <p class="muted">No entry</p>
-        {/if}
-      </div>
-    {/if}
-  </div>
-
   <div class="entry-field categories-field">
     <div class="entry-field-title">
       <div class="inner">
@@ -404,6 +347,63 @@ const isEdited = $derived.by(() => {
             </div>
           </div>
         </Modal>
+      </div>
+    {/if}
+  </div>
+
+  <div class="entry-field entry-field-text">
+    <div class="entry-field-title">
+      <div class="inner">
+        <Notebook />
+        Entry
+      </div>
+      {#if mode === 'edit' || mode === 'create'}
+        <button
+          onclick={() => (entryTextModal = true)}
+          aria-label="Show entry text formatting help">
+          <Chip>
+            <Signature />
+          </Chip>
+        </button>
+
+        <Modal bind:open={entryTextModal}>
+          <p>
+            Entry text supports markdown formatting, it uses
+            <a
+              href="https://ssssota.github.io/svelte-exmarkdown/"
+              target="_blank">
+              svelte-exmarkdown
+            </a>
+            for formatting
+          </p>
+          <p>
+            See general markdown documentation <a
+              href="https://www.markdownguide.org/cheat-sheet/"
+              target="_blank">
+              here
+            </a>
+          </p>
+        </Modal>
+      {/if}
+    </div>
+
+    {#if mode === 'edit' || mode === 'create'}
+      <div class="entry-textarea">
+        <Textarea
+          bind:value={editModel.entry}
+          maxlength={entryMaxLength}
+          placeholder="Write your thoughts here..."
+          fullwidth />
+      </div>
+    {:else}
+      <div class="entry-text">
+        {#if entry}
+          <div class="entry-text-content">
+            <Markdown md={entry} />
+          </div>
+        {:else}
+          <p class="muted">No entry</p>
+        {/if}
       </div>
     {/if}
   </div>

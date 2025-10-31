@@ -123,7 +123,6 @@ const submit = async () => {
         return await res.json()
       })
       .then(data => {
-        console.log('Logged in user:', data)
         userStore.logIn(data.id)
       })
       .catch(err => {
@@ -151,7 +150,6 @@ const submit = async () => {
         return await res.json()
       })
       .then(data => {
-        console.log('Registered user:', data)
         userStore.logIn(data.id)
       })
       .catch(err => {

@@ -26,6 +26,7 @@ export type Entry = {
   date: string
   mood: MoodValue
   entry?: string
+  selectedTagIds: string[]
 }
 
 export type NewEntry = Omit<Entry, 'id'>

@@ -318,7 +318,7 @@ $moodColors: ('red', 'yellow', 'green', 'blue', 'pink');
   --chip-base-background: var(--color-base-90);
   --chip-base-background-hover: var(--color-base-80);
   --chip-base-background-active: var(--color-base-70);
-  --chip-base-color: var(--color-base-50);
+  --chip-base-color: var(--color-base-40);
 
   @each $color in $saturatedColors {
     --chip-#{$color}-background: var(--color-#{$color}-100);

@@ -61,7 +61,6 @@ const evaluateInputState = (mount = false) => {
 }
 
 onMount(() => {
-  console.log(value)
   evaluateInputState(true)
 })
 
