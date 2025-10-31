@@ -27,6 +27,8 @@ pub fn endpoint() -> poem::Route {
     .delete(v1::entry::delete_entry))
     .at("/entries/:from_date/:to_date", get(v1::entries::get_entries))
 
+    .at("/sessions", get(v1::sessions::get_sessions))
+
     .at("/auth", post(v1::auth::authenticate_user))
 
     .at("/auth/config", get(v1::auth::auth_config))

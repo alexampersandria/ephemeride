@@ -136,16 +136,11 @@ pub fn get_user_session_by_id(session_id: &str) -> Result<Session, EphemerideErr
   }
 }
 
-pub fn get_all_user_sessions(session_id: &str) -> Result<Vec<Session>, EphemerideError> {
+pub fn get_all_user_sessions(user_id: &str) -> Result<Vec<Session>, EphemerideError> {
   let mut conn = establish_connection();
 
-  let current_session = match get_user_session_by_id(session_id) {
-    Ok(session) => session,
-    Err(_) => return Err(EphemerideError::SessionNotFound),
-  };
-
   let result = schema::sessions::table
-    .filter(schema::sessions::user_id.eq(current_session.user_id))
+    .filter(schema::sessions::user_id.eq(&user_id))
     .load::<Session>(&mut conn);
 
   match result {
