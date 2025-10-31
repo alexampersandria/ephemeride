@@ -5,13 +5,16 @@ use crate::{
   util::{self, error::EphemerideError},
 };
 use diesel::{
-  deserialize::Queryable, prelude::Insertable, ExpressionMethods, QueryDsl, RunQueryDsl,
+  deserialize::Queryable, prelude::Insertable, ExpressionMethods, JoinOnDsl, QueryDsl, RunQueryDsl,
 };
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 use validator::Validate;
 
 use super::delete_all_user_sessions;
+
+use dotenvy::dotenv;
+use std::env;
 
 #[derive(Debug, Deserialize, Serialize, Validate)]
 pub struct CreateUser {
@@ -127,7 +130,16 @@ pub fn create_user(user: CreateUser) -> Result<UserDetails, EphemerideError> {
 
   let mut conn = establish_connection();
 
-  let password_hash = match bcrypt::hash(&user.password, bcrypt::DEFAULT_COST) {
+dotenv().ok();
+  let cost = match env::var("BCRYPT_COST") {
+    Ok(val) => match val.parse::<u32>() {
+      Ok(parsed) => parsed,
+      Err(_) => bcrypt::DEFAULT_COST,
+    },
+    Err(_) => bcrypt::DEFAULT_COST,
+  };
+
+  let password_hash = match bcrypt::hash(&user.password, cost) {
     Ok(hash) => hash,
     Err(_) => return Err(EphemerideError::InternalServerError),
   };

@@ -52,7 +52,7 @@ else
     sudo -u postgres psql -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE \"$database\" TO \"$username\";"
 fi
 cargo install diesel_cli --no-default-features --features postgres
-echo -e "DATABASE_URL=postgres://$username:$password@localhost/$database\nDIESEL_CONFIG_FILE=./diesel.toml\nINVITE_REQUIRED=true\nPORT=3000" > backend/.env
+echo -e "DATABASE_URL=postgres://$username:$password@localhost/$database\nDIESEL_CONFIG_FILE=./diesel.toml\nINVITE_REQUIRED=true\nPORT=3000\nENVIRONMENT=development\nURL=http://localhost:3000\nBCRYPT_COST=8" > backend/.env
 echo -e "PUBLIC_VITE_API_URL=http://localhost:3000/api" > frontend/.env
 cd backend
 diesel setup

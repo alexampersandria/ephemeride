@@ -15,12 +15,23 @@ async fn main() -> Result<(), std::io::Error> {
   dotenv().ok();
 
   let port = env::var("PORT").unwrap_or("3000".to_string());
+  let environment = env::var("ENVIRONMENT").unwrap_or("development".to_string());
+  let url = env::var("URL").unwrap_or(format!("http://localhost:{}", port));
 
-  let cors = Cors::new()
+  let dev_cors = Cors::new()
     .allow_origin("http://localhost:5173")
     .allow_origin("http://127.0.0.1:5173")
     .allow_origin(format!("http://localhost:{}", port))
     .allow_origin(format!("http://127.0.0.1:{}", port));
+  let prod_cors = Cors::new().allow_origin(url);
+
+  let cors = if environment == "development" {
+    dev_cors
+  } else {
+    prod_cors
+  };
+
+  println!("starting server in {} mode", environment);
 
   tracing_subscriber::fmt()
     .with_span_events(FmtSpan::FULL)
