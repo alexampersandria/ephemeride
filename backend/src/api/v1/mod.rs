@@ -15,3 +15,5 @@ pub mod entries;
 pub use entries::*;
 pub mod sessions;
 pub use sessions::*;
+pub mod metrics;
+pub use metrics::*;

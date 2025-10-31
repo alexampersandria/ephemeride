@@ -130,7 +130,7 @@ pub fn create_user(user: CreateUser) -> Result<UserDetails, EphemerideError> {
 
   let mut conn = establish_connection();
 
-dotenv().ok();
+  dotenv().ok();
   let cost = match env::var("BCRYPT_COST") {
     Ok(val) => match val.parse::<u32>() {
       Ok(parsed) => parsed,
@@ -228,6 +228,32 @@ pub fn update_password(id: &str, password: UpdatePassword) -> Result<bool, Ephem
 
   match result {
     Ok(rows_affected) => Ok(rows_affected > 0),
+    Err(_) => Err(EphemerideError::DatabaseError),
+  }
+}
+
+pub fn user_count() -> Result<i64, EphemerideError> {
+  let mut conn = establish_connection();
+
+  let result = schema::users::table.count().get_result::<i64>(&mut conn);
+
+  match result {
+    Ok(count) => Ok(count),
+    Err(_) => Err(EphemerideError::DatabaseError),
+  }
+}
+
+pub fn active_user_count(since_timestamp: i64) -> Result<i64, EphemerideError> {
+  let mut conn = establish_connection();
+
+  let result = schema::users::table
+    .inner_join(schema::sessions::table.on(schema::users::id.eq(schema::sessions::user_id)))
+    .filter(schema::sessions::accessed_at.ge(since_timestamp))
+    .select(diesel::dsl::count_distinct(schema::users::id))
+    .first::<i64>(&mut conn);
+
+  match result {
+    Ok(count) => Ok(count),
     Err(_) => Err(EphemerideError::DatabaseError),
   }
 }

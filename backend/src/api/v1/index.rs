@@ -30,6 +30,7 @@ pub fn endpoint() -> poem::Route {
     .at("/sessions", get(v1::sessions::get_sessions))
 
     .at("/auth", post(v1::auth::authenticate_user))
-
     .at("/auth/config", get(v1::auth::auth_config))
+
+    .at("/metrics", get(v1::metrics::metrics))
 }

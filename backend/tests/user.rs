@@ -205,3 +205,24 @@ fn deletes_a_session() {
 
   assert!(found_session.is_err());
 }
+
+#[test]
+fn user_count() {
+  let _created_user = user::create_user(user::CreateUser {
+    name: Uuid::new_v4().to_string(),
+    email: format!("{}@example.com", Uuid::new_v4().to_string()),
+    password: "password".to_string(),
+    invite: None,
+  });
+
+  let count = user::user_count();
+  let active_count = user::active_user_count(0);
+  let active_count_max_i64 = user::active_user_count(i64::MAX);
+
+  assert!(count.is_ok());
+  assert!(count.unwrap() > 0);
+  assert!(active_count.is_ok());
+  assert!(active_count.unwrap() > 0);
+  assert!(active_count_max_i64.is_ok());
+  assert!(active_count_max_i64.unwrap() == 0);
+}
