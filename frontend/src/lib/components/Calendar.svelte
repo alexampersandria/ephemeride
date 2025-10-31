@@ -4,14 +4,16 @@ import {
   calendarDaysInMonth,
   calendarDefaults,
   formatMonth,
+  monthDateRange,
 } from '$lib/utils/log'
 import { ChevronLeft, ChevronRight } from 'lucide-svelte'
-import type { Color } from '$lib/types/color'
+import { useDataStore } from '$lib/store/dataStore.svelte'
+
+let dataStore = useDataStore()
 
 let {
   month = calendarDefaults().month,
   year = calendarDefaults().year,
-  days = [],
 }: CalendarProps = $props()
 
 let daysInMonth = $derived.by(() => {
@@ -27,22 +29,30 @@ const navigate = (increment: number) => {
     month = 1
     year += 1
   }
+
+  const { firstDate, lastDate } = monthDateRange(year, month)
+  dataStore.fetchEntries(firstDate, lastDate)
 }
 
-const colorForDay = (day: number | null): Color | null => {
-  if (day === null) return null
-
-  const date = `${year}-${String(month).padStart(2, '0')}-${String(
-    day,
-  ).padStart(2, '0')}`
-  const dayEntry = days.find(d => d.date === date)
-  return dayEntry ? dayEntry.color : null
+const formatDay = (day: number): string => {
+  const paddedMonth = String(month).padStart(2, '0')
+  const paddedDay = String(day).padStart(2, '0')
+  return `${year}-${paddedMonth}-${paddedDay}`
 }
 
 const entryLink = (day: number): string => {
-  const paddedMonth = String(month).padStart(2, '0')
-  const paddedDay = String(day).padStart(2, '0')
-  return `/entry/${year}-${paddedMonth}-${paddedDay}`
+  return `/entry/${formatDay(day)}`
+}
+
+const dayMood = (day: number | null) => {
+  if (dataStore.entries && day !== null) {
+    const dateStr = formatDay(day)
+    const entry = dataStore.entries[dateStr]
+    if (entry) {
+      return entry.mood
+    }
+  }
+  return 'null'
 }
 </script>
 
@@ -80,8 +90,8 @@ const entryLink = (day: number): string => {
     {#each daysInMonth as week}
       <div class="row week">
         {#each week as day}
-          <div class="day {colorForDay(day)}">
-            {#if day !== null}
+          <div class="day mood-{dayMood(day)}">
+            {#if day}
               <a href={entryLink(day)} class="day-button">{day}</a>
             {/if}
           </div>
@@ -159,6 +169,28 @@ const entryLink = (day: number): string => {
         display: table-cell;
         text-align: center;
         width: calc(100% / 7);
+        padding: var(--calendar-button-spacing);
+
+        @for $i from 1 through 5 {
+          &.mood-#{$i} {
+            .day-button {
+              background-color: var(--calendar-day-mood-#{$i}-background);
+              color: var(--calendar-day-mood-#{$i}-color);
+            }
+
+            .day-button:hover {
+              background-color: var(--calendar-day-mood-#{$i}-background-hover);
+              color: var(--calendar-day-mood-#{$i}-color);
+            }
+
+            .day-button:active {
+              background-color: var(
+                --calendar-day-mood-#{$i}-background-active
+              );
+              color: var(--calendar-day-mood-#{$i}-color);
+            }
+          }
+        }
 
         .day-button {
           background-color: transparent;

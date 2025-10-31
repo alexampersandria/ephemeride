@@ -29,6 +29,9 @@ import Message from '$lib/components/Message.svelte'
 import { onMount } from 'svelte'
 import { currentDate, fullDate, sortCategories } from '$lib/utils/log'
 import { diff } from 'deep-object-diff'
+import { useDataStore } from '$lib/store/dataStore.svelte'
+
+let dataStore = useDataStore()
 
 let {
   date = currentDate(),
@@ -38,6 +41,12 @@ let {
   mood = $bindable(),
   selectedTagIds = $bindable([]),
 }: EntryProps = $props()
+
+$effect(() => {
+  if (dataStore.categories) {
+    categories = dataStore.categories
+  }
+})
 
 let errors = $derived.by(() => {
   const errs: string[] = []

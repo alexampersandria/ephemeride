@@ -1,9 +1,9 @@
-import type { UserDetails } from '$lib/types/user'
 import { env } from '$env/dynamic/public'
+import type { UserDetails } from '$lib/types/user'
 import { goto } from '$app/navigation'
+import { useDataStore, type DataState } from './dataStore.svelte'
 
-export const themes = ['dark', 'light', 'system'] as const
-export type Theme = (typeof themes)[number]
+let dataStore: DataState | null = null
 
 export type UserState = {
   sessionId: string | null
@@ -18,6 +18,9 @@ let userDetails: UserDetails | null = $state(null)
 const logOut = () => {
   sessionId = null
   userDetails = null
+  if (dataStore) {
+    dataStore.deleteData()
+  }
   goto('/')
 }
 
@@ -30,8 +33,14 @@ const logIn = (newSessionId: string) => {
 
 export const useUserStore: () => UserState = () => {
   $effect(() => {
+    if (!dataStore) {
+      dataStore = useDataStore()
+    }
+  })
+
+  $effect(() => {
     if (sessionId) {
-      fetch(env.PUBLIC_VITE_API_URL + '/v1/user', {
+      fetch(`${env.PUBLIC_VITE_API_URL}/v1/user`, {
         headers: { Authorization: `Bearer ${sessionId}` },
       })
         .then(res => {

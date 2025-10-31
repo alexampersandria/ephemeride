@@ -159,6 +159,8 @@ $mood-bar-width: 2px;
   --app-left-menu-min-width: 12rem;
   --app-left-menu-max-width: 50vw;
 
+  --calendar-button-spacing: var(--border-width);
+
   --better-ease-out: cubic-bezier(0.09, 0.04, 0.3, 0.93);
   --animation-length-xs: 75ms;
   --animation-length-s: 150ms;

@@ -113,6 +113,7 @@ $color-pink-100: oklch($oklch-l-100 $oklch-c-100 347.15 / 1);
 
 $saturatedColors: ('blue', 'green', 'yellow', 'red', 'purple', 'pink');
 $colors: list.append($saturatedColors, 'base');
+$moodColors: ('red', 'yellow', 'green', 'blue', 'pink');
 
 #root {
   --color-base-00: #{$color-base-00};
@@ -318,76 +319,40 @@ $colors: list.append($saturatedColors, 'base');
   --chip-base-background-hover: var(--color-base-80);
   --chip-base-background-active: var(--color-base-70);
   --chip-base-color: var(--color-base-50);
-  --chip-blue-background: var(--color-blue-100);
-  --chip-blue-background-hover: var(--color-blue-90);
-  --chip-blue-background-active: var(--color-blue-80);
-  --chip-blue-color: var(--color-blue-40);
-  --chip-green-background: var(--color-green-100);
-  --chip-green-background-hover: var(--color-green-90);
-  --chip-green-background-active: var(--color-green-80);
-  --chip-green-color: var(--color-green-40);
-  --chip-red-background: var(--color-red-100);
-  --chip-red-background-hover: var(--color-red-90);
-  --chip-red-background-active: var(--color-red-80);
-  --chip-red-color: var(--color-red-40);
-  --chip-yellow-background: var(--color-yellow-100);
-  --chip-yellow-background-hover: var(--color-yellow-90);
-  --chip-yellow-background-active: var(--color-yellow-80);
-  --chip-yellow-color: var(--color-yellow-40);
-  --chip-purple-background: var(--color-purple-100);
-  --chip-purple-background-hover: var(--color-purple-90);
-  --chip-purple-background-active: var(--color-purple-80);
-  --chip-purple-color: var(--color-purple-40);
-  --chip-pink-background: var(--color-pink-100);
-  --chip-pink-background-hover: var(--color-pink-90);
-  --chip-pink-background-active: var(--color-pink-80);
-  --chip-pink-color: var(--color-pink-40);
+
+  @each $color in $saturatedColors {
+    --chip-#{$color}-background: var(--color-#{$color}-100);
+    --chip-#{$color}-background-hover: var(--color-#{$color}-90);
+    --chip-#{$color}-background-active: var(--color-#{$color}-80);
+    --chip-#{$color}-color: var(--color-#{$color}-40);
+  }
 
   --chip-solid-base-background: var(--color-base-60);
   --chip-solid-base-background-hover: var(--color-base-50);
   --chip-solid-base-background-active: var(--color-base-40);
   --chip-solid-base-color: var(--color-base-100);
-  --chip-solid-blue-background: var(--color-blue-60);
-  --chip-solid-blue-background-hover: var(--color-blue-50);
-  --chip-solid-blue-background-active: var(--color-blue-40);
-  --chip-solid-blue-color: var(--color-base-100);
-  --chip-solid-green-background: var(--color-green-60);
-  --chip-solid-green-background-hover: var(--color-green-50);
-  --chip-solid-green-background-active: var(--color-green-40);
-  --chip-solid-green-color: var(--color-base-100);
-  --chip-solid-red-background: var(--color-red-60);
-  --chip-solid-red-background-hover: var(--color-red-50);
-  --chip-solid-red-background-active: var(--color-red-40);
-  --chip-solid-red-color: var(--color-base-100);
-  --chip-solid-yellow-background: var(--color-yellow-60);
-  --chip-solid-yellow-background-hover: var(--color-yellow-50);
-  --chip-solid-yellow-background-active: var(--color-yellow-40);
-  --chip-solid-yellow-color: var(--color-base-100);
-  --chip-solid-purple-background: var(--color-purple-60);
-  --chip-solid-purple-background-hover: var(--color-purple-50);
-  --chip-solid-purple-background-active: var(--color-purple-40);
-  --chip-solid-purple-color: var(--color-base-100);
-  --chip-solid-pink-background: var(--color-pink-60);
-  --chip-solid-pink-background-hover: var(--color-pink-50);
-  --chip-solid-pink-background-active: var(--color-pink-40);
-  --chip-solid-pink-color: var(--color-base-100);
+
+  @each $color in $saturatedColors {
+    --chip-solid-#{$color}-background: var(--color-#{$color}-60);
+    --chip-solid-#{$color}-background-hover: var(--color-#{$color}-50);
+    --chip-solid-#{$color}-background-active: var(--color-#{$color}-40);
+    --chip-solid-#{$color}-color: var(--color-base-100);
+  }
 
   --mood-button-unselected: var(--color-base-80);
-  --mood-button-selected-primary-1: var(--color-red-60);
-  --mood-button-selected-secondary-1: var(--color-red-70);
-  --mood-button-selected-tertiary-1: var(--color-red-90);
-  --mood-button-selected-primary-2: var(--color-yellow-60);
-  --mood-button-selected-secondary-2: var(--color-yellow-70);
-  --mood-button-selected-tertiary-2: var(--color-yellow-90);
-  --mood-button-selected-primary-3: var(--color-green-60);
-  --mood-button-selected-secondary-3: var(--color-green-70);
-  --mood-button-selected-tertiary-3: var(--color-green-90);
-  --mood-button-selected-primary-4: var(--color-blue-60);
-  --mood-button-selected-secondary-4: var(--color-blue-70);
-  --mood-button-selected-tertiary-4: var(--color-blue-90);
-  --mood-button-selected-primary-5: var(--color-pink-60);
-  --mood-button-selected-secondary-5: var(--color-pink-70);
-  --mood-button-selected-tertiary-5: var(--color-pink-90);
+
+  @each $color in $moodColors {
+    $index: list.index($moodColors, $color);
+    --mood-button-selected-primary-#{$index}: var(--color-#{$color}-60);
+    --mood-button-selected-secondary-#{$index}: var(--color-#{$color}-70);
+    --mood-button-selected-tertiary-#{$index}: var(--color-#{$color}-90);
+
+    --calendar-day-mood-#{$index}-background: var(--color-#{$color}-60);
+    --calendar-day-mood-#{$index}-background-hover: var(--color-#{$color}-50);
+    --calendar-day-mood-#{$index}-background-active: var(--color-#{$color}-40);
+    --calendar-day-mood-#{$index}-color: var(--color-base-100);
+  }
+
   --mood-bar-color-primary: var(--color-base-80);
   --mood-bar-color-secondary: var(--color-base-90);
   --mood-bar-color-primary-filled: var(--color-base-50);
@@ -486,76 +451,40 @@ $colors: list.append($saturatedColors, 'base');
   --chip-base-background-hover: var(--color-base-30);
   --chip-base-background-active: var(--color-base-40);
   --chip-base-color: var(--color-base-70);
-  --chip-blue-background: var(--color-blue-10);
-  --chip-blue-background-hover: var(--color-blue-20);
-  --chip-blue-background-active: var(--color-blue-10);
-  --chip-blue-color: var(--color-blue-70);
-  --chip-green-background: var(--color-green-10);
-  --chip-green-background-hover: var(--color-green-20);
-  --chip-green-background-active: var(--color-green-10);
-  --chip-green-color: var(--color-green-70);
-  --chip-red-background: var(--color-red-10);
-  --chip-red-background-hover: var(--color-red-20);
-  --chip-red-background-active: var(--color-red-10);
-  --chip-red-color: var(--color-red-70);
-  --chip-yellow-background: var(--color-yellow-10);
-  --chip-yellow-background-hover: var(--color-yellow-20);
-  --chip-yellow-background-active: var(--color-yellow-10);
-  --chip-yellow-color: var(--color-yellow-70);
-  --chip-purple-background: var(--color-purple-10);
-  --chip-purple-background-hover: var(--color-purple-20);
-  --chip-purple-background-active: var(--color-purple-10);
-  --chip-purple-color: var(--color-purple-70);
-  --chip-pink-background: var(--color-pink-10);
-  --chip-pink-background-hover: var(--color-pink-20);
-  --chip-pink-background-active: var(--color-pink-10);
-  --chip-pink-color: var(--color-pink-70);
+
+  @each $color in $saturatedColors {
+    --chip-#{$color}-background: var(--color-#{$color}-10);
+    --chip-#{$color}-background-hover: var(--color-#{$color}-20);
+    --chip-#{$color}-background-active: var(--color-#{$color}-10);
+    --chip-#{$color}-color: var(--color-#{$color}-70);
+  }
 
   --chip-solid-base-background: var(--color-base-50);
   --chip-solid-base-background-hover: var(--color-base-60);
   --chip-solid-base-background-active: var(--color-base-50);
   --chip-solid-base-color: var(--color-base-100);
-  --chip-solid-blue-background: var(--color-blue-50);
-  --chip-solid-blue-background-hover: var(--color-blue-60);
-  --chip-solid-blue-background-active: var(--color-blue-50);
-  --chip-solid-blue-color: var(--color-base-100);
-  --chip-solid-green-background: var(--color-green-50);
-  --chip-solid-green-background-hover: var(--color-green-60);
-  --chip-solid-green-background-active: var(--color-green-50);
-  --chip-solid-green-color: var(--color-base-100);
-  --chip-solid-red-background: var(--color-red-50);
-  --chip-solid-red-background-hover: var(--color-red-60);
-  --chip-solid-red-background-active: var(--color-red-50);
-  --chip-solid-red-color: var(--color-base-100);
-  --chip-solid-yellow-background: var(--color-yellow-50);
-  --chip-solid-yellow-background-hover: var(--color-yellow-60);
-  --chip-solid-yellow-background-active: var(--color-yellow-50);
-  --chip-solid-yellow-color: var(--color-base-100);
-  --chip-solid-purple-background: var(--color-purple-50);
-  --chip-solid-purple-background-hover: var(--color-purple-60);
-  --chip-solid-purple-background-active: var(--color-purple-50);
-  --chip-solid-purple-color: var(--color-base-100);
-  --chip-solid-pink-background: var(--color-pink-50);
-  --chip-solid-pink-background-hover: var(--color-pink-60);
-  --chip-solid-pink-background-active: var(--color-pink-50);
-  --chip-solid-pink-color: var(--color-base-100);
+
+  @each $color in $saturatedColors {
+    --chip-solid-#{$color}-background: var(--color-#{$color}-50);
+    --chip-solid-#{$color}-background-hover: var(--color-#{$color}-60);
+    --chip-solid-#{$color}-background-active: var(--color-#{$color}-50);
+    --chip-solid-#{$color}-color: var(--color-base-100);
+  }
 
   --mood-button-unselected: var(--color-base-40);
-  --mood-button-selected-primary-1: var(--color-red-50);
-  --mood-button-selected-secondary-1: var(--color-red-40);
-  --mood-button-selected-tertiary-1: var(--color-red-20);
-  --mood-button-selected-primary-2: var(--color-yellow-50);
-  --mood-button-selected-secondary-2: var(--color-yellow-40);
-  --mood-button-selected-tertiary-2: var(--color-yellow-20);
-  --mood-button-selected-primary-3: var(--color-green-50);
-  --mood-button-selected-secondary-3: var(--color-green-40);
-  --mood-button-selected-tertiary-3: var(--color-green-20);
-  --mood-button-selected-primary-4: var(--color-blue-50);
-  --mood-button-selected-secondary-4: var(--color-blue-40);
-  --mood-button-selected-tertiary-4: var(--color-blue-20);
-  --mood-button-selected-primary-5: var(--color-pink-50);
-  --mood-button-selected-secondary-5: var(--color-pink-40);
-  --mood-button-selected-tertiary-5: var(--color-pink-20);
+
+  @each $color in $moodColors {
+    $index: list.index($moodColors, $color);
+    --mood-button-selected-primary-#{$index}: var(--color-#{$color}-50);
+    --mood-button-selected-secondary-#{$index}: var(--color-#{$color}-40);
+    --mood-button-selected-tertiary-#{$index}: var(--color-#{$color}-20);
+
+    --calendar-day-mood-#{$index}-background: var(--color-#{$color}-40);
+    --calendar-day-mood-#{$index}-background-hover: var(--color-#{$color}-50);
+    --calendar-day-mood-#{$index}-background-active: var(--color-#{$color}-30);
+    --calendar-day-mood-#{$index}-color: var(--color-base-100);
+  }
+
   --mood-bar-color-primary: var(--color-base-40);
   --mood-bar-color-secondary: var(--color-base-20);
   --mood-bar-color-primary-filled: var(--color-base-50);

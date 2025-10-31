@@ -61,6 +61,49 @@ export const currentDate = () => {
 }
 
 /**
+ * returns currentDate but in object form
+ * @returns object with year, month, day as numbers
+ */
+export const currentDateObject = () => {
+  const date = currentDate()
+  const [year, month, day] = date.split('-').map(Number)
+  return { year, month, day }
+}
+
+/**
+ * returns an object with the first and last date of the given month
+ * defaults to current month if no parameters given
+ * @param year - The year of the month
+ * @param month - The month (1-12)
+ * @returns object with first and last date strings YYYY-MM-DD
+ */
+export const monthDateRange = (year?: number, month?: number) => {
+  if (!year || !month) {
+    const current = currentDateObject()
+    year = current.year
+    month = current.month
+  }
+
+  const days: number[] = []
+  calendarDaysInMonth(year, month).forEach(week => {
+    week.forEach(day => {
+      if (day) {
+        days.push(day)
+      }
+    })
+  })
+
+  const firstDate = `${year}-${String(month).padStart(2, '0')}-${String(
+    days[0],
+  ).padStart(2, '0')}`
+  const lastDate = `${year}-${String(month).padStart(2, '0')}-${String(
+    days[days.length - 1],
+  ).padStart(2, '0')}`
+
+  return { firstDate, lastDate }
+}
+
+/**
  * gets the current year and month as numbers using the currentDate function
  * @returns the current year and month as numbers using the currentDate function
  */
@@ -136,4 +179,26 @@ export const calendarDaysInMonth = (year: number, month: number) => {
   }
 
   return weeks
+}
+
+/**
+ * Returns an array of dates in the specified range.
+ * @param startDate - The start date of the range (YYYY-MM-DD)
+ * @param endDate - The end date of the range (YYYY-MM-DD)
+ * @returns An array of dates in the range (YYYY-MM-DD)
+ */
+export const datesInRange = (startDate: string, endDate: string) => {
+  const start = new Date(startDate)
+  const end = new Date(endDate)
+  const dates: string[] = []
+
+  for (let dt = new Date(start); dt <= end; dt.setDate(dt.getDate() + 1)) {
+    dates.push(dt.toISOString().split('T')[0])
+  }
+
+  if (!dates.includes(endDate)) {
+    dates.push(endDate)
+  }
+
+  return dates
 }
