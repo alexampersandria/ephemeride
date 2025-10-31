@@ -2,15 +2,14 @@ type: http_request
 model: http_request
 id: rq_yYmFSPWHb9
 createdAt: 2025-10-30T18:58:15.340882
-updatedAt: 2025-10-30T19:20:13.832992
+updatedAt: 2025-10-31T10:50:21.654317
 workspaceId: wk_BESCzWuhSE
-folderId: null
+folderId: fl_d8b3aPxGc3
 authentication: {}
 authenticationType: null
 body:
   text: |-
     {
-      "id": "c97c96ad-1e3d-4b8a-842b-e14daa61f47a",
       "name": "we changed the name 🐶"
     }
 bodyType: application/json
@@ -22,6 +21,6 @@ headers:
   id: ME3p6vfH7U
 method: PATCH
 name: update category
-sortPriority: 11000.0
-url: http://localhost:3000/api/v1/category
+sortPriority: 1000.0
+url: ${[ base_url ]}/api/v1/category
 urlParameters: []

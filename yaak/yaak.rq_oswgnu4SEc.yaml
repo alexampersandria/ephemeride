@@ -2,9 +2,9 @@ type: http_request
 model: http_request
 id: rq_oswgnu4SEc
 createdAt: 2025-10-30T19:02:17.163338
-updatedAt: 2025-10-31T07:24:02.239094
+updatedAt: 2025-10-31T10:51:14.368965
 workspaceId: wk_BESCzWuhSE
-folderId: null
+folderId: fl_MutDAEV82K
 authentication: {}
 authenticationType: null
 body:
@@ -23,6 +23,6 @@ headers:
   id: ME3p6vfH7U
 method: POST
 name: new entry
-sortPriority: 16000.0001
-url: http://localhost:3000/api/v1/entry
+sortPriority: 0.0
+url: ${[ base_url ]}/v1/entry
 urlParameters: []

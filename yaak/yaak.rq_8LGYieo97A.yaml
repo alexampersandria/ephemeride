@@ -2,15 +2,15 @@ type: http_request
 model: http_request
 id: rq_8LGYieo97A
 createdAt: 2025-10-30T18:55:34.109589
-updatedAt: 2025-10-30T19:02:18.535014
+updatedAt: 2025-10-31T10:50:07.879537
 workspaceId: wk_BESCzWuhSE
-folderId: null
+folderId: fl_d8b3aPxGc3
 authentication: {}
 authenticationType: null
 body:
   text: |-
     {
-      "name": "a new category"
+      "nae": "a new category"
     }
 bodyType: application/json
 description: ''
@@ -21,6 +21,6 @@ headers:
   id: ME3p6vfH7U
 method: POST
 name: new category
-sortPriority: 10000.0
-url: http://localhost:3000/api/v1/category
+sortPriority: 0.0
+url: ${[ base_url ]}/v1/category
 urlParameters: []

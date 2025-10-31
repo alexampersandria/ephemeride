@@ -2,9 +2,9 @@ type: http_request
 model: http_request
 id: rq_x3vyoCMbwE
 createdAt: 2025-10-30T15:30:34.063391
-updatedAt: 2025-10-30T19:02:18.530476
+updatedAt: 2025-10-31T10:51:47.124284
 workspaceId: wk_BESCzWuhSE
-folderId: null
+folderId: fl_s7uAHUrDvi
 authentication: {}
 authenticationType: null
 body:
@@ -22,8 +22,8 @@ headers:
   id: F5FnJGHQtk
 method: POST
 name: log in
-sortPriority: 4000.0
-url: http://localhost:3000/api/v1/auth
+sortPriority: 1000.0
+url: ${[ base_url ]}/v1/auth
 urlParameters:
 - enabled: true
   name: ''

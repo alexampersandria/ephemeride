@@ -2,9 +2,9 @@ type: http_request
 model: http_request
 id: rq_ugJfUHj36E
 createdAt: 2025-10-31T08:43:25.706646
-updatedAt: 2025-10-31T08:44:57.872787
+updatedAt: 2025-10-31T10:51:27.186688
 workspaceId: wk_BESCzWuhSE
-folderId: null
+folderId: fl_MutDAEV82K
 authentication: {}
 authenticationType: null
 body:
@@ -16,7 +16,7 @@ bodyType: null
 description: ''
 headers: []
 method: GET
-name: delete entry
-sortPriority: 16000.0033
-url: http://localhost:3000/api/v1/entries/199901-01/2099-01-01
+name: get entries
+sortPriority: 3000.0
+url: ${[ base_url ]}/v1/entries/1999-01-01/2099-01-01
 urlParameters: []

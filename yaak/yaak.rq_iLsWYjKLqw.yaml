@@ -2,9 +2,9 @@ type: http_request
 model: http_request
 id: rq_iLsWYjKLqw
 createdAt: 2025-10-30T16:53:53.213165
-updatedAt: 2025-10-30T19:02:18.533427
+updatedAt: 2025-10-31T10:51:47.126271
 workspaceId: wk_BESCzWuhSE
-folderId: null
+folderId: fl_s7uAHUrDvi
 authentication: {}
 authenticationType: null
 body:
@@ -22,8 +22,8 @@ headers:
   id: GkhPfZu5Ur
 method: PATCH
 name: update user info
-sortPriority: 8000.0
-url: http://localhost:3000/api/v1/user
+sortPriority: 4000.0
+url: ${[ base_url ]}/api/v1/user
 urlParameters:
 - enabled: true
   name: ''

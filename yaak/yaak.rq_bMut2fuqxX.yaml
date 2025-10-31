@@ -2,9 +2,9 @@ type: http_request
 model: http_request
 id: rq_bMut2fuqxX
 createdAt: 2025-10-30T19:00:42.782711
-updatedAt: 2025-10-30T19:02:18.536866
+updatedAt: 2025-10-31T10:50:34.025596
 workspaceId: wk_BESCzWuhSE
-folderId: null
+folderId: fl_SzpuvioiT3
 authentication: {}
 authenticationType: null
 body:
@@ -23,6 +23,6 @@ headers:
   id: ME3p6vfH7U
 method: POST
 name: new tag
-sortPriority: 13000.0
-url: http://localhost:3000/api/v1/tag
+sortPriority: 0.0
+url: ${[ base_url ]}/v1/tag
 urlParameters: []
