@@ -1,7 +1,7 @@
 use crate::{
   establish_connection,
   schema::{entry_tags, tags},
-  services::{get_user, category::get_category},
+  services::{category::get_category, get_user},
   util::{self, Color, EphemerideError},
 };
 use diesel::{

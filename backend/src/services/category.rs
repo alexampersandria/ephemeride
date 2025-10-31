@@ -1,7 +1,10 @@
 use crate::{
   establish_connection,
   schema::categories,
-  services::{get_user, tag::{Tag, get_category_tags, delete_all_category_tags}},
+  services::{
+    get_user,
+    tag::{delete_all_category_tags, get_category_tags, Tag},
+  },
   util::{self, EphemerideError},
 };
 use diesel::{
