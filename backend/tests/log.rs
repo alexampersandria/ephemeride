@@ -1003,3 +1003,123 @@ fn test_edit_entry_content_too_long() {
 
   assert!(edited.is_err());
 }
+
+#[test]
+fn test_delete_tag_in_use_by_entry() {
+  let user = create_test_user();
+  let category = log::create_category(log::CreateCategory {
+    name: "Test Category".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  let tag = log::create_tag(log::CreateTag {
+    name: "In Use".to_string(),
+    color: "blue".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  let entry = log::create_entry(log::CreateEntry {
+    date: "2025-10-17".to_string(),
+    mood: 5,
+    entry: Some("Test entry".to_string()),
+    selected_tags: vec![tag.id.clone()],
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let deleted = log::delete_tag(&tag.id, &user.id);
+
+  let get_entry_again = log::get_entry_with_tags(&entry.id, &user.id);
+
+  assert!(deleted.is_ok());
+  assert_eq!(deleted.unwrap(), true);
+  assert!(get_entry_again.is_ok());
+  let entry_with_tags = get_entry_again.unwrap();
+  assert!(entry_with_tags.selected_tags.is_empty());
+}
+
+#[test]
+fn test_delete_category_with_tags() {
+  let user = create_test_user();
+  let category = log::create_category(log::CreateCategory {
+    name: "To Delete".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  let tag = log::create_tag(log::CreateTag {
+    name: "Tag".to_string(),
+    color: "blue".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let deleted = log::delete_category(&category.id, &user.id);
+
+  let found_tag = log::get_tag(&tag.id, &user.id);
+
+  assert!(deleted.is_ok());
+  assert_eq!(deleted.unwrap(), true);
+  assert!(found_tag.is_err());
+}
+
+#[test]
+fn test_create_entry_date_validation() {
+  let user = create_test_user();
+
+  let string_date = log::create_entry(log::CreateEntry {
+    date: "invalid-date".to_string(),
+    mood: 3,
+    entry: Some("Test content".to_string()),
+    selected_tags: vec![],
+    user_id: user.id.clone(),
+  });
+  let empty_date = log::create_entry(log::CreateEntry {
+    date: "".to_string(),
+    mood: 3,
+    entry: Some("Test content".to_string()),
+    selected_tags: vec![],
+    user_id: user.id.clone(),
+  });
+  let invalid_format_date = log::create_entry(log::CreateEntry {
+    date: "2025/10/17".to_string(),
+    mood: 3,
+    entry: Some("Test content".to_string()),
+    selected_tags: vec![],
+    user_id: user.id.clone(),
+  });
+  let american_format_date = log::create_entry(log::CreateEntry {
+    date: "10-17-2025".to_string(),
+    mood: 3,
+    entry: Some("Test content".to_string()),
+    selected_tags: vec![],
+    user_id: user.id.clone(),
+  });
+
+  assert!(string_date.is_err());
+  assert!(empty_date.is_err());
+  assert!(invalid_format_date.is_err());
+  assert!(american_format_date.is_err());
+}
+
+#[test]
+fn test_tag_color_default() {
+  let user = create_test_user();
+  let category = log::create_category(log::CreateCategory {
+    name: "Test Category".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let invalid_color_tag = log::create_tag(log::CreateTag {
+    name: "Invalid Color".to_string(),
+    color: "invalid".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  });
+
+  assert!(invalid_color_tag.is_ok());
+  let tag = invalid_color_tag.unwrap();
+  assert_eq!(tag.color, "base");
+}
