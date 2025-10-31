@@ -1,5 +1,4 @@
-import { colorPriority, moodColors } from '$lib/types/color'
-import type { MoodValue } from '$lib/types/components/moodinput'
+import { colorPriority } from '$lib/types/color'
 import type { CategoryWithTags } from '$lib/types/log'
 
 /**
@@ -24,10 +23,6 @@ export const sortCategories = (categories: CategoryWithTags[]) => {
   })
 
   return sortedCategories
-}
-
-export const moodColor = (mood: MoodValue) => {
-  return moodColors[mood]
 }
 
 /**
