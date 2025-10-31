@@ -188,15 +188,14 @@ returns either the created category or an error
 }
 ```
 
-## PATCH /v1/category/
+## PATCH /v1/category/:id
 
-updates an existing category
+updates an existing category with the given id
 
 ### request body
 
 ```json
 {
-  "id": "1234-ffff-5678-aaaa", // string, category id
   "name": "string" // string, category name
 }
 ```
@@ -209,17 +208,9 @@ returns either the updated category or an error
 
 body same as `POST /v1/category` response
 
-## DELETE /v1/category/
+## DELETE /v1/category/:id
 
-deletes an existing category
-
-### request body
-
-```json
-{
-  "id": "1234-ffff-5678-aaaa" // string, category id
-}
-```
+deletes an existing category with the given id
 
 ### response
 
@@ -262,17 +253,28 @@ returns either the created tag or an error
 }
 ```
 
-## DELETE /v1/tag
+## PATCH /v1/tag:id
 
-deletes an existing tag
+updates an existing tag with the given id
 
 ### request body
 
 ```json
 {
-  "id": "1234-ffff-5678-aaaa" // string, tag id
+  "name": "string", // string, tag name
+  "color": "string" // string, tag color
 }
 ```
+
+### response
+
+returns either the updated tag or an error
+
+see `POST /v1/tag` response for details
+
+## DELETE /v1/tag/:id
+
+deletes an existing tag with the given id
 
 ### response
 
@@ -315,15 +317,14 @@ returns either the created entry or an error
 }
 ```
 
-## PATCH /v1/entry
+## PATCH /v1/entry/:id
 
-updates an existing entry
+updates an existing entry with the given id
 
 ### request body
 
 ```json
 {
-  "id": "1234-ffff-5678-aaaa", // string, entry id
   "mood": 5, // integer, mood rating from 1-5
   "date": "YYYY-MM-DD", // string, date of the entry
   "entry": "string", // string, content of the entry, optional
@@ -339,17 +340,9 @@ returns either the updated entry or an error
 
 body same as `POST /v1/entry` response
 
-## DELETE /v1/entry
+## DELETE /v1/entry/:id
 
-deletes an existing entry
-
-### request body
-
-```json
-{
-  "id": "1234-ffff-5678-aaaa" // string, entry id
-}
-```
+deletes an existing entry with the given id
 
 ### response
 

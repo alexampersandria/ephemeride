@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_vXXvJsYizj
 createdAt: 2025-10-30T19:03:22.576893
-updatedAt: 2025-10-30T19:04:01.113253
+updatedAt: 2025-10-31T07:26:57.713541
 workspaceId: wk_BESCzWuhSE
 folderId: null
 authentication: {}
@@ -10,13 +10,9 @@ authenticationType: null
 body:
   text: |-
     {
-      "id": "d757cb40-c6fa-4e27-b228-7da7db3a8b9d",
       "mood": 4,
-      "date": "2025-07-22",
-      "selected_tags": [
-        "123",
-        "456"
-      ],
+      "date": "2025-03-30",
+      "selected_tags": ["6d0c6812-6fe3-47c6-892d-2a585849b7f8"],
       "entry": "# Hello :)"
     }
 bodyType: application/json
@@ -26,8 +22,8 @@ headers:
   name: Content-Type
   value: application/json
   id: ME3p6vfH7U
-method: POST
+method: PATCH
 name: update entry
-sortPriority: 16000.0011
-url: http://localhost:3000/api/v1/entry
+sortPriority: 16000.0012
+url: http://localhost:3000/api/v1/entry/93c8fef1-99e5-43c7-966e-653c96043d0d
 urlParameters: []

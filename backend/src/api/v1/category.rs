@@ -2,7 +2,12 @@ use crate::{
   services::{authorize_request, log},
   util::{error::error_response, response, EphemerideError},
 };
-use poem::{handler, http::StatusCode, web::Json, Request, Response};
+use poem::{
+  handler,
+  http::StatusCode,
+  web::{Json, Path},
+  Request, Response,
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -12,13 +17,7 @@ struct CreateCategoryRequest {
 
 #[derive(Debug, Deserialize, Serialize)]
 struct EditCategoryRequest {
-  id: String,
   name: String,
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-struct DeleteCategoryRequest {
-  id: String,
 }
 
 #[handler]
@@ -40,14 +39,18 @@ pub fn create_category(Json(category): Json<CreateCategoryRequest>, request: &Re
 }
 
 #[handler]
-pub fn edit_category(Json(category): Json<EditCategoryRequest>, request: &Request) -> Response {
+pub fn edit_category(
+  Path(id): Path<String>,
+  Json(category): Json<EditCategoryRequest>,
+  request: &Request,
+) -> Response {
   let session = match authorize_request(request) {
     Ok(session) => session,
     Err(error) => return error_response(error),
   };
 
   let edited_category = log::edit_category(log::EditCategory {
-    id: category.id,
+    id: id,
     name: category.name,
     user_id: session.user_id,
   });
@@ -59,13 +62,13 @@ pub fn edit_category(Json(category): Json<EditCategoryRequest>, request: &Reques
 }
 
 #[handler]
-pub fn delete_category(Json(category): Json<DeleteCategoryRequest>, request: &Request) -> Response {
+pub fn delete_category(Path(id): Path<String>, request: &Request) -> Response {
   let session = match authorize_request(request) {
     Ok(session) => session,
     Err(error) => return error_response(error),
   };
 
-  let deleted_category = match log::delete_category(&category.id, &session.user_id) {
+  let deleted_category = match log::delete_category(&id, &session.user_id) {
     Ok(deleted) => deleted,
     Err(error) => return error_response(error),
   };

@@ -2,7 +2,12 @@ use crate::{
   services::{authorize_request, log},
   util::{error::error_response, response, EphemerideError},
 };
-use poem::{handler, http::StatusCode, web::Json, Request, Response};
+use poem::{
+  handler,
+  http::StatusCode,
+  web::{Json, Path},
+  Request, Response,
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -15,16 +20,10 @@ struct CreateEntryRequest {
 
 #[derive(Debug, Deserialize, Serialize)]
 struct EditEntryRequest {
-  id: String,
   date: String,
   mood: i32,
   entry: Option<String>,
   selected_tags: Vec<String>,
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-struct DeleteEntryRequest {
-  id: String,
 }
 
 #[handler]
@@ -49,14 +48,18 @@ pub fn create_entry(Json(entry): Json<CreateEntryRequest>, request: &Request) ->
 }
 
 #[handler]
-pub fn edit_entry(Json(entry): Json<EditEntryRequest>, request: &Request) -> Response {
+pub fn edit_entry(
+  Path(id): Path<String>,
+  Json(entry): Json<EditEntryRequest>,
+  request: &Request,
+) -> Response {
   let session = match authorize_request(request) {
     Ok(session) => session,
     Err(error) => return error_response(error),
   };
 
   let edited_entry = log::edit_entry(log::EditEntry {
-    id: entry.id,
+    id: id,
     date: entry.date,
     mood: entry.mood,
     entry: entry.entry,
@@ -71,13 +74,13 @@ pub fn edit_entry(Json(entry): Json<EditEntryRequest>, request: &Request) -> Res
 }
 
 #[handler]
-pub fn delete_entry(Json(entry): Json<DeleteEntryRequest>, request: &Request) -> Response {
+pub fn delete_entry(Path(id): Path<String>, request: &Request) -> Response {
   let session = match authorize_request(request) {
     Ok(session) => session,
     Err(error) => return error_response(error),
   };
 
-  let deleted_entry = match log::delete_entry(&entry.id, &session.user_id) {
+  let deleted_entry = match log::delete_entry(&id, &session.user_id) {
     Ok(deleted) => deleted,
     Err(error) => return error_response(error),
   };

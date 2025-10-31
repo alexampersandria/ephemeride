@@ -2,7 +2,12 @@ use crate::{
   services::{authorize_request, log},
   util::{error::error_response, response, EphemerideError},
 };
-use poem::{handler, http::StatusCode, web::Json, Request, Response};
+use poem::{
+  handler,
+  http::StatusCode,
+  web::{Json, Path},
+  Request, Response,
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -14,14 +19,8 @@ struct CreateTagRequest {
 
 #[derive(Debug, Deserialize, Serialize)]
 struct EditTagRequest {
-  id: String,
   name: String,
   color: String,
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-struct DeleteTagRequest {
-  id: String,
 }
 
 #[handler]
@@ -45,14 +44,18 @@ pub fn create_tag(Json(tag): Json<CreateTagRequest>, request: &Request) -> Respo
 }
 
 #[handler]
-pub fn edit_tag(Json(tag): Json<EditTagRequest>, request: &Request) -> Response {
+pub fn edit_tag(
+  Path(id): Path<String>,
+  Json(tag): Json<EditTagRequest>,
+  request: &Request,
+) -> Response {
   let session = match authorize_request(request) {
     Ok(session) => session,
     Err(error) => return error_response(error),
   };
 
   let edited_tag = log::edit_tag(log::EditTag {
-    id: tag.id,
+    id: id,
     name: tag.name,
     color: tag.color,
     user_id: session.user_id,
@@ -65,13 +68,13 @@ pub fn edit_tag(Json(tag): Json<EditTagRequest>, request: &Request) -> Response 
 }
 
 #[handler]
-pub fn delete_tag(Json(tag): Json<DeleteTagRequest>, request: &Request) -> Response {
+pub fn delete_tag(Path(id): Path<String>, request: &Request) -> Response {
   let session = match authorize_request(request) {
     Ok(session) => session,
     Err(error) => return error_response(error),
   };
 
-  let deleted_tag = match log::delete_tag(&tag.id, &session.user_id) {
+  let deleted_tag = match log::delete_tag(&id, &session.user_id) {
     Ok(deleted) => deleted,
     Err(error) => return error_response(error),
   };

@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_jT3ZeJpzRd
 createdAt: 2025-10-30T19:23:53.853226
-updatedAt: 2025-10-30T19:23:58.887913
+updatedAt: 2025-10-31T07:26:55.002856
 workspaceId: wk_BESCzWuhSE
 folderId: null
 authentication: {}
@@ -12,15 +12,11 @@ body:
     {
       "id": "d757cb40-c6fa-4e27-b228-7da7db3a8b9d"
     }
-bodyType: application/json
+bodyType: null
 description: ''
-headers:
-- enabled: true
-  name: Content-Type
-  value: application/json
-  id: ME3p6vfH7U
+headers: []
 method: DELETE
-name: update entry
+name: delete entry
 sortPriority: 16000.0022
-url: http://localhost:3000/api/v1/entry
+url: http://localhost:3000/api/v1/entry/d757cb40-c6fa-4e27-b228-7da7db3a8b9d
 urlParameters: []

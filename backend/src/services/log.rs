@@ -306,7 +306,7 @@ pub fn delete_category(category_id: &str, user_id: &str) -> Result<bool, Ephemer
   .execute(&mut conn);
 
   match result {
-    Ok(_) => Ok(true),
+    Ok(count) => Ok(count > 0),
     Err(_) => Err(EphemerideError::DatabaseError),
   }
 }
@@ -434,6 +434,13 @@ pub fn delete_tag(tag_id: &str, user_id: &str) -> Result<bool, EphemerideError> 
 
   let mut conn = establish_connection();
 
+  let deleted_entry_tags =
+    diesel::delete(entry_tags::table.filter(entry_tags::tag_id.eq(tag_id))).execute(&mut conn);
+
+  if deleted_entry_tags.is_err() {
+    return Err(EphemerideError::DatabaseError);
+  }
+
   let result = diesel::delete(
     tags::table
       .filter(tags::id.eq(tag_id))
@@ -442,7 +449,7 @@ pub fn delete_tag(tag_id: &str, user_id: &str) -> Result<bool, EphemerideError> 
   .execute(&mut conn);
 
   match result {
-    Ok(_) => Ok(true),
+    Ok(count) => Ok(count > 0),
     Err(_) => Err(EphemerideError::DatabaseError),
   }
 }
@@ -656,8 +663,23 @@ pub fn edit_entry(entry: EditEntry) -> Result<EntryWithTags, EphemerideError> {
     Err(_) => return Err(EphemerideError::BadRequest),
   };
 
-  if get_entry_by_date(naive_date, &entry.user_id).is_ok() {
-    return Err(EphemerideError::EntryAlreadyExistsForDate);
+  match get_entry_by_date(naive_date, &entry.user_id) {
+    Ok(entry_for_date) => {
+      if entry_for_date.id != entry.id {
+        return Err(EphemerideError::EntryAlreadyExistsForDate);
+      }
+    }
+    Err(_) => (),
+  }
+
+  let mut tags: Vec<Tag> = Vec::new();
+
+  for tag_id in &entry.selected_tags {
+    let tag = get_tag(tag_id, &entry.user_id);
+
+    if tag.is_ok() {
+      tags.push(tag.unwrap());
+    }
   }
 
   let mut conn = establish_connection();
@@ -687,11 +709,11 @@ pub fn edit_entry(entry: EditEntry) -> Result<EntryWithTags, EphemerideError> {
     return Err(EphemerideError::DatabaseError);
   }
 
-  for tag_id in &entry.selected_tags {
+  for tag in &tags {
     let entry_tag = EntryTag {
       id: Uuid::new_v4().to_string(),
       entry_id: entry.id.to_string(),
-      tag_id: tag_id.to_string(),
+      tag_id: tag.id.to_string(),
     };
 
     let tag_result = diesel::insert_into(crate::schema::entry_tags::table)
@@ -770,6 +792,13 @@ pub fn delete_entry(entry_id: &str, user_id: &str) -> Result<bool, EphemerideErr
 
   let mut conn = establish_connection();
 
+  let deleted_entry_tags =
+    diesel::delete(entry_tags::table.filter(entry_tags::entry_id.eq(entry_id))).execute(&mut conn);
+
+  if deleted_entry_tags.is_err() {
+    return Err(EphemerideError::DatabaseError);
+  }
+
   let result = diesel::delete(
     entries::table
       .filter(entries::id.eq(entry_id))
@@ -778,7 +807,7 @@ pub fn delete_entry(entry_id: &str, user_id: &str) -> Result<bool, EphemerideErr
   .execute(&mut conn);
 
   match result {
-    Ok(_) => Ok(true),
+    Ok(count) => Ok(count > 0),
     Err(_) => Err(EphemerideError::DatabaseError),
   }
 }
