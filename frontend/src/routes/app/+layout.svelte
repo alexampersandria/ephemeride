@@ -529,6 +529,7 @@ const handleLogout = () => {
       width: 100%;
       height: calc(100dvh - var(--app-top-bar-height) + var(--border-width));
       z-index: 10;
+      padding-bottom: 0;
 
       transform: translateX(-2rem);
       filter: blur(4px);
