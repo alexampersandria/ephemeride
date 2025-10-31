@@ -26,6 +26,10 @@ const logOut = () => {
 
 const logIn = (newSessionId: string) => {
   sessionId = newSessionId
+  if (dataStore) {
+    dataStore.fetchCategories()
+    dataStore.fetchEntries()
+  }
   goto('/app')
 }
 
