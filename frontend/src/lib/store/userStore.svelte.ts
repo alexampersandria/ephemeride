@@ -26,11 +26,10 @@ const logOut = () => {
 
 const logIn = (newSessionId: string) => {
   sessionId = newSessionId
-  if (dataStore) {
-    dataStore.fetchCategories()
-    dataStore.fetchEntries()
-  }
-  goto('/app')
+  // use window api rather than goto to force reload of the page and all stores
+  // this ensure that all stores are properly reset and data is fetched as expected
+  // this also triggers the preloader again but that is acceptable here
+  window.location.href = '/app'
 }
 
 export const useUserStore: () => UserState = () => {
