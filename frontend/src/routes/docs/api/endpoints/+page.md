@@ -1,5 +1,7 @@
 # API Endpoints
 
+> #TODO: this should be split up into multiple files for better organization, it's far too long right now
+
 ## GET /api
 
 returns package information and version
@@ -351,3 +353,27 @@ returns either a success message or an error
 #### 204 no content
 
 returns no content on success
+
+## GET /v1/entries/:from_date/:to_date
+
+gets all entries in the given date range (inclusive)
+
+### response
+
+returns either the list of entries or an error
+
+#### 200 ok
+
+```json
+[
+  {
+    "id": "1234-ffff-5678-aaaa", // string, entry id
+    "mood": 5, // integer, mood rating from 1-5
+    "date": "YYYY-MM-DD", // string, date of the entry
+    "entry": "string", // string, content of the entry
+    "selected_tags": ["tag_id1", "tag_id2"], // array of strings, selected tag ids
+    "user_id": "9876-abcd-1234-lgbt", // string, user id
+    "created_at": 12345 // integer, timestamp
+  }
+]
+```

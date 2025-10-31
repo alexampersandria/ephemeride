@@ -1123,3 +1123,55 @@ fn test_tag_color_default() {
   let tag = invalid_color_tag.unwrap();
   assert_eq!(tag.color, "base");
 }
+
+#[test]
+fn test_get_entries_in_range() {
+  let user = create_test_user();
+
+  let entry1 = log::create_entry(log::CreateEntry {
+    date: "2025-10-15".to_string(),
+    mood: 4,
+    entry: Some("Entry 1".to_string()),
+    selected_tags: vec![],
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let entry2 = log::create_entry(log::CreateEntry {
+    date: "2025-10-16".to_string(),
+    mood: 5,
+    entry: Some("Entry 2".to_string()),
+    selected_tags: vec![],
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let entry3 = log::create_entry(log::CreateEntry {
+    date: "2025-10-17".to_string(),
+    mood: 3,
+    entry: Some("Entry 3".to_string()),
+    selected_tags: vec![],
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let entry4 = log::create_entry(log::CreateEntry {
+    date: "2025-10-14".to_string(),
+    mood: 2,
+    entry: Some("Entry 4".to_string()),
+    selected_tags: vec![],
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let entries = log::get_entries_in_range("2025-10-15", "2025-10-16", &user.id);
+
+  assert!(entries.is_ok());
+  let entries = entries.unwrap();
+  assert_eq!(entries.len(), 2);
+  let entry_ids: Vec<String> = entries.into_iter().map(|e| e.id).collect();
+  assert!(entry_ids.contains(&entry1.id));
+  assert!(entry_ids.contains(&entry2.id));
+  assert!(!entry_ids.contains(&entry3.id));
+  assert!(!entry_ids.contains(&entry4.id));
+}

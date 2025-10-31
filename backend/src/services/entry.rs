@@ -3,7 +3,10 @@ use std::sync::LazyLock;
 use crate::{
   establish_connection,
   schema::{entries, entry_tags},
-  services::{get_user, tag::{Tag, get_tag}},
+  services::{
+    get_user,
+    tag::{get_tag, Tag},
+  },
   util::{self, EphemerideError},
 };
 use diesel::{
@@ -313,4 +316,43 @@ pub fn delete_entry(entry_id: &str, user_id: &str) -> Result<bool, EphemerideErr
     Ok(count) => Ok(count > 0),
     Err(_) => Err(EphemerideError::DatabaseError),
   }
+}
+
+pub fn get_entries_in_range(
+  from_date: &str,
+  to_date: &str,
+  user_id: &str,
+) -> Result<Vec<EntryWithTags>, EphemerideError> {
+  let from_naive_date = match chrono::NaiveDate::parse_from_str(from_date, "%Y-%m-%d") {
+    Ok(date) => date,
+    Err(_) => return Err(EphemerideError::BadRequest),
+  };
+
+  let to_naive_date = match chrono::NaiveDate::parse_from_str(to_date, "%Y-%m-%d") {
+    Ok(date) => date,
+    Err(_) => return Err(EphemerideError::BadRequest),
+  };
+
+  let mut conn = establish_connection();
+
+  let results = entries::table
+    .filter(entries::date.ge(from_naive_date))
+    .filter(entries::date.le(to_naive_date))
+    .filter(entries::user_id.eq(user_id))
+    .load::<Entry>(&mut conn);
+
+  if results.is_err() {
+    return Err(EphemerideError::DatabaseError);
+  }
+
+  let entries = results.unwrap();
+  let mut entries_with_tags: Vec<EntryWithTags> = Vec::new();
+
+  for entry in entries {
+    let entry_with_tags = get_entry_with_tags(&entry.id, user_id)?;
+
+    entries_with_tags.push(entry_with_tags);
+  }
+
+  Ok(entries_with_tags)
 }

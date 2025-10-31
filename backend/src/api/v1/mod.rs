@@ -11,3 +11,5 @@ pub mod tag;
 pub use tag::*;
 pub mod entry;
 pub use entry::*;
+pub mod entries;
+pub use entries::*;

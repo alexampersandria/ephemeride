@@ -1,0 +1,22 @@
+type: http_request
+model: http_request
+id: rq_ugJfUHj36E
+createdAt: 2025-10-31T08:43:25.706646
+updatedAt: 2025-10-31T08:44:57.872787
+workspaceId: wk_BESCzWuhSE
+folderId: null
+authentication: {}
+authenticationType: null
+body:
+  text: |-
+    {
+      "id": "d757cb40-c6fa-4e27-b228-7da7db3a8b9d"
+    }
+bodyType: null
+description: ''
+headers: []
+method: GET
+name: delete entry
+sortPriority: 16000.0033
+url: http://localhost:3000/api/v1/entries/199901-01/2099-01-01
+urlParameters: []
