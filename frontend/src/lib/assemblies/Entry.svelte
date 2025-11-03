@@ -5,8 +5,8 @@ import Textarea from '$lib/components/Textarea.svelte'
 import Category from './Category.svelte'
 import Button from '$lib/components/Button.svelte'
 import {
-  Folder,
-  Notebook,
+  FolderOpen,
+  NotebookText,
   Pencil,
   PencilOff,
   Plus,
@@ -23,38 +23,50 @@ import Modal from '$lib/components/Modal.svelte'
 import Markdown from 'svelte-exmarkdown'
 import type { MoodValue } from '$lib/types/components/moodinput'
 import Input from '$lib/components/Input.svelte'
-import type { Category as CategoryType, CategoryWithTags } from '$lib/types/log'
+import type { Category as CategoryType } from '$lib/types/log'
 import type { InputState } from '$lib/types/input'
 import Message from '$lib/components/Message.svelte'
 import { onMount } from 'svelte'
 import { currentDate, fullDate, sortCategories } from '$lib/utils/log'
 import { diff } from 'deep-object-diff'
-import { useDataStore } from '$lib/store/dataStore.svelte'
-
-let dataStore = useDataStore()
+import { formatNumber } from '$lib/utils/numbers'
 
 let {
+  id = undefined,
   date = currentDate(),
   mode = $bindable('view'),
-  categories = $bindable([]),
-  entry = $bindable(''),
-  mood = $bindable(),
-  selectedTagIds = $bindable([]),
+  categories = [],
+  entry = '',
+  mood = undefined,
+  selectedTagIds = [],
+
+  onCreate = () => {},
+  onUpdate = () => {},
+  onDelete = () => {},
+  onAddTag = () => {},
+  onEditTag = () => {},
+  onRemoveTag = () => {},
+  onAddCategory = () => {},
+  onEditCategory = () => {},
+  onDeleteCategory = () => {},
 }: EntryProps = $props()
 
-$effect(() => {
-  if (dataStore.categories) {
-    categories = dataStore.categories
-  }
-})
+let inputState: InputState = $state('untouched')
 
 let errors = $derived.by(() => {
   const errs: string[] = []
+  if (inputState === 'untouched') {
+    return errs
+  }
 
-  if (entry.length > entryMaxLength) {
+  if (editModel.entry.length > entryMaxLength) {
     errs.push(
-      `Entry text exceeds maximum length of ${entryMaxLength} characters.`,
+      `Entry text exceeds maximum length of ${formatNumber(entryMaxLength)} characters`,
     )
+  }
+
+  if (editModel.mood === undefined) {
+    errs.push('Mood value is required')
   }
 
   return errs
@@ -65,29 +77,25 @@ let entryTextModal = $state(false)
 let editModel = $state<{
   mood?: MoodValue
   entry: string
-  categories: CategoryWithTags[]
+  // the editmodel categories no longer work, the edit model should only be for the entry itself
   selectedTagIds: string[]
 }>({
   mood: mood,
   entry: '',
-  categories: [],
   selectedTagIds: [],
 })
 
 const resetEditModel = () => {
+  inputState = 'untouched'
   editModel.mood = mood
   editModel.entry = entry
-  editModel.categories = sortCategories(categories)
   editModel.selectedTagIds = selectedTagIds
   resetCategoryDetails()
 }
 
-const applyEditModel = () => {
-  if (editModel.mood !== undefined) {
-    mood = editModel.mood
-  }
+const applyEditModel = async () => {
+  mood = editModel.mood
   entry = editModel.entry
-  categories = editModel.categories
   selectedTagIds = editModel.selectedTagIds
 }
 
@@ -96,18 +104,49 @@ const startEdit = () => {
   mode = 'edit'
 }
 
-const saveChanges = () => {
+const saveChanges = async () => {
+  inputState = 'touched'
+
   if (errors.length > 0) {
     return
   }
 
-  applyEditModel()
+  await applyEditModel()
+
+  if (mood !== undefined) {
+    if (mode === 'create') {
+      onCreate({
+        date,
+        entry,
+        mood,
+        selected_tags: selectedTagIds,
+      })
+    } else if (mode === 'edit' && id) {
+      onUpdate({
+        id,
+        date,
+        entry,
+        mood,
+        selected_tags: selectedTagIds,
+      })
+    }
+  } else {
+    console.error('Mood is undefined, cannot save entry')
+    return
+  }
+
   mode = 'view'
 }
 
 const cancelChanges = () => {
   resetEditModel()
   mode = 'view'
+}
+
+const deleteEntry = () => {
+  if (id) {
+    onDelete(id)
+  }
 }
 
 let categoryDetails: {
@@ -138,7 +177,7 @@ const validateCategoryDetails = () => {
     categoryDetails.name.inputstate = 'invalid'
     categoryDetails.errors.push('Name is required')
   } else if (
-    editModel.categories.find(
+    categories.find(
       c => c.name === categoryDetails.name.value && c.id !== categoryDetails.id,
     )
   ) {
@@ -176,10 +215,8 @@ const submitAddCategory = () => {
     return
   }
 
-  editModel.categories.push({
-    id: Date.now().toString(),
+  onAddCategory({
     name: categoryDetails.name.value,
-    tags: [],
   })
 
   resetCategoryDetails()
@@ -187,19 +224,13 @@ const submitAddCategory = () => {
 
 const submitEditCategory = () => {
   validateCategoryDetails()
-
-  if (categoryDetails.name.inputstate === 'invalid') {
+  if (categoryDetails.name.inputstate === 'invalid' || !categoryDetails.id) {
     return
   }
 
-  editModel.categories = editModel.categories.map(c => {
-    if (c.id === categoryDetails.id) {
-      return {
-        ...c,
-        name: categoryDetails.name.value,
-      }
-    }
-    return c
+  onEditCategory({
+    id: categoryDetails.id,
+    name: categoryDetails.name.value,
   })
 
   resetCategoryDetails()
@@ -208,12 +239,10 @@ const submitEditCategory = () => {
 const deleteCategory = () => {
   if (!categoryDetails.id) return
 
-  editModel.categories = editModel.categories.filter(
-    c => c.id !== categoryDetails.id,
-  )
   editModel.selectedTagIds = editModel.selectedTagIds.filter(tagId => {
-    return editModel.categories.some(c => c.tags.some(t => t.id === tagId))
+    return categories.some(c => c.tags.some(t => t.id === tagId))
   })
+  onDeleteCategory(categoryDetails.id)
 
   resetCategoryDetails()
 }
@@ -232,13 +261,11 @@ const isEdited = $derived.by(() => {
       mood: mood,
       selectedTagIds: selectedTagIds,
       entry: entry,
-      categories: sortCategories(categories),
     },
     {
       mood: editModel.mood,
       selectedTagIds: editModel.selectedTagIds,
       entry: editModel.entry,
-      categories: editModel.categories,
     },
   )
 
@@ -275,22 +302,26 @@ const isEdited = $derived.by(() => {
   <div class="entry-field categories-field">
     <div class="entry-field-title">
       <div class="inner">
-        <Folder />
+        <FolderOpen />
         Categories
       </div>
     </div>
 
     <div class="categories">
-      {#if editModel.categories.length === 0}
+      {#if categories.length === 0}
         <div class="muted">No categories</div>
       {/if}
 
-      {#each editModel.categories as category}
+      {#each sortCategories(categories) as category}
         <Category
+          id={category.id}
           name={category.name}
-          bind:tags={category.tags}
+          tags={category.tags}
           bind:selectedTagIds={editModel.selectedTagIds}
           oneditcategory={() => startEditCategory(category)}
+          onaddtag={tag => onAddTag(tag)}
+          onedittag={tag => onEditTag(tag)}
+          onremovetag={tagId => onRemoveTag(tagId)}
           mode={mode === 'view' ? 'view' : 'select'} />
       {/each}
     </div>
@@ -339,6 +370,7 @@ const isEdited = $derived.by(() => {
                   <Trash />
                   Delete category
                 </Button>
+
                 <Button onclick={submitEditCategory}>
                   <Save />
                   Save changes
@@ -354,7 +386,7 @@ const isEdited = $derived.by(() => {
   <div class="entry-field entry-field-text">
     <div class="entry-field-title">
       <div class="inner">
-        <Notebook />
+        <NotebookText />
         Entry
       </div>
       {#if mode === 'edit' || mode === 'create'}
@@ -421,6 +453,12 @@ const isEdited = $derived.by(() => {
 
   <div class="entry-actions">
     {#if mode === 'view'}
+      {#if id}
+        <Button type="destructive" onclick={() => deleteEntry()}>
+          <Trash /> Delete entry
+        </Button>
+      {/if}
+
       <Button onclick={() => startEdit()}>
         <Pencil /> Edit
       </Button>
@@ -474,8 +512,12 @@ const isEdited = $derived.by(() => {
     display: flex;
     flex-direction: column;
     gap: var(--padding-m);
-    padding: var(--padding-m) 0;
+    padding-top: var(--padding-m);
     width: 100%;
+  }
+
+  .add-category {
+    margin-top: var(--padding-m);
   }
 
   .entry-field {

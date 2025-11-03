@@ -17,13 +17,14 @@ import {
   Trash,
   X,
 } from 'lucide-svelte'
-import type { Tag } from '$lib/types/log'
+import type { NewTag, Tag } from '$lib/types/log'
 import ColorPicker from '$lib/components/ColorPicker.svelte'
 import Label from '$lib/components/Label.svelte'
 
 let {
+  id,
   name,
-  tags = $bindable([]),
+  tags = [],
   selectedTagIds = $bindable([]),
   mode = 'view',
   onaddtag,
@@ -159,16 +160,11 @@ const submitAddTag = () => {
     return
   }
 
-  const newTag = {
+  const newTag: NewTag = {
     name: tagDetails.name.value,
     color: tagDetails.color.value as Color,
+    category_id: id,
   }
-
-  // timestamp, await ID from backend #TODO
-  tags.push({
-    id: Date.now().toString(),
-    ...newTag,
-  })
 
   if (onaddtag) {
     onaddtag(newTag)
@@ -190,15 +186,13 @@ const submitEditTag = () => {
     return
   }
 
-  const editedTag = {
-    id: tagDetails.id,
-    name: tagDetails.name.value,
-    color: tagDetails.color.value as Color,
-  }
-
   const tagIndex = tags.findIndex(tag => tag.id === tagDetails.id)
   if (tagIndex !== -1) {
-    tags[tagIndex] = editedTag
+    const editedTag = {
+      ...tags[tagIndex],
+      name: tagDetails.name.value,
+      color: tagDetails.color.value as Color,
+    }
 
     if (onedittag) {
       onedittag(editedTag)
@@ -232,7 +226,6 @@ const deleteEditTag = () => {
 }
 
 const removeTag = (tagId: string) => {
-  tags = tags.filter(tag => tag.id !== tagId)
   selectedTagIds = selectedTagIds.filter(id => id !== tagId)
   if (onremovetag) {
     onremovetag(tagId)
@@ -380,10 +373,12 @@ const onclickeditcategory = () => {
       </div>
     {:else}
       {#each tags as tag}
-        <button
+        <svelte:element
+          this={mode === 'view' ? 'a' : 'button'}
+          href={mode === 'view' ? `/app/tag/${tag.id}` : undefined}
           class="plain"
           onclick={() => clickTag(tag)}
-          role="option"
+          role={mode === 'select' ? undefined : 'option'}
           aria-selected={selectedTagIds.includes(tag.id)}
           aria-label={mode === 'select'
             ? selectedTagIds.includes(tag.id)
@@ -396,7 +391,7 @@ const onclickeditcategory = () => {
             solid={selectedTagIds.includes(tag.id)}>
             {tag.name}
           </Chip>
-        </button>
+        </svelte:element>
       {/each}
     {/if}
   </div>

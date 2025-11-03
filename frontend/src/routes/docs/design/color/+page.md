@@ -20,9 +20,17 @@ Base also includes `05` and `95` shades for extra light and extra dark variants 
 
 <DocsColorRow color="green" />
 
+## Lime
+
+<DocsColorRow color="lime" />
+
 ## Yellow
 
 <DocsColorRow color="yellow" />
+
+## Orange
+
+<DocsColorRow color="orange" />
 
 ## Red
 

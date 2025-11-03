@@ -3,11 +3,13 @@ import type { CalendarProps } from '$lib/types/components/calendar'
 import {
   calendarDaysInMonth,
   calendarDefaults,
+  currentDate,
   formatMonth,
   monthDateRange,
 } from '$lib/utils/log'
 import { ChevronLeft, ChevronRight } from 'lucide-svelte'
 import { useDataStore } from '$lib/store/dataStore.svelte'
+import { page } from '$app/state'
 
 let dataStore = useDataStore()
 
@@ -41,7 +43,7 @@ const formatDay = (day: number): string => {
 }
 
 const entryLink = (day: number): string => {
-  return `/app/entry/${formatDay(day)}`
+  return `/app/entry/${formatDay(day)}/`
 }
 
 const dayMood = (day: number | null) => {
@@ -53,6 +55,24 @@ const dayMood = (day: number | null) => {
     }
   }
   return 'null'
+}
+
+const isToday = (day: number | null) => {
+  const today = currentDate()
+  return today === formatDay(day || 0)
+}
+
+const isFuture = (day: number | null) => {
+  const today = currentDate()
+  return new Date(formatDay(day || 0)) > new Date(today)
+}
+
+const isActive = (day: number | null) => {
+  if (day === null) {
+    return false
+  }
+  const url = page.url.pathname
+  return url === entryLink(day)
 }
 </script>
 
@@ -90,7 +110,11 @@ const dayMood = (day: number | null) => {
     {#each daysInMonth as week}
       <div class="row week">
         {#each week as day}
-          <div class="day mood-{dayMood(day)}">
+          <div
+            class="day mood-{dayMood(day)}"
+            class:today={isToday(day)}
+            class:future={isFuture(day)}
+            class:active={isActive(day)}>
             {#if day}
               <a href={entryLink(day)} class="day-button">{day}</a>
             {/if}
@@ -170,6 +194,39 @@ const dayMood = (day: number | null) => {
         text-align: center;
         width: calc(100% / 7);
         padding: var(--calendar-button-spacing);
+
+        &.today {
+          position: relative;
+
+          .day-button {
+            color: var(--text-primary);
+          }
+
+          &:after {
+            content: '';
+            display: block;
+            width: 0.25rem;
+            height: 0.25rem;
+            background-color: var(--color-base-100);
+            border-radius: 50%;
+            position: absolute;
+            top: 0.33rem;
+            right: 0.33rem;
+          }
+        }
+
+        &.future {
+          .day-button {
+            color: var(--text-dimmed);
+          }
+        }
+
+        &.active {
+          .day-button {
+            font-weight: 600;
+            color: var(--text-primary);
+          }
+        }
 
         @for $i from 1 through 5 {
           &.mood-#{$i} {

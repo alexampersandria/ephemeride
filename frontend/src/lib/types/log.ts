@@ -4,32 +4,69 @@ import type { MoodValue } from './components/moodinput'
 export type Category = {
   id: string
   name: string
+  user_id: string
+  created_at: number
 }
 
-export type NewCategory = Omit<Category, 'id'>
+export type NewCategory = {
+  name: string
+}
+
+export type EditCategory = {
+  id: string
+  name: string
+}
 
 export type CategoryWithTags = Category & {
   tags: Tag[]
-  selectedTagIds?: string[]
+  selected_tags?: string[]
 }
 
 export type Tag = {
+  id: string
+  user_id: string
+  created_at: number
+  name: string
+  color: Color
+  category_id: string
+}
+
+export type NewTag = {
+  name: string
+  color: Color
+  category_id: string
+}
+
+export type EditTag = {
   id: string
   name: string
   color: Color
 }
 
-export type NewTag = Omit<Tag, 'id'>
-
 export type Entry = {
+  id: string
+  user_id: string
+  date: string
+  created_at: number
+  mood: MoodValue
+  entry?: string
+  selected_tags: string[]
+}
+
+export type NewEntry = {
+  date: string
+  mood: MoodValue
+  entry?: string
+  selected_tags: string[]
+}
+
+export type EditEntry = {
   id: string
   date: string
   mood: MoodValue
   entry?: string
-  selectedTagIds: string[]
+  selected_tags: string[]
 }
-
-export type NewEntry = Omit<Entry, 'id'>
 
 export const entryMaxLength = 1000
 
@@ -40,22 +77,89 @@ export const defaultCategories: CategoryWithTags[] = [
   {
     id: crypto.randomUUID(),
     name: 'Activities',
+    user_id: '',
+    created_at: 0,
     tags: [
-      { id: crypto.randomUUID(), name: 'Work', color: 'base' },
-      { id: crypto.randomUUID(), name: 'Movie', color: 'base' },
-      { id: crypto.randomUUID(), name: 'Exercise', color: 'base' },
-      { id: crypto.randomUUID(), name: 'Read', color: 'base' },
-      { id: crypto.randomUUID(), name: 'Shopping', color: 'base' },
-      { id: crypto.randomUUID(), name: 'Gaming', color: 'base' },
+      {
+        id: crypto.randomUUID(),
+        user_id: '',
+        created_at: 0,
+        name: 'Work',
+        color: 'base',
+        category_id: '',
+      },
+      {
+        id: crypto.randomUUID(),
+        user_id: '',
+        created_at: 0,
+        name: 'Movie',
+        color: 'base',
+        category_id: '',
+      },
+      {
+        id: crypto.randomUUID(),
+        user_id: '',
+        created_at: 0,
+        name: 'Exercise',
+        color: 'base',
+        category_id: '',
+      },
+      {
+        id: crypto.randomUUID(),
+        user_id: '',
+        created_at: 0,
+        name: 'Read',
+        color: 'base',
+        category_id: '',
+      },
+      {
+        id: crypto.randomUUID(),
+        user_id: '',
+        created_at: 0,
+        name: 'Shopping',
+        color: 'base',
+        category_id: '',
+      },
+      {
+        id: crypto.randomUUID(),
+        user_id: '',
+        created_at: 0,
+        name: 'Gaming',
+        color: 'base',
+        category_id: '',
+      },
     ],
   },
   {
     id: crypto.randomUUID(),
     name: 'Tags',
+    user_id: '',
+    created_at: 0,
     tags: [
-      { id: crypto.randomUUID(), name: 'Travel', color: 'base' },
-      { id: crypto.randomUUID(), name: 'Important', color: 'blue' },
-      { id: crypto.randomUUID(), name: 'Sick', color: 'red' },
+      {
+        id: crypto.randomUUID(),
+        user_id: '',
+        created_at: 0,
+        name: 'Travel',
+        color: 'base',
+        category_id: '',
+      },
+      {
+        id: crypto.randomUUID(),
+        user_id: '',
+        created_at: 0,
+        name: 'Important',
+        color: 'blue',
+        category_id: '',
+      },
+      {
+        id: crypto.randomUUID(),
+        user_id: '',
+        created_at: 0,
+        name: 'Sick',
+        color: 'red',
+        category_id: '',
+      },
     ],
   },
 ]

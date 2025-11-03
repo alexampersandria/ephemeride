@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_oswgnu4SEc
 createdAt: 2025-10-30T19:02:17.163338
-updatedAt: 2025-10-31T10:51:14.368965
+updatedAt: 2025-11-03T11:37:58.080644
 workspaceId: wk_BESCzWuhSE
 folderId: fl_MutDAEV82K
 authentication: {}
@@ -10,8 +10,9 @@ authenticationType: null
 body:
   text: |-
     {
-      "mood": 5,
-      "date": "2025-07-26",
+      "mood": 1,
+      "date": "2026-01-26",
+      "entry": "",
       "selected_tags": []
     }
 bodyType: application/json

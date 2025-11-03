@@ -33,7 +33,7 @@ export const compareRoutes = (a: string, b: string) => {
 
 export const isActiveRoute = (route: string) => {
   if (browser) {
-    return compareRoutes(route, page.route.id || '')
+    return compareRoutes(route, page.url.pathname || '')
   }
 }
 

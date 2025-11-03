@@ -1,6 +1,7 @@
 import type { NewTag, Tag } from '../log'
 
 export type CategoryProps = {
+  id: string
   name: string
   tags: Tag[]
   selectedTagIds?: string[]

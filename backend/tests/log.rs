@@ -1175,3 +1175,40 @@ fn test_get_entries_in_range() {
   assert!(!entry_ids.contains(&entry3.id));
   assert!(!entry_ids.contains(&entry4.id));
 }
+
+#[test]
+fn test_delete_category_with_tags_where_tags_are_also_in_use() {
+  let user = create_test_user();
+  let category = log::create_category(log::CreateCategory {
+    name: "To Delete".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  let tag = log::create_tag(log::CreateTag {
+    name: "Tag".to_string(),
+    color: "blue".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  let entry = log::create_entry(log::CreateEntry {
+    date: "2025-10-17".to_string(),
+    mood: 5,
+    entry: Some("Test entry".to_string()),
+    selected_tags: vec![tag.id.clone()],
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let deleted = log::delete_category(&category.id, &user.id);
+
+  let found_tag = log::get_tag(&tag.id, &user.id);
+  let found_entry = log::get_entry_with_tags(&entry.id, &user.id);
+
+  assert!(deleted.is_ok());
+  assert_eq!(deleted.unwrap(), true);
+  assert!(found_tag.is_err());
+  assert!(found_entry.is_ok());
+  let entry_with_tags = found_entry.unwrap();
+  assert!(entry_with_tags.selected_tags.is_empty());
+}

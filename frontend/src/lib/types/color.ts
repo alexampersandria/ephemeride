@@ -1,7 +1,9 @@
 export const saturatedColors = [
   'blue',
   'green',
+  'lime',
   'red',
+  'orange',
   'yellow',
   'purple',
   'pink',
@@ -17,8 +19,10 @@ export const colorPriority: Record<Color, number> = {
   base: 0,
   blue: 1,
   green: 2,
+  lime: 3,
   yellow: 4,
-  purple: 5,
-  pink: 6,
+  orange: 5,
+  purple: 6,
+  pink: 7,
   red: 99,
 }

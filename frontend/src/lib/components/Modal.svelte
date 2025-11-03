@@ -1,4 +1,5 @@
 <script lang="ts">
+import { page } from '$app/state'
 import type { ModalProps } from '$lib/types/components/modal'
 import { firstFocusable } from '$lib/utils/focus'
 import { X } from 'lucide-svelte'
@@ -48,6 +49,12 @@ $effect(() => {
 
   return () => {
     window.removeEventListener('keydown', onKeyDown)
+  }
+})
+
+$effect(() => {
+  if (page.url.pathname) {
+    close()
   }
 })
 </script>

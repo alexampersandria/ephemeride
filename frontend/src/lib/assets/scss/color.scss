@@ -63,17 +63,41 @@ $color-green-80: oklch($oklch-l-80 $oklch-c-80 145.48 / 1);
 $color-green-90: oklch($oklch-l-90 $oklch-c-90 145.75 / 1);
 $color-green-100: oklch($oklch-l-100 $oklch-c-100 146.34 / 1);
 
-$color-yellow-00: oklch($oklch-l-00 $oklch-c-00 73.14 / 1);
-$color-yellow-10: oklch($oklch-l-10 $oklch-c-10 62.6 / 1);
-$color-yellow-20: oklch($oklch-l-20 $oklch-c-20 64.18 / 1);
-$color-yellow-30: oklch($oklch-l-30 $oklch-c-30 66.98 / 1);
-$color-yellow-40: oklch($oklch-l-40 $oklch-c-40 69.66 / 1);
-$color-yellow-50: oklch($oklch-l-50 $oklch-c-50 74.93 / 1);
-$color-yellow-60: oklch($oklch-l-60 $oklch-c-60 75.9 / 1);
-$color-yellow-70: oklch($oklch-l-70 $oklch-c-70 79.91 / 1);
-$color-yellow-80: oklch($oklch-l-80 $oklch-c-80 85.24 / 1);
-$color-yellow-90: oklch($oklch-l-90 $oklch-c-90 89.95 / 1);
-$color-yellow-100: oklch($oklch-l-100 $oklch-c-100 92.51 / 1);
+$color-lime-00: oklch($oklch-l-00 $oklch-c-00 110.28 / 1);
+$color-lime-10: oklch($oklch-l-10 $oklch-c-10 112.96 / 1);
+$color-lime-20: oklch($oklch-l-20 $oklch-c-20 114.34 / 1);
+$color-lime-30: oklch($oklch-l-30 $oklch-c-30 115.96 / 1);
+$color-lime-40: oklch($oklch-l-40 $oklch-c-40 116.34 / 1);
+$color-lime-50: oklch($oklch-l-50 $oklch-c-50 117.34 / 1);
+$color-lime-60: oklch($oklch-l-60 $oklch-c-60 118.34 / 1);
+$color-lime-70: oklch($oklch-l-70 $oklch-c-70 119.34 / 1);
+$color-lime-80: oklch($oklch-l-80 $oklch-c-80 120.34 / 1);
+$color-lime-90: oklch($oklch-l-90 $oklch-c-90 121.34 / 1);
+$color-lime-100: oklch($oklch-l-100 $oklch-c-100 122.34 / 1);
+
+$color-yellow-00: oklch($oklch-l-00 $oklch-c-00 83.14 / 1);
+$color-yellow-10: oklch($oklch-l-10 $oklch-c-10 72.6 / 1);
+$color-yellow-20: oklch($oklch-l-20 $oklch-c-20 74.18 / 1);
+$color-yellow-30: oklch($oklch-l-30 $oklch-c-30 76.98 / 1);
+$color-yellow-40: oklch($oklch-l-40 $oklch-c-40 79.66 / 1);
+$color-yellow-50: oklch($oklch-l-50 $oklch-c-50 84.93 / 1);
+$color-yellow-60: oklch($oklch-l-60 $oklch-c-60 85.9 / 1);
+$color-yellow-70: oklch($oklch-l-70 $oklch-c-70 89.91 / 1);
+$color-yellow-80: oklch($oklch-l-80 $oklch-c-80 95.24 / 1);
+$color-yellow-90: oklch($oklch-l-90 $oklch-c-90 99.95 / 1);
+$color-yellow-100: oklch($oklch-l-100 $oklch-c-100 102.51 / 1);
+
+$color-orange-00: oklch($oklch-l-00 $oklch-c-00 45.23 / 1);
+$color-orange-10: oklch($oklch-l-10 $oklch-c-10 48.12 / 1);
+$color-orange-20: oklch($oklch-l-20 $oklch-c-20 50.34 / 1);
+$color-orange-30: oklch($oklch-l-30 $oklch-c-30 52.21 / 1);
+$color-orange-40: oklch($oklch-l-40 $oklch-c-40 54.36 / 1);
+$color-orange-50: oklch($oklch-l-50 $oklch-c-50 56.73 / 1);
+$color-orange-60: oklch($oklch-l-60 $oklch-c-60 58.96 / 1);
+$color-orange-70: oklch($oklch-l-70 $oklch-c-70 60.78 / 1);
+$color-orange-80: oklch($oklch-l-80 $oklch-c-80 62.91 / 1);
+$color-orange-90: oklch($oklch-l-90 $oklch-c-90 64.34 / 1);
+$color-orange-100: oklch($oklch-l-100 $oklch-c-100 65.21 / 1);
 
 $color-red-00: oklch($oklch-l-00 $oklch-c-00 25.64 / 1);
 $color-red-10: oklch($oklch-l-10 $oklch-c-10 28.52 / 1);
@@ -111,9 +135,9 @@ $color-pink-80: oklch($oklch-l-80 $oklch-c-80 348.59 / 1);
 $color-pink-90: oklch($oklch-l-90 $oklch-c-90 348.79 / 1);
 $color-pink-100: oklch($oklch-l-100 $oklch-c-100 347.15 / 1);
 
-$saturatedColors: ('blue', 'green', 'yellow', 'red', 'purple', 'pink');
+$saturatedColors: ('blue', 'green', 'lime', 'yellow', 'orange', 'red', 'purple', 'pink');
 $colors: list.append($saturatedColors, 'base');
-$moodColors: ('red', 'yellow', 'green', 'blue', 'pink');
+$moodColors: ('red', 'orange', 'yellow', 'lime', 'green');
 
 #root {
   --color-base-00: #{$color-base-00};
@@ -142,6 +166,18 @@ $moodColors: ('red', 'yellow', 'green', 'blue', 'pink');
   --color-blue-90: #{$color-blue-90};
   --color-blue-100: #{$color-blue-100};
 
+  --color-lime-00: #{$color-lime-00};
+  --color-lime-10: #{$color-lime-10};
+  --color-lime-20: #{$color-lime-20};
+  --color-lime-30: #{$color-lime-30};
+  --color-lime-40: #{$color-lime-40};
+  --color-lime-50: #{$color-lime-50};
+  --color-lime-60: #{$color-lime-60};
+  --color-lime-70: #{$color-lime-70};
+  --color-lime-80: #{$color-lime-80};
+  --color-lime-90: #{$color-lime-90};
+  --color-lime-100: #{$color-lime-100};
+
   --color-green-00: #{$color-green-00};
   --color-green-10: #{$color-green-10};
   --color-green-20: #{$color-green-20};
@@ -165,6 +201,18 @@ $moodColors: ('red', 'yellow', 'green', 'blue', 'pink');
   --color-yellow-80: #{$color-yellow-80};
   --color-yellow-90: #{$color-yellow-90};
   --color-yellow-100: #{$color-yellow-100};
+
+  --color-orange-00: #{$color-orange-00};
+  --color-orange-10: #{$color-orange-10};
+  --color-orange-20: #{$color-orange-20};
+  --color-orange-30: #{$color-orange-30};
+  --color-orange-40: #{$color-orange-40};
+  --color-orange-50: #{$color-orange-50};
+  --color-orange-60: #{$color-orange-60};
+  --color-orange-70: #{$color-orange-70};
+  --color-orange-80: #{$color-orange-80};
+  --color-orange-90: #{$color-orange-90};
+  --color-orange-100: #{$color-orange-100};
 
   --color-red-00: #{$color-red-00};
   --color-red-10: #{$color-red-10};
@@ -297,7 +345,7 @@ $moodColors: ('red', 'yellow', 'green', 'blue', 'pink');
   --button-primary-color-active: var(--button-primary-color);
 
   --button-destructive-background: var(--color-red-50);
-  --button-destructive-border: var(--color-red-30);
+  --button-destructive-border: var(--color-red-40);
   --button-destructive-color: var(--button-primary-color);
 
   --button-destructive-background-hover: var(--color-red-40);
@@ -441,7 +489,16 @@ $moodColors: ('red', 'yellow', 'green', 'blue', 'pink');
   --button-primary-border-active: var(--color-base-70);
   --button-primary-color-active: var(--button-primary-color);
 
-  --button-destructive-color: var(--button-color);
+  --button-destructive-background: var(--color-red-40);
+  --button-destructive-border: var(--color-red-30);
+  --button-destructive-color: var(--text-primary);
+
+  --button-destructive-background-hover: var(--color-red-30);
+  --button-destructive-border-hover: var(--button-destructive-border);
+  --button-destructive-color-hover: var(--button-destructive-color);
+  --button-destructive-background-active: var(--color-red-20);
+  --button-destructive-border-active: var(--button-destructive-border);
+  --button-destructive-color-active: var(--button-destructive-color);
 
   --modal-background: var(--background-primary);
   --modal-backdrop: var(--background-overlay);

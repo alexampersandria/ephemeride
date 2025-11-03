@@ -38,7 +38,7 @@ pub struct CreateEntry {
   pub date: String,
   #[validate(range(min = 1, max = 5))]
   pub mood: i32,
-  #[validate(length(min = 1, max = 1000))]
+  #[validate(length(min = 0, max = 1000))]
   pub entry: Option<String>,
   pub selected_tags: Vec<String>,
   #[validate(length(min = 1, max = 255))]
@@ -53,7 +53,7 @@ pub struct EditEntry {
   pub date: String,
   #[validate(range(min = 1, max = 5))]
   pub mood: i32,
-  #[validate(length(min = 1, max = 1000))]
+  #[validate(length(min = 0, max = 1000))]
   pub entry: Option<String>,
   pub selected_tags: Vec<String>,
   #[validate(length(min = 1, max = 255))]
@@ -339,6 +339,7 @@ pub fn get_entries_in_range(
     .filter(entries::date.ge(from_naive_date))
     .filter(entries::date.le(to_naive_date))
     .filter(entries::user_id.eq(user_id))
+    .order(entries::date.asc())
     .load::<Entry>(&mut conn);
 
   if results.is_err() {

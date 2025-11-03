@@ -5,12 +5,14 @@ import {
   Book,
   CalendarDays,
   ChartLine,
+  FolderOpen,
   Github,
   House,
   LogOut,
   PanelLeftClose,
   PanelLeftOpen,
   Plus,
+  ScrollText,
   Settings,
   User,
 } from 'lucide-svelte'
@@ -25,10 +27,12 @@ import ThemeToggle from '$lib/components/ThemeToggle.svelte'
 import Label from '$lib/components/Label.svelte'
 import Logo from '$lib/components/Logo.svelte'
 import Calendar from '$lib/components/Calendar.svelte'
+import { useDataStore } from '$lib/store/dataStore.svelte'
 
 let { children } = $props()
 
 let userStore = useUserStore()
+let dataStore = useDataStore()
 let uiStore = useUiStore()
 
 let isDragging = $state(false)
@@ -70,6 +74,16 @@ const toggleLeftMenuMobile = () => {
 const handleLogout = () => {
   userDetailsModal = false
   userStore.logOut()
+}
+
+const entryForToday = () => {
+  if (dataStore.entries) {
+    const entry = dataStore.entries[currentDate()]
+    if (entry) {
+      return entry
+    }
+  }
+  return null
 }
 </script>
 
@@ -114,13 +128,19 @@ const handleLogout = () => {
 
     <div class="right">
       <Button href="/app/entry/{currentDate()}" left>
-        <Plus />
-        New Entry
-        <div class="new-entry-chip">
-          <Chip>
-            {currentDate()}
-          </Chip>
-        </div>
+        {#if entryForToday()}
+          <CalendarDays />
+          Today's entry
+        {:else}
+          <Plus />
+          New entry
+
+          <div class="new-entry-chip">
+            <Chip>
+              {currentDate()}
+            </Chip>
+          </div>
+        {/if}
       </Button>
     </div>
   </div>
@@ -133,14 +153,19 @@ const handleLogout = () => {
           <div class="ellipsis">Home</div>
         </Button>
 
-        <Button type="navigation" href="/app/calendar" left>
-          <CalendarDays />
-          <div class="ellipsis">Calendar</div>
-        </Button>
-
         <Button type="navigation" href="/app/stats" left>
           <ChartLine />
           <div class="ellipsis">Stats</div>
+        </Button>
+
+        <Button type="navigation" href="/app/entries" left>
+          <ScrollText />
+          <div class="ellipsis">Entries</div>
+        </Button>
+
+        <Button type="navigation" href="/app/categories" left>
+          <FolderOpen />
+          <div class="ellipsis">Categories</div>
         </Button>
       </div>
 
@@ -188,14 +213,19 @@ const handleLogout = () => {
 {#if userStore.userDetails}
   <Modal bind:open={userDetailsModal}>
     <div class="app-modal user-details">
-      <div class="title">User Details</div>
-      <div class="name">Display Name: {userStore.userDetails.name}</div>
+      <div class="title">User details</div>
+      <div class="name">Display name: {userStore.userDetails.name}</div>
       <div class="email">Email: {userStore.userDetails.email}</div>
       <div class="member-since">
         Member since: {fullDate(userStore.userDetails.created_at)}
       </div>
 
-      <div class="logout">
+      <div class="user-actions">
+        <Button href="/app/user/" fullwidth>
+          <User />
+          Manage account
+        </Button>
+
         <Button onclick={handleLogout} fullwidth>
           <LogOut />
           Log out
@@ -582,8 +612,10 @@ const handleLogout = () => {
     font-weight: 600;
   }
 
-  .logout {
-    margin-top: var(--padding-m);
+  .user-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-xs);
   }
 
   .internal {

@@ -43,17 +43,17 @@ still very much a WIP :)
 ## Usage
 
 <DocsExample>
-  <Category name="Activities" />
+  <Category id="1" name="Activities" />
 </DocsExample>
 
 ```svelte
-<Category name="Activities" />
+<Category id="1" name="Activities" />
 ```
 
 ### Tags + Select
 
 <DocsExample>
-  <Category name="Activities" mode="select" bind:tags />
+  <Category id="1" name="Activities" mode="select" bind:tags />
 </DocsExample>
 
 ```svelte
@@ -73,5 +73,5 @@ let tags = $state([
 ])
 </script>
 
-<Category name="Activities" mode="select" bind:tags />
+<Category id="1" name="Activities" mode="select" bind:tags />
 ```

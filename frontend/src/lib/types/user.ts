@@ -6,7 +6,7 @@ export type UserDetails = {
   invite?: string
 }
 
-export type SessionResponse = {
+export type Session = {
   id: string
   user_id: string
   created_at: string

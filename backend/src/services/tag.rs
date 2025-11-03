@@ -203,19 +203,19 @@ pub fn delete_all_category_tags(category_id: &str, user_id: &str) -> Result<bool
     return Err(EphemerideError::CategoryNotFound);
   }
 
-  let mut conn = establish_connection();
+  let category_tags = match get_category_tags(category_id, user_id) {
+    Ok(tags) => tags,
+    Err(error) => return Err(error),
+  };
 
-  let result = diesel::delete(
-    tags::table
-      .filter(tags::category_id.eq(category_id))
-      .filter(tags::user_id.eq(user_id)),
-  )
-  .execute(&mut conn);
-
-  match result {
-    Ok(_) => Ok(true),
-    Err(_) => Err(EphemerideError::DatabaseError),
+  for tag in category_tags {
+    match delete_tag(&tag.id, user_id) {
+      Ok(deleted) => deleted,
+      Err(error) => return Err(error),
+    };
   }
+
+  Ok(true)
 }
 
 pub fn get_category_tags(category_id: &str, user_id: &str) -> Result<Vec<Tag>, EphemerideError> {
