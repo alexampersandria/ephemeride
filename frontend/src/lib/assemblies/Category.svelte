@@ -434,7 +434,7 @@ const onClickEditCategory = () => {
   .category-info {
     display: flex;
     justify-content: space-between;
-    gap: var(--padding-s);
+    gap: var(--padding-xs);
     align-items: center;
 
     .category-name {
@@ -457,7 +457,7 @@ const onClickEditCategory = () => {
   .category-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--padding-s);
+    gap: var(--padding-xs);
     max-width: 100%;
   }
 }

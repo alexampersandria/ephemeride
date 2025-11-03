@@ -17,7 +17,9 @@ let entry = $derived.by(() => {
 })
 
 // force reload to reset Entry component when date param changes
-let forceReload = $state(false)
+// this is a hack and should be fixed properly later
+// #TODO: above
+let forceReload = $state(true)
 $effect(() => {
   if (data.date) {
     dataStore.getEntry(data.date)
@@ -92,8 +94,14 @@ $effect(() => {
           return dataStore.deleteCategory(categoryId)
         }} />
     {:else}
-      <Spinner />
+      <div class="loading">
+        <Spinner />
+      </div>
     {/if}
+  {:else}
+    <div class="loading">
+      <Spinner />
+    </div>
   {/if}
 </div>
 
@@ -102,5 +110,11 @@ $effect(() => {
   display: flex;
   justify-content: center;
   padding: var(--padding-l);
+
+  .loading {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 }
 </style>

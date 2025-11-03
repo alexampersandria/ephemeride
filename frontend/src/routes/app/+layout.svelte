@@ -316,6 +316,7 @@ const entryForToday = () => {
   }
 
   .content {
+    position: relative;
     grid-area: content;
     background-color: var(--background-primary);
     border-radius: var(--radius-m);
