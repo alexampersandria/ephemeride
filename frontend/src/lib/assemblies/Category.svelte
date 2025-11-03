@@ -27,11 +27,11 @@ let {
   tags = [],
   selectedTagIds = $bindable([]),
   mode = 'view',
-  onaddtag,
-  onremovetag,
-  onselecttag,
-  onedittag,
-  oneditcategory,
+  onAddTag,
+  onRemoveTag,
+  onSelectTag,
+  onEditTag,
+  onEditCategory,
 }: CategoryProps = $props()
 
 const clickTag = (tag: Tag) => {
@@ -42,8 +42,8 @@ const clickTag = (tag: Tag) => {
       selectedTagIds = [...selectedTagIds, tag.id]
     }
 
-    if (onselecttag) {
-      onselecttag(tag, selectedTagIds.includes(tag.id))
+    if (onSelectTag) {
+      onSelectTag(tag, selectedTagIds.includes(tag.id))
     }
   } else if (mode === 'edit') {
     openEditTag(tag.id)
@@ -76,6 +76,7 @@ let tagDetails: {
     inputstate: InputState
   }
   errors: string[]
+  loading: boolean
 } = $state({
   mode: 'add',
   open: false,
@@ -89,6 +90,7 @@ let tagDetails: {
     inputstate: 'untouched',
   },
   errors: [] as string[],
+  loading: false,
 })
 
 const openAddTag = () => {
@@ -148,7 +150,7 @@ const validateTagDetails = (requireUntouched = true) => {
   }
 }
 
-const submitAddTag = () => {
+const submitAddTag = async () => {
   validateTagDetails(false)
 
   if (
@@ -166,14 +168,21 @@ const submitAddTag = () => {
     category_id: id,
   }
 
-  if (onaddtag) {
-    onaddtag(newTag)
+  if (onAddTag) {
+    tagDetails.loading = true
+    const res = await onAddTag(newTag)
+    if (res) {
+      closeTagDetails()
+    } else {
+      tagDetails.loading = false
+      tagDetails.errors = ['Failed to add tag']
+    }
+  } else {
+    resetTagDetails()
   }
-
-  resetTagDetails()
 }
 
-const submitEditTag = () => {
+const submitEditTag = async () => {
   validateTagDetails(false)
 
   if (
@@ -194,12 +203,21 @@ const submitEditTag = () => {
       color: tagDetails.color.value as Color,
     }
 
-    if (onedittag) {
-      onedittag(editedTag)
+    if (onEditTag) {
+      tagDetails.loading = true
+      const res = await onEditTag(editedTag)
+      if (res) {
+        closeTagDetails()
+      } else {
+        tagDetails.loading = false
+        tagDetails.errors = ['Failed to edit tag']
+      }
+    } else {
+      closeTagDetails()
     }
+  } else {
+    resetTagDetails()
   }
-
-  resetTagDetails()
 }
 
 $effect(() => {
@@ -215,20 +233,25 @@ const resetTagDetails = () => {
   tagDetails.color.value = undefined
   tagDetails.color.inputstate = 'untouched'
   tagDetails.errors = []
+  tagDetails.loading = false
   tagDetails.open = false
 }
 
-const deleteEditTag = () => {
+const deleteEditTag = async () => {
   if (tagDetails.id) {
-    removeTag(tagDetails.id)
-    closeTagDetails()
-  }
-}
-
-const removeTag = (tagId: string) => {
-  selectedTagIds = selectedTagIds.filter(id => id !== tagId)
-  if (onremovetag) {
-    onremovetag(tagId)
+    selectedTagIds = selectedTagIds.filter(id => id !== tagDetails.id)
+    if (onRemoveTag) {
+      tagDetails.loading = true
+      const res = await onRemoveTag(tagDetails.id)
+      if (res) {
+        closeTagDetails()
+      } else {
+        tagDetails.loading = false
+        tagDetails.errors = ['Failed to delete tag']
+      }
+    } else {
+      closeTagDetails()
+    }
   }
 }
 
@@ -239,17 +262,17 @@ const validAddTag = $derived.by(() => {
   )
 })
 
-const onclickeditcategory = () => {
-  if (oneditcategory) {
-    oneditcategory()
+const onClickEditCategory = () => {
+  if (onEditCategory) {
+    onEditCategory()
   }
 }
 </script>
 
 <div class="category">
   <div class="category-info">
-    {#if (mode === 'edit' || mode === 'select') && oneditcategory}
-      <button onclick={onclickeditcategory} aria-label="Edit {name} category">
+    {#if (mode === 'edit' || mode === 'select') && onEditCategory}
+      <button onclick={onClickEditCategory} aria-label="Edit {name} category">
         <Chip>
           <Settings />
         </Chip>
@@ -316,7 +339,7 @@ const onclickeditcategory = () => {
 
               {#if tagDetails.errors.length > 0}
                 <Alert type="error" size="small">
-                  <b>Invalid tag</b>
+                  <b>Error</b>
                   <ul class="muted">
                     {#each tagDetails.errors as error}
                       <li>{error}</li>

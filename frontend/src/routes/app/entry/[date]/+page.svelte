@@ -2,20 +2,17 @@
 import Entry from '$lib/assemblies/Entry.svelte'
 import Spinner from '$lib/components/Spinner.svelte'
 import { useDataStore } from '$lib/store/dataStore.svelte'
-import type { Entry as EntryType } from '$lib/types/log'
 import type { PageProps } from './$types'
 
 let { data }: PageProps = $props()
 
 let dataStore = useDataStore()
 
-let entry: EntryType | null = $state(null)
-
-$effect(() => {
-  if (dataStore) {
-    dataStore.getEntry(data.date).then(e => {
-      entry = e
-    })
+let entry = $derived.by(() => {
+  if (dataStore.entries) {
+    return dataStore.entries[data.date]
+  } else {
+    return null
   }
 })
 
@@ -23,6 +20,7 @@ $effect(() => {
 let forceReload = $state(false)
 $effect(() => {
   if (data.date) {
+    dataStore.getEntry(data.date)
     forceReload = true
     setTimeout(() => {
       forceReload = false
@@ -33,78 +31,65 @@ $effect(() => {
 
 <div class="entry-page">
   {#if !forceReload}
-    {#if entry && dataStore.categories}
+    {#if dataStore.categories}
       <Entry
-        mode="view"
-        id={entry.id}
-        date={entry.date}
-        entry={entry.entry || ''}
-        mood={entry.mood}
-        selectedTagIds={entry.selected_tags}
-        categories={dataStore.categories}
-        onUpdate={entry => {
-          dataStore.updateEntry(entry)
-        }}
-        onDelete={id => {
-          dataStore.deleteEntry(id)
-        }}
-        onAddTag={tag => {
-          dataStore.createTag(tag)
-        }}
-        onEditTag={tag => {
-          dataStore.updateTag({
-            id: tag.id,
-            name: tag.name,
-            color: tag.color,
-          })
-        }}
-        onRemoveTag={tagId => {
-          dataStore.deleteTag(tagId)
-        }}
-        onAddCategory={category => {
-          dataStore.createCategory(category)
-        }}
-        onEditCategory={category => {
-          dataStore.updateCategory({
-            id: category.id,
-            name: category.name,
-          })
-        }}
-        onDeleteCategory={categoryId => {
-          dataStore.deleteCategory(categoryId)
-        }} />
-    {:else if dataStore.categories}
-      <Entry
+        mode={entry ? 'view' : 'create'}
+        id={entry ? entry.id : undefined}
         date={data.date}
-        mode="create"
+        entry={entry ? entry.entry : undefined}
+        mood={entry ? entry.mood : undefined}
+        selectedTagIds={entry ? entry.selected_tags : undefined}
         categories={dataStore.categories}
-        onCreate={entry => {
-          dataStore.createEntry(entry)
+        onCreate={async entry => {
+          return dataStore.createEntry({
+            date: data.date,
+            entry: entry.entry,
+            mood: entry.mood,
+            selected_tags: entry.selected_tags,
+          })
         }}
-        onAddTag={tag => {
-          dataStore.createTag(tag)
+        onUpdate={async entry => {
+          return dataStore.updateEntry({
+            id: entry.id,
+            date: data.date,
+            entry: entry.entry,
+            mood: entry.mood,
+            selected_tags: entry.selected_tags,
+          })
         }}
-        onEditTag={tag => {
-          dataStore.updateTag({
+        onDelete={async id => {
+          return dataStore.deleteEntry(id)
+        }}
+        onAddTag={async tag => {
+          return dataStore.createTag({
+            name: tag.name,
+            color: tag.color,
+            category_id: tag.category_id,
+          })
+        }}
+        onEditTag={async tag => {
+          return dataStore.updateTag({
             id: tag.id,
             name: tag.name,
             color: tag.color,
           })
         }}
-        onRemoveTag={tagId => {
-          dataStore.deleteTag(tagId)
+        onRemoveTag={async tagId => {
+          return dataStore.deleteTag(tagId)
         }}
-        onAddCategory={category => {
-          dataStore.createCategory(category)
+        onAddCategory={async category => {
+          return dataStore.createCategory({
+            name: category.name,
+          })
         }}
-        onEditCategory={category => {
-          dataStore.updateCategory({
+        onEditCategory={async category => {
+          return dataStore.updateCategory({
             id: category.id,
             name: category.name,
           })
         }}
-        onDeleteCategory={categoryId => {
-          dataStore.deleteCategory(categoryId)
+        onDeleteCategory={async categoryId => {
+          return dataStore.deleteCategory(categoryId)
         }} />
     {:else}
       <Spinner />

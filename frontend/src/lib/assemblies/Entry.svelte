@@ -23,7 +23,7 @@ import Modal from '$lib/components/Modal.svelte'
 import Markdown from 'svelte-exmarkdown'
 import type { MoodValue } from '$lib/types/components/moodinput'
 import Input from '$lib/components/Input.svelte'
-import type { Category as CategoryType } from '$lib/types/log'
+import type { Category as CategoryType, NewTag, Tag } from '$lib/types/log'
 import type { InputState } from '$lib/types/input'
 import Message from '$lib/components/Message.svelte'
 import { onMount } from 'svelte'
@@ -40,15 +40,15 @@ let {
   mood = undefined,
   selectedTagIds = [],
 
-  onCreate = () => {},
-  onUpdate = () => {},
-  onDelete = () => {},
-  onAddTag = () => {},
-  onEditTag = () => {},
-  onRemoveTag = () => {},
-  onAddCategory = () => {},
-  onEditCategory = () => {},
-  onDeleteCategory = () => {},
+  onCreate,
+  onUpdate,
+  onDelete,
+  onAddTag,
+  onEditTag,
+  onRemoveTag,
+  onAddCategory,
+  onEditCategory,
+  onDeleteCategory,
 }: EntryProps = $props()
 
 let inputState: InputState = $state('untouched')
@@ -114,14 +114,14 @@ const saveChanges = async () => {
   await applyEditModel()
 
   if (mood !== undefined) {
-    if (mode === 'create') {
+    if (mode === 'create' && onCreate) {
       onCreate({
         date,
         entry,
         mood,
         selected_tags: selectedTagIds,
       })
-    } else if (mode === 'edit' && id) {
+    } else if (mode === 'edit' && id && onUpdate) {
       onUpdate({
         id,
         date,
@@ -144,7 +144,7 @@ const cancelChanges = () => {
 }
 
 const deleteEntry = () => {
-  if (id) {
+  if (id && onDelete) {
     onDelete(id)
   }
 }
@@ -215,9 +215,11 @@ const submitAddCategory = () => {
     return
   }
 
-  onAddCategory({
-    name: categoryDetails.name.value,
-  })
+  if (onAddCategory) {
+    onAddCategory({
+      name: categoryDetails.name.value,
+    })
+  }
 
   resetCategoryDetails()
 }
@@ -228,10 +230,12 @@ const submitEditCategory = () => {
     return
   }
 
-  onEditCategory({
-    id: categoryDetails.id,
-    name: categoryDetails.name.value,
-  })
+  if (onEditCategory) {
+    onEditCategory({
+      id: categoryDetails.id,
+      name: categoryDetails.name.value,
+    })
+  }
 
   resetCategoryDetails()
 }
@@ -242,7 +246,9 @@ const deleteCategory = () => {
   editModel.selectedTagIds = editModel.selectedTagIds.filter(tagId => {
     return categories.some(c => c.tags.some(t => t.id === tagId))
   })
-  onDeleteCategory(categoryDetails.id)
+  if (onDeleteCategory) {
+    onDeleteCategory(categoryDetails.id)
+  }
 
   resetCategoryDetails()
 }
@@ -271,6 +277,27 @@ const isEdited = $derived.by(() => {
 
   return Object.keys(difference).length > 0
 })
+
+const categoryAddTag = async (tag: NewTag) => {
+  if (onAddTag) {
+    return onAddTag(tag)
+  }
+  return null
+}
+
+const categoryEditTag = async (tag: Tag) => {
+  if (onEditTag) {
+    return onEditTag(tag)
+  }
+  return null
+}
+
+const categoryRemoveTag = async (tagId: string) => {
+  if (onRemoveTag) {
+    return onRemoveTag(tagId)
+  }
+  return null
+}
 </script>
 
 <div class="entry">
@@ -318,10 +345,10 @@ const isEdited = $derived.by(() => {
           name={category.name}
           tags={category.tags}
           bind:selectedTagIds={editModel.selectedTagIds}
-          oneditcategory={() => startEditCategory(category)}
-          onaddtag={tag => onAddTag(tag)}
-          onedittag={tag => onEditTag(tag)}
-          onremovetag={tagId => onRemoveTag(tagId)}
+          onEditCategory={() => startEditCategory(category)}
+          onAddTag={categoryAddTag}
+          onEditTag={categoryEditTag}
+          onRemoveTag={categoryRemoveTag}
           mode={mode === 'view' ? 'view' : 'select'} />
       {/each}
     </div>

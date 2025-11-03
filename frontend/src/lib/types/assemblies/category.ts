@@ -6,9 +6,9 @@ export type CategoryProps = {
   tags: Tag[]
   selectedTagIds?: string[]
   mode?: 'view' | 'edit' | 'select'
-  onaddtag?: (tag: NewTag) => void
-  onremovetag?: (id: Tag['id']) => void
-  onselecttag?: (tag: Tag, selected: boolean) => void
-  onedittag?: (tag: Tag) => void
-  oneditcategory?: () => void
+  onAddTag?: (tag: NewTag) => Promise<Tag | null>
+  onRemoveTag?: (id: Tag['id']) => Promise<boolean | null>
+  onSelectTag?: (tag: Tag, selected: boolean) => Promise<void>
+  onEditTag?: (tag: Tag) => Promise<Tag | null>
+  onEditCategory?: () => void
 }

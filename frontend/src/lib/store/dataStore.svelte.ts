@@ -36,15 +36,15 @@ export type DataState = {
 
   createEntry: (entry: NewEntry) => Promise<Entry | null>
   updateEntry: (entry: EditEntry) => Promise<Entry | null>
-  deleteEntry: (id: string) => Promise<void>
+  deleteEntry: (id: string) => Promise<boolean | null>
 
   createCategory: (category: NewCategory) => Promise<CategoryWithTags | null>
   updateCategory: (category: EditCategory) => Promise<CategoryWithTags | null>
-  deleteCategory: (id: string) => Promise<void>
+  deleteCategory: (id: string) => Promise<boolean | null>
 
   createTag: (tag: NewTag) => Promise<Tag | null>
   updateTag: (tag: EditTag) => Promise<Tag | null>
-  deleteTag: (id: string) => Promise<void>
+  deleteTag: (id: string) => Promise<boolean | null>
 
   deleteData: () => void
 }
@@ -69,7 +69,6 @@ const fetchCategories = async () => {
       })
       .catch(err => {
         console.error('Error fetching user categories:', err)
-        categories = null
       })
   }
 }
@@ -104,7 +103,6 @@ const fetchEntries = async (from?: string, to?: string) => {
       })
       .catch(err => {
         console.error('Error fetching user details:', err)
-        entries = null
       })
   }
 }
@@ -147,7 +145,7 @@ const getAllEntries = async (): Promise<Entry[] | null> => {
 }
 
 const createEntry = async (entry: NewEntry): Promise<Entry | null> => {
-  const e = await fetch(`${env.PUBLIC_VITE_API_URL}/v1/entry`, {
+  return fetch(`${env.PUBLIC_VITE_API_URL}/v1/entry`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -159,27 +157,25 @@ const createEntry = async (entry: NewEntry): Promise<Entry | null> => {
       if (!res.ok) {
         throw new Error('Failed to create entry')
       }
-      return res.json() as Promise<Entry>
+      return res.json()
+    })
+    .then((data: Entry) => {
+      if (entries) {
+        entries[data.date] = data
+      } else {
+        entries = { [data.date]: data }
+      }
+
+      return data
     })
     .catch(err => {
       console.error('Error creating entry:', err)
       return null
     })
-
-  if (e) {
-    if (entries) {
-      entries[e.date] = e
-    } else {
-      entries = { [e.date]: e }
-    }
-
-    return e
-  }
-  return null
 }
 
 const updateEntry = async (entry: EditEntry): Promise<Entry | null> => {
-  const e = await fetch(`${env.PUBLIC_VITE_API_URL}/v1/entry/${entry.id}`, {
+  return fetch(`${env.PUBLIC_VITE_API_URL}/v1/entry/${entry.id}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -191,27 +187,25 @@ const updateEntry = async (entry: EditEntry): Promise<Entry | null> => {
       if (!res.ok) {
         throw new Error('Failed to update entry')
       }
-      return res.json() as Promise<Entry>
+      return res.json()
+    })
+    .then((data: Entry) => {
+      if (entries) {
+        entries[data.date] = data
+      } else {
+        entries = { [data.date]: data }
+      }
+
+      return data
     })
     .catch(err => {
       console.error('Error updating entry:', err)
       return null
     })
-
-  if (e) {
-    if (entries) {
-      entries[e.date] = e
-    } else {
-      entries = { [e.date]: e }
-    }
-
-    return e
-  }
-  return null
 }
 
-const deleteEntry = async (id: string): Promise<void> => {
-  const deleted = await fetch(`${env.PUBLIC_VITE_API_URL}/v1/entry/${id}`, {
+const deleteEntry = async (id: string): Promise<boolean | null> => {
+  return fetch(`${env.PUBLIC_VITE_API_URL}/v1/entry/${id}`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${userStore?.sessionId}`,
@@ -224,24 +218,30 @@ const deleteEntry = async (id: string): Promise<void> => {
 
       if (res.status === 204) {
         return true
+      } else {
+        return false
       }
+    })
+    .then(data => {
+      if (data && entries) {
+        const entryToDelete = Object.values(entries).find(e => e?.id === id)
+        if (entryToDelete) {
+          delete entries[entryToDelete.date]
+        }
+      }
+
+      return data
     })
     .catch(err => {
       console.error('Error deleting entry:', err)
+      return null
     })
-
-  if (deleted && entries) {
-    const entryToDelete = Object.values(entries).find(e => e?.id === id)
-    if (entryToDelete) {
-      delete entries[entryToDelete.date]
-    }
-  }
 }
 
 const createCategory = async (
   category: NewCategory,
 ): Promise<CategoryWithTags | null> => {
-  const cat = await fetch(`${env.PUBLIC_VITE_API_URL}/v1/category`, {
+  return fetch(`${env.PUBLIC_VITE_API_URL}/v1/category`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -253,65 +253,59 @@ const createCategory = async (
       if (!res.ok) {
         throw new Error('Failed to create category')
       }
-      return res.json() as Promise<Category>
+      return res.json()
+    })
+    .then((data: Category) => {
+      if (categories) {
+        categories.push({ ...data, tags: [] })
+      }
+      return { ...data, tags: [] }
     })
     .catch(err => {
       console.error('Error creating category:', err)
       return null
     })
-
-  if (cat) {
-    if (categories) {
-      categories.push({ ...cat, tags: [] })
-    }
-
-    return { ...cat, tags: [] }
-  }
-  return null
 }
 
 const updateCategory = async (
   category: EditCategory,
 ): Promise<CategoryWithTags | null> => {
-  const cat = await fetch(
-    `${env.PUBLIC_VITE_API_URL}/v1/category/${category.id}`,
-    {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userStore?.sessionId}`,
-      },
-      body: JSON.stringify({ name: category.name }),
+  return fetch(`${env.PUBLIC_VITE_API_URL}/v1/category/${category.id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${userStore?.sessionId}`,
     },
-  )
+    body: JSON.stringify({ name: category.name }),
+  })
     .then(res => {
       if (!res.ok) {
         throw new Error('Failed to update category')
       }
-      return res.json() as Promise<Category>
+      return res.json()
+    })
+    .then((data: Category) => {
+      if (categories) {
+        categories = categories.map(c => {
+          if (c.id === data.id) {
+            return { ...c, name: data.name }
+          }
+          return c
+        })
+
+        return categories.find(c => c.id === data.id) || null
+      } else {
+        return null
+      }
     })
     .catch(err => {
       console.error('Error updating category:', err)
       return null
     })
-
-  if (cat) {
-    if (categories) {
-      categories = categories.map(c => {
-        if (c.id === cat.id) {
-          return { ...c, name: cat.name }
-        }
-        return c
-      })
-
-      return categories.find(c => c.id === cat.id) || null
-    }
-  }
-  return null
 }
 
-const deleteCategory = async (id: string): Promise<void> => {
-  const deleted = await fetch(`${env.PUBLIC_VITE_API_URL}/v1/category/${id}`, {
+const deleteCategory = async (id: string): Promise<boolean | null> => {
+  return fetch(`${env.PUBLIC_VITE_API_URL}/v1/category/${id}`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${userStore?.sessionId}`,
@@ -324,19 +318,24 @@ const deleteCategory = async (id: string): Promise<void> => {
 
       if (res.status === 204) {
         return true
+      } else {
+        return false
       }
+    })
+    .then(data => {
+      if (data && categories) {
+        categories = categories.filter(c => c.id !== id)
+      }
+      return data
     })
     .catch(err => {
       console.error('Error deleting category:', err)
+      return null
     })
-
-  if (deleted && categories) {
-    categories = categories.filter(c => c.id !== id)
-  }
 }
 
 const createTag = async (tag: NewTag): Promise<Tag | null> => {
-  const t = await fetch(`${env.PUBLIC_VITE_API_URL}/v1/tag`, {
+  return fetch(`${env.PUBLIC_VITE_API_URL}/v1/tag`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -348,26 +347,25 @@ const createTag = async (tag: NewTag): Promise<Tag | null> => {
       if (!res.ok) {
         throw new Error('Failed to create tag')
       }
-      return res.json() as Promise<Tag>
+      return res.json()
+    })
+    .then((data: Tag) => {
+      if (categories) {
+        const tagCategory = categories.find(c => c.id === data.category_id)
+        if (tagCategory) {
+          tagCategory.tags.push(data)
+        }
+      }
+      return data
     })
     .catch(err => {
       console.error('Error creating tag:', err)
       return null
     })
-
-  if (t) {
-    const tagCategory = categories?.find(c => c.id === t.category_id)
-    if (tagCategory) {
-      tagCategory.tags.push(t)
-    }
-
-    return t
-  }
-  return null
 }
 
 const updateTag = async (tag: EditTag): Promise<Tag | null> => {
-  const t = await fetch(`${env.PUBLIC_VITE_API_URL}/v1/tag/${tag.id}`, {
+  return fetch(`${env.PUBLIC_VITE_API_URL}/v1/tag/${tag.id}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -382,28 +380,28 @@ const updateTag = async (tag: EditTag): Promise<Tag | null> => {
       if (!res.ok) {
         throw new Error('Failed to update tag')
       }
-      return res.json() as Promise<Tag>
+      return res.json()
+    })
+    .then((data: Tag) => {
+      if (categories) {
+        const tagCategory = categories.find(c => c.id === data.category_id)
+        if (tagCategory) {
+          tagCategory.tags = tagCategory.tags.map(t =>
+            t.id === data.id ? data : t,
+          )
+        }
+      }
+
+      return data
     })
     .catch(err => {
       console.error('Error updating tag:', err)
       return null
     })
-
-  if (t) {
-    if (categories) {
-      const tagCategory = categories.find(c => c.id === t.category_id)
-      if (tagCategory) {
-        tagCategory.tags = tagCategory.tags.map(ct => (ct.id === t.id ? t : ct))
-      }
-    }
-
-    return t
-  }
-  return null
 }
 
-const deleteTag = async (id: string): Promise<void> => {
-  const deleted = await fetch(`${env.PUBLIC_VITE_API_URL}/v1/tag/${id}`, {
+const deleteTag = async (id: string): Promise<boolean | null> => {
+  return fetch(`${env.PUBLIC_VITE_API_URL}/v1/tag/${id}`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${userStore?.sessionId}`,
@@ -416,17 +414,22 @@ const deleteTag = async (id: string): Promise<void> => {
 
       if (res.status === 204) {
         return true
+      } else {
+        return false
       }
+    })
+    .then(data => {
+      if (categories) {
+        categories.forEach(c => {
+          c.tags = c.tags.filter(t => t.id !== id)
+        })
+      }
+      return data
     })
     .catch(err => {
       console.error('Error deleting tag:', err)
+      return null
     })
-
-  if (deleted && categories) {
-    categories.forEach(c => {
-      c.tags = c.tags.filter(t => t.id !== id)
-    })
-  }
 }
 
 const deleteData = () => {

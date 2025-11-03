@@ -1,12 +1,15 @@
 import type { MoodValue } from '../components/moodinput'
 import type {
+  Category,
   CategoryWithTags,
   EditCategory,
   EditEntry,
   EditTag,
+  Entry,
   NewCategory,
   NewEntry,
   NewTag,
+  Tag,
 } from '../log'
 
 export type EntryProps = {
@@ -44,37 +47,37 @@ export type EntryProps = {
   /**
    * called when a new entry is created
    */
-  onCreate?: (entry: NewEntry) => void
+  onCreate?: (entry: NewEntry) => Promise<Entry | null>
   /**
    * called when an existing entry is updated
    */
-  onUpdate?: (entry: EditEntry) => void
+  onUpdate?: (entry: EditEntry) => Promise<Entry | null>
   /**
    * called when an existing entry is deleted
    */
-  onDelete?: (id: string) => void
+  onDelete?: (id: string) => Promise<boolean | null>
   /**
    * when category component emits onaddtag
    */
-  onAddTag?: (tag: NewTag) => void
-  /**
-   * when category component emits onremovetag
-   */
-  onRemoveTag?: (id: string) => void
+  onAddTag?: (tag: NewTag) => Promise<Tag | null>
   /**
    * when category component emits onedittag
    */
-  onEditTag?: (tag: EditTag) => void
+  onEditTag?: (tag: EditTag) => Promise<Tag | null>
+  /**
+   * when category component emits onremovetag
+   */
+  onRemoveTag?: (id: string) => Promise<boolean | null>
   /**
    * when a new category is created
    */
-  onAddCategory?: (category: NewCategory) => void
+  onAddCategory?: (category: NewCategory) => Promise<Category | null>
   /**
    * when an existing category is edited
    */
-  onEditCategory?: (category: EditCategory) => void
+  onEditCategory?: (category: EditCategory) => Promise<Category | null>
   /**
    * when a category is deleted
    */
-  onDeleteCategory?: (id: string) => void
+  onDeleteCategory?: (id: string) => Promise<boolean | null>
 }
