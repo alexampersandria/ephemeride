@@ -74,7 +74,8 @@ const getData = async () => {
     }
     if (options.from_mood) params.append('from_mood', `${options.from_mood}`)
     if (options.to_mood) params.append('to_mood', `${options.to_mood}`)
-    if (options.order) params.append('order', options.order)
+    if (options.order && options.order !== 'date_desc')
+      params.append('order', options.order)
 
     goto(`/app/entries/?${params.toString()}`, { replaceState: true })
 
