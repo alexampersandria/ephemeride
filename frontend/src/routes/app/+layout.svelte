@@ -14,6 +14,7 @@ import {
   Plus,
   ScrollText,
   Settings,
+  Tags,
   User,
 } from 'lucide-svelte'
 
@@ -166,6 +167,11 @@ const entryForToday = () => {
         <Button type="navigation" href="/app/categories" left>
           <FolderOpen />
           <div class="ellipsis">Categories</div>
+        </Button>
+
+        <Button type="navigation" href="/app/tags" left>
+          <Tags />
+          <div class="ellipsis">Tags</div>
         </Button>
       </div>
 

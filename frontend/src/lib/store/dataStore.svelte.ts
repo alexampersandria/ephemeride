@@ -30,9 +30,11 @@ export type DataState = {
   fetchCategories: () => Promise<void>
   fetchEntries: (from?: string, to?: string) => Promise<void>
 
-  getAllEntries: () => Promise<Entry[] | null>
+  fetchAllEntries: () => Promise<Entry[] | null>
 
-  getEntry: (date: string) => Promise<Entry | null>
+  fetchEntry: (date: string) => Promise<Entry | null>
+
+  getTag: (id: string) => Tag | null
 
   createEntry: (entry: NewEntry) => Promise<Entry | null>
   updateEntry: (entry: EditEntry) => Promise<Entry | null>
@@ -107,7 +109,7 @@ const fetchEntries = async (from?: string, to?: string) => {
   }
 }
 
-const getEntry = async (date: string) => {
+const fetchEntry = async (date: string) => {
   if (entries) {
     if (date in entries) {
       return entries[date]
@@ -123,7 +125,7 @@ const getEntry = async (date: string) => {
   return null
 }
 
-const getAllEntries = async (): Promise<Entry[] | null> => {
+const fetchAllEntries = async (): Promise<Entry[] | null> => {
   const res = await fetch(
     `${env.PUBLIC_VITE_API_URL}/v1/entries/0001-01-01/9999-12-31`,
     {
@@ -142,6 +144,18 @@ const getAllEntries = async (): Promise<Entry[] | null> => {
     })
 
   return res || null
+}
+
+const getTag = (id: string): Tag | null => {
+  if (categories) {
+    for (const category of categories) {
+      const tag = category.tags.find(t => t.id === id)
+      if (tag) {
+        return tag
+      }
+    }
+  }
+  return null
 }
 
 const createEntry = async (entry: NewEntry): Promise<Entry | null> => {
@@ -476,11 +490,15 @@ export const useDataStore: () => DataState = () => {
       return fetchEntries
     },
 
-    get getEntry() {
-      return getEntry
+    get fetchEntry() {
+      return fetchEntry
     },
-    get getAllEntries() {
-      return getAllEntries
+    get fetchAllEntries() {
+      return fetchAllEntries
+    },
+
+    get getTag() {
+      return getTag
     },
 
     get createEntry() {

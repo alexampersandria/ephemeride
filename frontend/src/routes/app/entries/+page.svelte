@@ -10,7 +10,7 @@ let list: Entry[] = $state([])
 let loaded = $state(false)
 
 onMount(async () => {
-  list = (await dataStore.getAllEntries()) || []
+  list = (await dataStore.fetchAllEntries()) || []
   loaded = true
 })
 </script>

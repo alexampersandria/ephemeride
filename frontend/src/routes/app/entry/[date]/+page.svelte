@@ -22,7 +22,7 @@ let entry = $derived.by(() => {
 let forceReload = $state(true)
 $effect(() => {
   if (data.date) {
-    dataStore.getEntry(data.date)
+    dataStore.fetchEntry(data.date)
     forceReload = true
     setTimeout(() => {
       forceReload = false
