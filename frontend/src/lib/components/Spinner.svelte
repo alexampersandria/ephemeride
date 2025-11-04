@@ -6,6 +6,7 @@
   </div>
 </div>
 
+<!-- svelte-ignore css_unused_selector -->
 <style lang="scss">
 @use '../assets/scss/variables';
 
