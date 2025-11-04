@@ -31,6 +31,10 @@ export type Tag = {
   category_id: string
 }
 
+export type TagWithCategory = Tag & {
+  category: Category
+}
+
 export type NewTag = {
   name: string
   color: Color

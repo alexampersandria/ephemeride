@@ -1,5 +1,5 @@
 import { colorPriority } from '$lib/types/color'
-import type { CategoryWithTags } from '$lib/types/log'
+import type { CategoryWithTags, Entry } from '$lib/types/log'
 
 /**
  * Sort categories alphabetically by name, ignoring case.
@@ -23,6 +23,17 @@ export const sortCategories = (categories: CategoryWithTags[]) => {
   })
 
   return sortedCategories
+}
+
+/**
+ * sorts entries by date first (newest first)
+ */
+export const sortEntries = (entries: Entry[]): Entry[] => {
+  const copy = JSON.parse(JSON.stringify(entries)) as Entry[]
+  const sorted = copy.sort((a, b) => {
+    return new Date(b.date).getTime() - new Date(a.date).getTime()
+  })
+  return sorted
 }
 
 /**

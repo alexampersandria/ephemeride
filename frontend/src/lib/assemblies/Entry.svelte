@@ -20,6 +20,7 @@ import Alert from '$lib/components/Alert.svelte'
 import Chip from '$lib/components/Chip.svelte'
 import Modal from '$lib/components/Modal.svelte'
 import Markdown from 'svelte-exmarkdown'
+import { gfmPlugin } from 'svelte-exmarkdown/gfm'
 import type { MoodValue } from '$lib/types/components/moodinput'
 import type { EditTag, NewTag } from '$lib/types/log'
 import type { InputState } from '$lib/types/input'
@@ -289,7 +290,7 @@ const categoryRemoveTag = async (tagId: string) => {
       <div class="entry-text">
         {#if entry}
           <div class="entry-text-content">
-            <Markdown md={entry} />
+            <Markdown md={entry} plugins={[gfmPlugin()]} />
           </div>
         {:else}
           <p class="muted">No entry</p>

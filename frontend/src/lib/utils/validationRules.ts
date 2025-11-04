@@ -50,8 +50,8 @@ export const validatePassword = (
   if (value.length < 7) {
     errors.push('Must be at least 7 characters')
   }
-  if (value.length > 255) {
-    errors.push('Must be less than 255 characters')
+  if (value.length > 72) {
+    errors.push('Must be less than 72 characters')
   }
   if (!/[A-Z]/.test(value)) {
     errors.push('Must include at least one uppercase letter')

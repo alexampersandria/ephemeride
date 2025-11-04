@@ -32,8 +32,12 @@ const navigate = (increment: number) => {
     year += 1
   }
 
+  // update entries for the new month
   const { firstDate, lastDate } = monthDateRange(year, month)
-  dataStore.fetchEntries(firstDate, lastDate)
+  dataStore.fetchEntries({
+    from_date: firstDate,
+    to_date: lastDate,
+  })
 }
 
 const formatDay = (day: number): string => {

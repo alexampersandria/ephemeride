@@ -25,7 +25,7 @@ pub fn endpoint() -> poem::Route {
     .at("/entry", post(v1::entry::create_entry))
     .at("/entry/:id", patch(v1::entry::edit_entry)
     .delete(v1::entry::delete_entry))
-    .at("/entries/:from_date/:to_date", get(v1::entries::get_entries))
+    .at("/entries", get(v1::entries::get_entries))
 
     .at("/sessions", get(v1::sessions::get_sessions))
 

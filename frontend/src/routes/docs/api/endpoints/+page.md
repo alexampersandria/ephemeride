@@ -1,6 +1,8 @@
 # API Endpoints
 
 > #TODO: this should be split up into multiple files for better organization, it's far too long right now
+>
+> it is also out of date with the latest changes 🤷‍♀️
 
 ## GET /api
 

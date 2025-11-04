@@ -153,6 +153,7 @@ pub fn get_tags(tag_ids: Vec<&str>, user_id: &str) -> Result<Vec<Tag>, Ephemerid
   let result = tags::table
     .filter(tags::id.eq_any(tag_ids))
     .filter(tags::user_id.eq(user_id))
+    .order(tags::name.asc())
     .load::<Tag>(&mut conn);
 
   match result {
@@ -236,6 +237,7 @@ pub fn get_category_tags(category_id: &str, user_id: &str) -> Result<Vec<Tag>, E
   let result = tags::table
     .filter(tags::category_id.eq(category_id))
     .filter(tags::user_id.eq(user_id))
+    .order(tags::name.asc())
     .load::<Tag>(&mut conn);
 
   match result {

@@ -459,7 +459,7 @@ const onClickEditCategory = () => {
   .category-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--padding-xs);
+    gap: calc(5 * var(--focus-shadow-offset));
     max-width: 100%;
   }
 }

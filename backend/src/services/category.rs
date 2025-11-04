@@ -226,6 +226,7 @@ pub fn get_all_categories(user_id: &str) -> Result<Vec<Category>, EphemerideErro
 
   let result = categories::table
     .filter(categories::user_id.eq(user_id))
+    .order(categories::name.asc())
     .load::<Category>(&mut conn);
 
   match result {

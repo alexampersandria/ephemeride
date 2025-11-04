@@ -174,3 +174,14 @@ $mood-bar-width: 2px;
   --modal-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.33);
   --modal-filter: blur(2px) grayscale(50%);
 }
+
+@media screen and (max-width: 768px) {
+  #root {
+    --block-size-xxs: 100%;
+    --block-size-xs: 100%;
+    --block-size-s: 100%;
+    --block-size-m: 100%;
+    --block-size-l: 100%;
+    --block-size-xl: 100%;
+  }
+}

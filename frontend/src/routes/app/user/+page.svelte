@@ -1,8 +1,8 @@
 <script lang="ts">
-import { env } from '$env/dynamic/public'
 import Spinner from '$lib/components/Spinner.svelte'
 import { useUserStore } from '$lib/store/userStore.svelte'
 import type { Session } from '$lib/types/user'
+import { getSessions } from '$lib/utils/api'
 import { User } from 'lucide-svelte'
 import { onMount } from 'svelte'
 
@@ -10,30 +10,15 @@ let userStore = useUserStore()
 
 let sessions: Session[] | null = $state(null)
 
-const fetchSessions = () => {
+onMount(async () => {
   if (userStore.sessionId) {
-    fetch(`${env.PUBLIC_VITE_API_URL}/v1/sessions`, {
-      headers: { Authorization: `Bearer ${userStore.sessionId}` },
-    })
-      .then(res => {
-        if (!res.ok) {
-          throw new Error('Failed to fetch sessions')
-        }
-        return res.json()
-      })
-      .then((data: Session[]) => {
-        sessions = data
-      })
-      .catch(err => {
-        console.error('Error fetching sessions:', err)
-        sessions = null
-      })
+    sessions = (await getSessions(userStore.sessionId)) || null
   }
-}
-
-onMount(() => {
-  fetchSessions()
 })
+
+let isActive = (session: Session): boolean => {
+  return session.id === userStore.sessionId
+}
 </script>
 
 <div class="user-page">
@@ -81,7 +66,7 @@ onMount(() => {
           </thead>
           <tbody>
             {#each sessions as session}
-              <tr>
+              <tr class:active={isActive(session)}>
                 <td>{session.id}</td>
                 <td>{new Date(session.created_at).toLocaleString()}</td>
                 <td>{new Date(session.accessed_at).toLocaleString()}</td>
@@ -130,6 +115,10 @@ onMount(() => {
         text-align: left;
         padding: var(--padding-xs);
         border: 1px solid var(--border-color);
+      }
+
+      tr.active {
+        background-color: var(--color-success-background);
       }
     }
   }

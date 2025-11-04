@@ -29,6 +29,7 @@ import Label from '$lib/components/Label.svelte'
 import Logo from '$lib/components/Logo.svelte'
 import Calendar from '$lib/components/Calendar.svelte'
 import { useDataStore } from '$lib/store/dataStore.svelte'
+import { page } from '$app/state'
 
 let { children } = $props()
 
@@ -80,6 +81,12 @@ const handleLogout = () => {
 const entryForToday = () => {
   return dataStore.getEntry(currentDate()) !== null
 }
+
+$effect(() => {
+  if (page.url.pathname) {
+    leftMenuOpenMobile = false
+  }
+})
 </script>
 
 <svelte:head>
@@ -125,7 +132,7 @@ const entryForToday = () => {
       <Button href="/app/entry/{currentDate()}" left>
         {#if entryForToday()}
           <CalendarDays />
-          Today's entry
+          Today
         {:else}
           <Plus />
           New entry
@@ -226,7 +233,7 @@ const entryForToday = () => {
           Manage account
         </Button>
 
-        <Button onclick={handleLogout} fullwidth>
+        <Button type="destructive" onclick={handleLogout} fullwidth>
           <LogOut />
           Log out
         </Button>

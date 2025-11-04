@@ -226,3 +226,21 @@ fn user_count() {
   assert!(active_count_max_i64.is_ok());
   assert!(active_count_max_i64.unwrap() == 0);
 }
+
+#[test]
+fn too_long_password() {
+  let random_name = Uuid::new_v4().to_string();
+  let email = format!("{}@example.com", random_name);
+  let long_password = "p".repeat(73); // 73 characters, exceeding the 72 character limit
+
+  let user = user::CreateUser {
+    name: random_name.clone(),
+    email: email.clone(),
+    password: long_password,
+    invite: None,
+  };
+
+  let created_user = user::create_user(user);
+
+  assert!(created_user.is_err());
+}

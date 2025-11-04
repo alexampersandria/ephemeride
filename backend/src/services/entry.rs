@@ -318,29 +318,125 @@ pub fn delete_entry(entry_id: &str, user_id: &str) -> Result<bool, EphemerideErr
   }
 }
 
-pub fn get_entries_in_range(
-  from_date: &str,
-  to_date: &str,
+#[derive(Debug, Deserialize)]
+pub enum EntryOptionsOrder {
+  DateAsc,
+  DateDesc,
+  MoodAsc,
+  MoodDesc,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct EntryOptions {
+  pub from_date: Option<String>,
+  pub to_date: Option<String>,
+  pub tags: Option<Vec<String>>,
+  pub from_mood: Option<i32>,
+  pub to_mood: Option<i32>,
+  pub order: Option<EntryOptionsOrder>,
+}
+
+impl Default for EntryOptions {
+  fn default() -> Self {
+    EntryOptions {
+      from_date: None,
+      to_date: None,
+      tags: None,
+      from_mood: None,
+      to_mood: None,
+      order: Some(EntryOptionsOrder::DateDesc),
+    }
+  }
+}
+
+pub fn get_entries(
   user_id: &str,
+  options: Option<EntryOptions>,
 ) -> Result<Vec<EntryWithTags>, EphemerideError> {
-  let from_naive_date = match chrono::NaiveDate::parse_from_str(from_date, "%Y-%m-%d") {
-    Ok(date) => date,
-    Err(_) => return Err(EphemerideError::BadRequest),
-  };
-
-  let to_naive_date = match chrono::NaiveDate::parse_from_str(to_date, "%Y-%m-%d") {
-    Ok(date) => date,
-    Err(_) => return Err(EphemerideError::BadRequest),
-  };
-
   let mut conn = establish_connection();
-
-  let results = entries::table
-    .filter(entries::date.ge(from_naive_date))
-    .filter(entries::date.le(to_naive_date))
+  let mut query = entries::table
     .filter(entries::user_id.eq(user_id))
-    .order(entries::date.asc())
-    .load::<Entry>(&mut conn);
+    .into_boxed();
+
+  match options {
+    Some(options) => {
+      match options.from_date {
+        Some(from_date) => {
+          let from_naive_date = match chrono::NaiveDate::parse_from_str(&from_date, "%Y-%m-%d") {
+            Ok(date) => date,
+            Err(_) => return Err(EphemerideError::BadRequest),
+          };
+          query = query.filter(entries::date.ge(from_naive_date));
+        }
+        None => (),
+      }
+
+      match options.to_date {
+        Some(to_date) => {
+          let to_naive_date = match chrono::NaiveDate::parse_from_str(&to_date, "%Y-%m-%d") {
+            Ok(date) => date,
+            Err(_) => return Err(EphemerideError::BadRequest),
+          };
+          query = query.filter(entries::date.le(to_naive_date));
+        }
+        None => (),
+      }
+
+      match options.from_mood {
+        Some(from_mood) => {
+          query = query.filter(entries::mood.ge(from_mood));
+        }
+        None => (),
+      }
+
+      match options.to_mood {
+        Some(to_mood) => {
+          query = query.filter(entries::mood.le(to_mood));
+        }
+        None => (),
+      }
+
+      match options.tags {
+        Some(tags) => {
+          if !tags.is_empty() {
+            for tag in tags {
+              query = query.filter(
+                entries::id.eq_any(
+                  entry_tags::table
+                    .filter(entry_tags::tag_id.eq(tag))
+                    .select(entry_tags::entry_id),
+                ),
+              );
+            }
+          }
+        }
+        None => (),
+      }
+
+      match options.order {
+        Some(EntryOptionsOrder::DateAsc) => {
+          query = query.order(entries::date.asc());
+        }
+        Some(EntryOptionsOrder::DateDesc) => {
+          query = query.order(entries::date.desc());
+        }
+        Some(EntryOptionsOrder::MoodAsc) => {
+          query = query.order((entries::mood.asc(), entries::date.desc()));
+        }
+        Some(EntryOptionsOrder::MoodDesc) => {
+          query = query.order((entries::mood.desc(), entries::date.desc()));
+        }
+        None => {
+          query = query.order(entries::date.desc());
+        }
+      }
+    }
+    None => {
+      query = query.order(entries::date.desc());
+    }
+  }
+
+  let results = query.load::<Entry>(&mut conn);
 
   if results.is_err() {
     return Err(EphemerideError::DatabaseError);

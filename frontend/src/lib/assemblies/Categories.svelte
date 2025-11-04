@@ -1,6 +1,5 @@
 <script lang="ts">
 import Category from './Category.svelte'
-import { sortCategories } from '$lib/utils/log'
 import Button from '$lib/components/Button.svelte'
 import { Plus, Save, Trash } from 'lucide-svelte'
 import Modal from '$lib/components/Modal.svelte'
@@ -156,7 +155,7 @@ const deleteCategory = async () => {
     <div class="muted">No categories</div>
   {/if}
 
-  {#each sortCategories(categories) as category}
+  {#each categories as category}
     <Category
       id={category.id}
       name={category.name}

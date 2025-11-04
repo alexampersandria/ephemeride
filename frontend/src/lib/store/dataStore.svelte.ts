@@ -10,24 +10,25 @@ import type {
   NewEntry,
   NewTag,
   Tag,
+  TagWithCategory,
 } from '$lib/types/log'
-import { monthDateRange } from '$lib/utils/log'
+import { getEntries, type FetchEntriesOptions } from '$lib/utils/api'
+import { monthDateRange, sortCategories, sortEntries } from '$lib/utils/log'
 import { useUserStore, type UserState } from './userStore.svelte'
 
 let userStore: UserState | null = null
 
 export type DataState = {
-  categories: CategoryWithTags[] | null
+  categories: CategoryWithTags[]
   entries: Entry[]
   loaded: boolean
   fetchCategories: () => Promise<void>
-  fetchEntries: (from?: string, to?: string) => Promise<void>
-
-  fetchAllEntries: () => Promise<Entry[] | null>
+  fetchEntries: (options?: FetchEntriesOptions) => Promise<void>
 
   fetchEntry: (date: string) => Promise<Entry | null>
 
-  getTag: (id: string) => Tag | null
+  getTag: (id: string) => TagWithCategory | null
+  getTags: () => TagWithCategory[] | null
   getEntry: (date: string) => Entry | null
 
   createEntry: (entry: NewEntry) => Promise<Entry | null>
@@ -45,59 +46,50 @@ export type DataState = {
   deleteData: () => void
 }
 
-let categories: CategoryWithTags[] | null = $state(null)
+let categories: CategoryWithTags[] = $state([])
 let entries: Entry[] = $state([])
 let loaded: boolean = $state(false)
 
 const fetchCategories = async () => {
-  if (userStore && userStore.sessionId) {
-    await fetch(`${env.PUBLIC_VITE_API_URL}/v1/user/categories`, {
-      headers: { Authorization: `Bearer ${userStore.sessionId}` },
+  await fetch(`${env.PUBLIC_VITE_API_URL}/v1/user/categories`, {
+    headers: { Authorization: `Bearer ${userStore?.sessionId}` },
+  })
+    .then(res => {
+      if (!res.ok) {
+        throw new Error('Failed to fetch categories')
+      }
+      return res.json()
     })
-      .then(res => {
-        if (!res.ok) {
-          throw new Error('Failed to fetch categories')
-        }
-        return res.json()
-      })
-      .then((data: CategoryWithTags[]) => {
-        categories = data
-      })
-      .catch(err => {
-        console.error('Error fetching user categories:', err)
-      })
-  }
+    .then((data: CategoryWithTags[]) => {
+      categories = data
+    })
+    .catch(err => {
+      console.error('Error fetching user categories:', err)
+    })
 }
 
-const fetchEntries = async (from?: string, to?: string) => {
-  if (userStore && userStore.sessionId) {
-    const { firstDate, lastDate } = monthDateRange()
-    from = from || firstDate
-    to = to || lastDate
-
-    await fetch(`${env.PUBLIC_VITE_API_URL}/v1/entries/${from}/${to}`, {
-      headers: { Authorization: `Bearer ${userStore.sessionId}` },
-    })
-      .then(res => {
-        if (!res.ok) {
-          throw new Error('Failed to fetch entries')
+const fetchEntries = async (options?: FetchEntriesOptions) => {
+  const { firstDate, lastDate } = monthDateRange()
+  if (userStore?.sessionId) {
+    const data = await getEntries(
+      userStore.sessionId,
+      // if no options provided, fetch current month
+      options || {
+        from_date: firstDate,
+        to_date: lastDate,
+      },
+    )
+    if (data) {
+      data.forEach(entry => {
+        if (getEntry(entry.date)) {
+          // update existing entry
+          entries = entries.map(e => (e.date === entry.date ? entry : e))
+        } else {
+          // add new entry
+          entries.push(entry)
         }
-        return res.json()
       })
-      .then((data: Entry[]) => {
-        data.forEach(entry => {
-          if (getEntry(entry.date)) {
-            // update existing entry
-            entries = entries.map(e => (e.date === entry.date ? entry : e))
-          } else {
-            // add new entry
-            entries.push(entry)
-          }
-        })
-      })
-      .catch(err => {
-        console.error('Error fetching user details:', err)
-      })
+    }
   }
 }
 
@@ -107,41 +99,36 @@ const fetchEntry = async (date: string) => {
     if (entry) {
       return entry
     } else {
-      await fetchEntries(date, date)
+      await fetchEntries({
+        from_date: date,
+        to_date: date,
+      })
       return getEntry(date)
     }
   }
   return null
 }
 
-const fetchAllEntries = async (): Promise<Entry[] | null> => {
-  const res = await fetch(
-    `${env.PUBLIC_VITE_API_URL}/v1/entries/0001-01-01/9999-12-31`,
-    {
-      headers: { Authorization: `Bearer ${userStore?.sessionId}` },
-    },
-  )
-    .then(res => {
-      if (!res.ok) {
-        throw new Error('Failed to fetch all entries')
-      }
-      return res.json() as Promise<Entry[]>
-    })
-    .catch(err => {
-      console.error('Error fetching all entries:', err)
-    })
-
-  return res || null
-}
-
-const getTag = (id: string): Tag | null => {
+const getTag = (id: string): TagWithCategory | null => {
   if (categories) {
     for (const category of categories) {
       const tag = category.tags.find(t => t.id === id)
       if (tag) {
-        return tag
+        return { ...tag, category }
       }
     }
+  }
+  return null
+}
+
+const getTags = (): TagWithCategory[] | null => {
+  if (categories) {
+    const sorted = sortCategories(categories)
+    let tags: TagWithCategory[] = []
+    sorted.forEach(category => {
+      tags = tags.concat(category.tags.map(tag => ({ ...tag, category })))
+    })
+    return tags
   }
   return null
 }
@@ -442,7 +429,7 @@ const deleteTag = async (id: string): Promise<boolean | null> => {
 }
 
 const deleteData = () => {
-  categories = null
+  categories = []
   entries = []
 }
 
@@ -463,10 +450,16 @@ export const useDataStore: () => DataState = () => {
 
   return {
     get categories() {
-      return categories
+      if (categories) {
+        return sortCategories(categories)
+      }
+      return []
     },
     get entries() {
-      return entries
+      if (entries) {
+        return sortEntries(entries)
+      }
+      return []
     },
     set categories(value) {
       categories = value
@@ -488,12 +481,12 @@ export const useDataStore: () => DataState = () => {
     get fetchEntry() {
       return fetchEntry
     },
-    get fetchAllEntries() {
-      return fetchAllEntries
-    },
 
     get getTag() {
       return getTag
+    },
+    get getTags() {
+      return getTags
     },
     get getEntry() {
       return getEntry

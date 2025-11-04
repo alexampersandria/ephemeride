@@ -1,20 +1,46 @@
 use crate::{
-  services::{authorize_request, log},
+  services::{authorize_request, log, EntryOptions},
   util::{error::error_response, response},
 };
-use poem::{handler, http::StatusCode, web::Path, Request, Response};
+use poem::{handler, http::StatusCode, web::Query, Request, Response};
+use serde::Deserialize;
+
+#[derive(Debug, Deserialize)]
+pub struct EntryParams {
+  pub from_date: Option<String>,
+  pub to_date: Option<String>,
+  pub tags: Option<String>,
+  pub from_mood: Option<i32>,
+  pub to_mood: Option<i32>,
+  pub order: Option<String>,
+}
 
 #[handler]
-pub fn get_entries(
-  Path((from_date, to_date)): Path<(String, String)>,
-  request: &Request,
-) -> Response {
+pub fn get_entries(Query(_options): Query<EntryParams>, request: &Request) -> Response {
   let session = match authorize_request(request) {
     Ok(session) => session,
     Err(error) => return error_response(error),
   };
 
-  let entries = log::get_entries_in_range(&from_date, &to_date, &session.user_id);
+  let options = EntryOptions {
+    from_date: _options.from_date,
+    to_date: _options.to_date,
+    tags: _options
+      .tags
+      .map(|tags| tags.split(',').map(|s| s.to_string()).collect()),
+    from_mood: _options.from_mood,
+    to_mood: _options.to_mood,
+    order: match _options.order.as_deref() {
+      Some("date_asc") => Some(log::EntryOptionsOrder::DateAsc),
+      Some("date_desc") => Some(log::EntryOptionsOrder::DateDesc),
+      Some("mood_asc") => Some(log::EntryOptionsOrder::MoodAsc),
+      Some("mood_desc") => Some(log::EntryOptionsOrder::MoodDesc),
+      _ => None,
+    },
+    ..Default::default()
+  };
+
+  let entries = log::get_entries(&session.user_id, Some(options));
 
   match entries {
     Ok(entries) => response(StatusCode::OK, &entries),

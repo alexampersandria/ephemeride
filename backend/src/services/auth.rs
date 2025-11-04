@@ -1,7 +1,4 @@
-use diesel::{
-  deserialize::Queryable, prelude::Insertable, query_dsl::methods::FilterDsl, ExpressionMethods,
-  RunQueryDsl,
-};
+use diesel::{deserialize::Queryable, ExpressionMethods, Insertable, QueryDsl, RunQueryDsl};
 use poem::Request;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -141,6 +138,7 @@ pub fn get_all_user_sessions(user_id: &str) -> Result<Vec<Session>, EphemerideEr
 
   let result = schema::sessions::table
     .filter(schema::sessions::user_id.eq(&user_id))
+    .order(schema::sessions::accessed_at.desc())
     .load::<Session>(&mut conn);
 
   match result {

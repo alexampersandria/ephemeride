@@ -22,7 +22,7 @@ pub struct CreateUser {
   pub name: String,
   #[validate(email)]
   pub email: String,
-  #[validate(length(min = 7, max = 255))]
+  #[validate(length(min = 7, max = 72))]
   pub password: String,
   pub invite: Option<String>,
 }
@@ -31,7 +31,7 @@ pub struct CreateUser {
 pub struct AuthUser {
   #[validate(email)]
   pub email: String,
-  #[validate(length(min = 7, max = 255))]
+  #[validate(length(min = 7, max = 72))]
   pub password: String,
 }
 
@@ -45,7 +45,7 @@ pub struct UpdateUser {
 
 #[derive(Debug, Deserialize, Serialize, Validate)]
 pub struct UpdatePassword {
-  #[validate(length(min = 7, max = 255))]
+  #[validate(length(min = 7, max = 72))]
   pub password: String,
 }
 
@@ -95,11 +95,16 @@ pub fn get_user_id(email: &str) -> Result<String, EphemerideError> {
 pub fn get_user(id: &str) -> Result<UserDetails, EphemerideError> {
   let mut conn = establish_connection();
 
+  // should only select some fields here not all
+  // we remove password has with the user_details function
+  // but this could be fixed by only selecting needed fields
+  // #TODO: that ^
   let result = schema::users::table
     .filter(schema::users::id.eq(&id))
     .first(&mut conn);
 
   match result {
+    // #TODO: see above todo, but this needs to be fixed
     Ok(user) => Ok(user_details(user)),
     Err(_) => Err(EphemerideError::UserNotFound),
   }
