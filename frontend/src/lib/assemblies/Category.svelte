@@ -45,15 +45,15 @@ const clickTag = (tag: Tag) => {
     if (onSelectTag) {
       onSelectTag(tag, selectedTagIds.includes(tag.id))
     }
-  } else if (mode === 'edit') {
+  } else if (mode === 'edit' || mode === 'select-edit') {
     openEditTag(tag.id)
   }
 }
 
 const onedit = () => {
   if (mode === 'select') {
-    mode = 'edit'
-  } else if (mode === 'edit') {
+    mode = 'select-edit'
+  } else if (mode === 'select-edit') {
     mode = 'select'
   }
 }
@@ -271,7 +271,7 @@ const onClickEditCategory = () => {
 
 <div class="category">
   <div class="category-info">
-    {#if (mode === 'edit' || mode === 'select') && onEditCategory}
+    {#if (mode === 'edit' || mode === 'select' || mode === 'select-edit') && onEditCategory}
       <button onclick={onClickEditCategory} aria-label="Edit {name} category">
         <Chip>
           <Settings />
@@ -283,7 +283,7 @@ const onClickEditCategory = () => {
       {name}
     </div>
 
-    {#if mode === 'select' || mode === 'edit'}
+    {#if mode === 'select' || mode === 'edit' || mode === 'select-edit'}
       <div class="category-actions">
         {#if selectedTagIds.some(id => tags.find(tag => tag.id === id))}
           <button onclick={onclear} aria-label="Clear selected {name} tags">
@@ -293,7 +293,7 @@ const onClickEditCategory = () => {
           </button>
         {/if}
 
-        {#if mode === 'edit'}
+        {#if mode === 'edit' || mode === 'select-edit'}
           <button onclick={openAddTag} aria-label="Add tag">
             <Chip>
               <div class="add-tag-inner">
@@ -375,15 +375,17 @@ const onClickEditCategory = () => {
           </Modal>
         {/if}
 
-        <button onclick={onedit} aria-label="Edit {name} category">
-          <Chip outline={mode === 'edit'}>
-            {#if mode === 'select'}
-              <Pencil />
-            {:else if mode === 'edit'}
-              <PencilOff />
-            {/if}
-          </Chip>
-        </button>
+        {#if mode === 'select-edit' || mode === 'select'}
+          <button onclick={onedit} aria-label="Edit {name} category">
+            <Chip outline={mode === 'select-edit'}>
+              {#if mode === 'select'}
+                <Pencil />
+              {:else if mode === 'select-edit'}
+                <PencilOff />
+              {/if}
+            </Chip>
+          </button>
+        {/if}
       </div>
     {/if}
   </div>

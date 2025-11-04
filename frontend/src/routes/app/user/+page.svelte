@@ -1,12 +1,38 @@
 <script lang="ts">
+import { env } from '$env/dynamic/public'
+import Spinner from '$lib/components/Spinner.svelte'
 import { useUserStore } from '$lib/store/userStore.svelte'
+import type { Session } from '$lib/types/user'
 import { User } from 'lucide-svelte'
 import { onMount } from 'svelte'
 
 let userStore = useUserStore()
 
+let sessions: Session[] | null = $state(null)
+
+const fetchSessions = () => {
+  if (userStore.sessionId) {
+    fetch(`${env.PUBLIC_VITE_API_URL}/v1/sessions`, {
+      headers: { Authorization: `Bearer ${userStore.sessionId}` },
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Failed to fetch sessions')
+        }
+        return res.json()
+      })
+      .then((data: Session[]) => {
+        sessions = data
+      })
+      .catch(err => {
+        console.error('Error fetching sessions:', err)
+        sessions = null
+      })
+  }
+}
+
 onMount(() => {
-  userStore.fetchSessions()
+  fetchSessions()
 })
 </script>
 
@@ -42,28 +68,34 @@ onMount(() => {
 
     <div class="section sessions">
       <div class="section-title">Active Sessions</div>
-      <table>
-        <thead>
-          <tr>
-            <th>Session ID</th>
-            <th>Created At</th>
-            <th>Accessed At</th>
-            <th>IP Address</th>
-            <th>User Agent</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each userStore.sessions as session}
+      {#if sessions}
+        <table>
+          <thead>
             <tr>
-              <td>{session.id}</td>
-              <td>{new Date(session.created_at).toLocaleString()}</td>
-              <td>{new Date(session.accessed_at).toLocaleString()}</td>
-              <td>{session.ip_address}</td>
-              <td>{session.user_agent}</td>
+              <th>Session ID</th>
+              <th>Created At</th>
+              <th>Accessed At</th>
+              <th>IP Address</th>
+              <th>User Agent</th>
             </tr>
-          {/each}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {#each sessions as session}
+              <tr>
+                <td>{session.id}</td>
+                <td>{new Date(session.created_at).toLocaleString()}</td>
+                <td>{new Date(session.accessed_at).toLocaleString()}</td>
+                <td>{session.ip_address}</td>
+                <td>{session.user_agent}</td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      {:else}
+        <div class="loading">
+          <Spinner />
+        </div>
+      {/if}
     </div>
   </div>
 </div>

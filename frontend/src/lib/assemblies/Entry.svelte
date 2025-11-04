@@ -2,7 +2,6 @@
 import type { EntryProps } from '$lib/types/assemblies/entry'
 import MoodInput from '$lib/components/MoodInput.svelte'
 import Textarea from '$lib/components/Textarea.svelte'
-import Category from './Category.svelte'
 import Button from '$lib/components/Button.svelte'
 import {
   FolderOpen,
@@ -22,14 +21,13 @@ import Chip from '$lib/components/Chip.svelte'
 import Modal from '$lib/components/Modal.svelte'
 import Markdown from 'svelte-exmarkdown'
 import type { MoodValue } from '$lib/types/components/moodinput'
-import Input from '$lib/components/Input.svelte'
-import type { Category as CategoryType, NewTag, Tag } from '$lib/types/log'
+import type { EditTag, NewTag } from '$lib/types/log'
 import type { InputState } from '$lib/types/input'
-import Message from '$lib/components/Message.svelte'
 import { onMount } from 'svelte'
-import { currentDate, fullDate, sortCategories } from '$lib/utils/log'
+import { currentDate, fullDate } from '$lib/utils/log'
 import { diff } from 'deep-object-diff'
 import { formatNumber } from '$lib/utils/numbers'
+import Categories from './Categories.svelte'
 
 let {
   id = undefined,
@@ -90,7 +88,6 @@ const resetEditModel = () => {
   editModel.mood = mood
   editModel.entry = entry
   editModel.selectedTagIds = selectedTagIds
-  resetCategoryDetails()
 }
 
 const applyEditModel = async () => {
@@ -149,110 +146,6 @@ const deleteEntry = () => {
   }
 }
 
-let categoryDetails: {
-  mode: 'create' | 'edit'
-  open: boolean
-  id?: string
-  name: {
-    value: string
-    inputstate: InputState
-  }
-  errors: string[]
-} = $state({
-  mode: 'create',
-  open: false,
-  id: undefined,
-  name: {
-    value: '',
-    inputstate: 'untouched',
-  },
-  errors: [],
-})
-
-const validateCategoryDetails = () => {
-  categoryDetails.errors = []
-  categoryDetails.name.value = categoryDetails.name.value.trim()
-
-  if (!categoryDetails.name.value) {
-    categoryDetails.name.inputstate = 'invalid'
-    categoryDetails.errors.push('Name is required')
-  } else if (
-    categories.find(
-      c => c.name === categoryDetails.name.value && c.id !== categoryDetails.id,
-    )
-  ) {
-    categoryDetails.name.inputstate = 'invalid'
-    categoryDetails.errors.push('Name must be unique')
-  }
-}
-
-const startAddCategory = () => {
-  resetCategoryDetails()
-  categoryDetails.mode = 'create'
-  categoryDetails.open = true
-  categoryDetails.id = Date.now().toString()
-}
-
-const startEditCategory = (category: CategoryType) => {
-  resetCategoryDetails()
-  categoryDetails.mode = 'edit'
-  categoryDetails.name.value = category.name
-  categoryDetails.open = true
-  categoryDetails.id = category.id
-}
-
-const resetCategoryDetails = () => {
-  categoryDetails.name.value = ''
-  categoryDetails.name.inputstate = 'untouched'
-  categoryDetails.open = false
-  categoryDetails.errors = []
-  categoryDetails.id = undefined
-}
-
-const submitAddCategory = () => {
-  validateCategoryDetails()
-  if (categoryDetails.name.inputstate === 'invalid') {
-    return
-  }
-
-  if (onAddCategory) {
-    onAddCategory({
-      name: categoryDetails.name.value,
-    })
-  }
-
-  resetCategoryDetails()
-}
-
-const submitEditCategory = () => {
-  validateCategoryDetails()
-  if (categoryDetails.name.inputstate === 'invalid' || !categoryDetails.id) {
-    return
-  }
-
-  if (onEditCategory) {
-    onEditCategory({
-      id: categoryDetails.id,
-      name: categoryDetails.name.value,
-    })
-  }
-
-  resetCategoryDetails()
-}
-
-const deleteCategory = () => {
-  if (!categoryDetails.id) return
-
-  editModel.selectedTagIds = editModel.selectedTagIds.filter(tagId => {
-    return categories.some(c => c.tags.some(t => t.id === tagId))
-  })
-  if (onDeleteCategory) {
-    onDeleteCategory(categoryDetails.id)
-  }
-
-  resetCategoryDetails()
-}
-
 onMount(() => {
   resetEditModel()
 })
@@ -285,7 +178,7 @@ const categoryAddTag = async (tag: NewTag) => {
   return null
 }
 
-const categoryEditTag = async (tag: Tag) => {
+const categoryEditTag = async (tag: EditTag) => {
   if (onEditTag) {
     return onEditTag(tag)
   }
@@ -335,79 +228,17 @@ const categoryRemoveTag = async (tagId: string) => {
     </div>
 
     <div class="categories">
-      {#if categories.length === 0}
-        <div class="muted">No categories</div>
-      {/if}
-
-      {#each sortCategories(categories) as category}
-        <Category
-          id={category.id}
-          name={category.name}
-          tags={category.tags}
-          bind:selectedTagIds={editModel.selectedTagIds}
-          onEditCategory={() => startEditCategory(category)}
-          onAddTag={categoryAddTag}
-          onEditTag={categoryEditTag}
-          onRemoveTag={categoryRemoveTag}
-          mode={mode === 'view' ? 'view' : 'select'} />
-      {/each}
+      <Categories
+        {categories}
+        mode={mode === 'view' ? 'view' : 'select'}
+        bind:selectedTagIds={editModel.selectedTagIds}
+        {onAddCategory}
+        {onEditCategory}
+        {onDeleteCategory}
+        {categoryAddTag}
+        {categoryEditTag}
+        {categoryRemoveTag} />
     </div>
-
-    {#if mode === 'edit' || mode === 'create'}
-      <div class="add-category">
-        <Button type="ghost" fullwidth onclick={startAddCategory}>
-          <Plus /> Add Category
-        </Button>
-
-        <Modal open={categoryDetails.open}>
-          <div class="category-details">
-            <div class="category-details-title">
-              {#if categoryDetails.mode === 'create'}
-                Add Category
-              {:else if categoryDetails.mode === 'edit'}
-                Edit Category
-              {/if}
-            </div>
-
-            <div class="category-details-inputs">
-              <Input
-                required
-                bind:value={categoryDetails.name.value}
-                bind:inputstate={categoryDetails.name.inputstate}
-                placeholder="Category name"
-                fullwidth />
-
-              {#if categoryDetails.errors.length}
-                {#each categoryDetails.errors as error}
-                  <Message size="small" type="error">
-                    {error}
-                  </Message>
-                {/each}
-              {/if}
-            </div>
-
-            <div class="category-details-actions">
-              {#if categoryDetails.mode === 'create'}
-                <Button onclick={submitAddCategory}>
-                  <Plus />
-                  Add
-                </Button>
-              {:else if categoryDetails.mode === 'edit'}
-                <Button type="destructive" onclick={deleteCategory}>
-                  <Trash />
-                  Delete category
-                </Button>
-
-                <Button onclick={submitEditCategory}>
-                  <Save />
-                  Save changes
-                </Button>
-              {/if}
-            </div>
-          </div>
-        </Modal>
-      </div>
-    {/if}
   </div>
 
   <div class="entry-field entry-field-text">
@@ -535,18 +366,6 @@ const categoryRemoveTag = async (tagId: string) => {
     }
   }
 
-  .categories {
-    display: flex;
-    flex-direction: column;
-    gap: var(--padding-m);
-    padding-top: var(--padding-m);
-    width: 100%;
-  }
-
-  .add-category {
-    margin-top: var(--padding-m);
-  }
-
   .entry-field {
     display: flex;
     flex-direction: column;
@@ -582,33 +401,6 @@ const categoryRemoveTag = async (tagId: string) => {
   }
 
   .entry-actions {
-    display: flex;
-    justify-content: space-between;
-
-    :global(:only-child) {
-      margin-left: auto;
-    }
-  }
-}
-
-.category-details {
-  display: flex;
-  flex-direction: column;
-  gap: var(--padding-s);
-
-  .category-details-title {
-    font-weight: 600;
-    font-size: var(--font-size-xl);
-  }
-
-  .category-details-inputs {
-    display: flex;
-    gap: var(--padding-s);
-    flex-direction: column;
-    margin: var(--padding-m) 0;
-  }
-
-  .category-details-actions {
     display: flex;
     justify-content: space-between;
 
