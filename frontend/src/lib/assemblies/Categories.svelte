@@ -231,7 +231,6 @@ const deleteCategory = async () => {
   display: flex;
   flex-direction: column;
   gap: var(--padding-m);
-  padding-top: var(--padding-m);
   width: 100%;
 }
 

@@ -352,6 +352,10 @@ const categoryRemoveTag = async (tagId: string) => {
   width: 100%;
   max-width: var(--block-size-s);
 
+  .categories {
+    padding-top: var(--padding-m);
+  }
+
   .entry-title {
     font-weight: 600;
     font-size: var(--font-size-xl);

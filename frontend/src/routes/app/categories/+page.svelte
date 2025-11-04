@@ -37,7 +37,7 @@ let dataStore = useDataStore()
             return dataStore.deleteCategory(categoryId)
           }} />
       {:else}
-        <div class="muted">No categories available</div>
+        <div class="muted">No categories</div>
       {/if}
     </div>
   </div>
