@@ -49,7 +49,7 @@ const entryLink = (day: number): string => {
 const dayMood = (day: number | null) => {
   if (dataStore.entries && day !== null) {
     const dateStr = formatDay(day)
-    const entry = dataStore.entries[dateStr]
+    const entry = dataStore.getEntry(dateStr)
     if (entry) {
       return entry.mood
     }

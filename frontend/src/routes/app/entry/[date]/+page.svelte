@@ -9,11 +9,7 @@ let { data }: PageProps = $props()
 let dataStore = useDataStore()
 
 let entry = $derived.by(() => {
-  if (dataStore.entries) {
-    return dataStore.entries[data.date]
-  } else {
-    return null
-  }
+  return dataStore.getEntry(data.date)
 })
 
 // force reload to reset Entry component when date param changes

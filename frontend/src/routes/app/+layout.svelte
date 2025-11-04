@@ -78,13 +78,7 @@ const handleLogout = () => {
 }
 
 const entryForToday = () => {
-  if (dataStore.entries) {
-    const entry = dataStore.entries[currentDate()]
-    if (entry) {
-      return entry
-    }
-  }
-  return null
+  return dataStore.getEntry(currentDate()) !== null
 }
 </script>
 

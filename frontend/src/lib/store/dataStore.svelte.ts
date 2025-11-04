@@ -11,21 +11,14 @@ import type {
   NewTag,
   Tag,
 } from '$lib/types/log'
-import { datesInRange, monthDateRange } from '$lib/utils/log'
+import { monthDateRange } from '$lib/utils/log'
 import { useUserStore, type UserState } from './userStore.svelte'
 
 let userStore: UserState | null = null
 
-/**
- * null indicates data for date has been loaded but no entry exists
- */
-export type DataEntries = {
-  [key: string]: Entry | null
-}
-
 export type DataState = {
   categories: CategoryWithTags[] | null
-  entries: DataEntries | null
+  entries: Entry[]
   loaded: boolean
   fetchCategories: () => Promise<void>
   fetchEntries: (from?: string, to?: string) => Promise<void>
@@ -35,6 +28,7 @@ export type DataState = {
   fetchEntry: (date: string) => Promise<Entry | null>
 
   getTag: (id: string) => Tag | null
+  getEntry: (date: string) => Entry | null
 
   createEntry: (entry: NewEntry) => Promise<Entry | null>
   updateEntry: (entry: EditEntry) => Promise<Entry | null>
@@ -52,7 +46,7 @@ export type DataState = {
 }
 
 let categories: CategoryWithTags[] | null = $state(null)
-let entries: DataEntries | null = $state(null)
+let entries: Entry[] = $state([])
 let loaded: boolean = $state(false)
 
 const fetchCategories = async () => {
@@ -80,7 +74,6 @@ const fetchEntries = async (from?: string, to?: string) => {
     const { firstDate, lastDate } = monthDateRange()
     from = from || firstDate
     to = to || lastDate
-    const dates = datesInRange(from, to)
 
     await fetch(`${env.PUBLIC_VITE_API_URL}/v1/entries/${from}/${to}`, {
       headers: { Authorization: `Bearer ${userStore.sessionId}` },
@@ -92,16 +85,15 @@ const fetchEntries = async (from?: string, to?: string) => {
         return res.json()
       })
       .then((data: Entry[]) => {
-        const entriesByDate: DataEntries = {}
-        dates.forEach(date => {
-          let entry = data.find(e => e.date === date) || null
-          // do not overwrite existing entry with null
-          if (entry === null && entriesByDate[date] !== null) {
-            entry = entriesByDate[date]
+        data.forEach(entry => {
+          if (getEntry(entry.date)) {
+            // update existing entry
+            entries = entries.map(e => (e.date === entry.date ? entry : e))
+          } else {
+            // add new entry
+            entries.push(entry)
           }
-          entriesByDate[date] = entry
         })
-        entries = { ...entries, ...entriesByDate }
       })
       .catch(err => {
         console.error('Error fetching user details:', err)
@@ -111,15 +103,12 @@ const fetchEntries = async (from?: string, to?: string) => {
 
 const fetchEntry = async (date: string) => {
   if (entries) {
-    if (date in entries) {
-      return entries[date]
+    const entry = getEntry(date)
+    if (entry) {
+      return entry
     } else {
       await fetchEntries(date, date)
-      if (date in entries) {
-        return entries[date]
-      } else {
-        console.error('dataStore: Entry not found for date after fetch:', date)
-      }
+      return getEntry(date)
     }
   }
   return null
@@ -140,7 +129,6 @@ const fetchAllEntries = async (): Promise<Entry[] | null> => {
     })
     .catch(err => {
       console.error('Error fetching all entries:', err)
-      entries = null
     })
 
   return res || null
@@ -153,6 +141,16 @@ const getTag = (id: string): Tag | null => {
       if (tag) {
         return tag
       }
+    }
+  }
+  return null
+}
+
+const getEntry = (date: string): Entry | null => {
+  if (entries) {
+    const entry = entries.find(e => e.date === date)
+    if (entry) {
+      return entry
     }
   }
   return null
@@ -175,9 +173,9 @@ const createEntry = async (entry: NewEntry): Promise<Entry | null> => {
     })
     .then((data: Entry) => {
       if (entries) {
-        entries[data.date] = data
+        entries.push(data)
       } else {
-        entries = { [data.date]: data }
+        entries = [data]
       }
 
       return data
@@ -205,9 +203,9 @@ const updateEntry = async (entry: EditEntry): Promise<Entry | null> => {
     })
     .then((data: Entry) => {
       if (entries) {
-        entries[data.date] = data
+        entries = entries.map(e => (e.date === data.date ? data : e))
       } else {
-        entries = { [data.date]: data }
+        entries = [data]
       }
 
       return data
@@ -238,10 +236,7 @@ const deleteEntry = async (id: string): Promise<boolean | null> => {
     })
     .then(data => {
       if (data && entries) {
-        const entryToDelete = Object.values(entries).find(e => e?.id === id)
-        if (entryToDelete) {
-          delete entries[entryToDelete.date]
-        }
+        entries = entries.filter(e => e.id !== id)
       }
 
       return data
@@ -448,7 +443,7 @@ const deleteTag = async (id: string): Promise<boolean | null> => {
 
 const deleteData = () => {
   categories = null
-  entries = null
+  entries = []
 }
 
 export const useDataStore: () => DataState = () => {
@@ -499,6 +494,9 @@ export const useDataStore: () => DataState = () => {
 
     get getTag() {
       return getTag
+    },
+    get getEntry() {
+      return getEntry
     },
 
     get createEntry() {
