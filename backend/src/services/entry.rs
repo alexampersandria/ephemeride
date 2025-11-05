@@ -2,7 +2,7 @@ use std::sync::LazyLock;
 
 use crate::{
   establish_connection,
-  schema::{entries, entry_tags},
+  schema::{self},
   services::{
     get_user,
     tag::{get_tag, Tag},
@@ -11,7 +11,7 @@ use crate::{
 };
 use diesel::{
   prelude::{Insertable, Queryable},
-  ExpressionMethods, QueryDsl, RunQueryDsl,
+  ExpressionMethods, JoinOnDsl, NullableExpressionMethods, QueryDsl, RunQueryDsl,
 };
 use regex::Regex;
 use serde::{Deserialize, Serialize};
@@ -22,7 +22,7 @@ pub static DATE_REGEX: LazyLock<Regex> =
   LazyLock::new(|| Regex::new(r"^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$").unwrap());
 
 #[derive(Debug, Deserialize, Serialize, Insertable, Queryable)]
-#[diesel(table_name = entries)]
+#[diesel(table_name = schema::entries)]
 pub struct Entry {
   pub id: String,
   pub user_id: String,
@@ -72,7 +72,7 @@ pub struct EntryWithTags {
 }
 
 #[derive(Debug, Deserialize, Serialize, Insertable, Queryable)]
-#[diesel(table_name = entry_tags)]
+#[diesel(table_name = schema::entry_tags)]
 pub struct EntryTag {
   pub id: String,
   pub entry_id: String,
@@ -121,7 +121,7 @@ pub fn create_entry(entry: CreateEntry) -> Result<EntryWithTags, EphemerideError
     entry: entry.entry.clone(),
   };
 
-  let result = diesel::insert_into(entries::table)
+  let result = diesel::insert_into(schema::entries::table)
     .values(&new_entry)
     .execute(&mut conn);
 
@@ -136,7 +136,7 @@ pub fn create_entry(entry: CreateEntry) -> Result<EntryWithTags, EphemerideError
       tag_id: tag.id.clone(),
     };
 
-    let tag_result = diesel::insert_into(crate::schema::entry_tags::table)
+    let tag_result = diesel::insert_into(schema::entry_tags::table)
       .values(&entry_tag)
       .execute(&mut conn);
 
@@ -191,14 +191,14 @@ pub fn edit_entry(entry: EditEntry) -> Result<EntryWithTags, EphemerideError> {
   let mut conn = establish_connection();
 
   let result = diesel::update(
-    entries::table
-      .filter(entries::id.eq(&entry.id))
-      .filter(entries::user_id.eq(&entry.user_id)),
+    schema::entries::table
+      .filter(schema::entries::id.eq(&entry.id))
+      .filter(schema::entries::user_id.eq(&entry.user_id)),
   )
   .set((
-    entries::date.eq(&naive_date),
-    entries::mood.eq(entry.mood),
-    entries::entry.eq(&entry.entry),
+    schema::entries::date.eq(&naive_date),
+    schema::entries::mood.eq(entry.mood),
+    schema::entries::entry.eq(&entry.entry),
   ))
   .execute(&mut conn);
 
@@ -237,9 +237,9 @@ pub fn edit_entry(entry: EditEntry) -> Result<EntryWithTags, EphemerideError> {
 pub fn get_entry_by_date(date: chrono::NaiveDate, user_id: &str) -> Result<Entry, EphemerideError> {
   let mut conn = establish_connection();
 
-  let result = entries::table
-    .filter(entries::date.eq(date))
-    .filter(entries::user_id.eq(user_id))
+  let result = schema::entries::table
+    .filter(schema::entries::date.eq(date))
+    .filter(schema::entries::user_id.eq(user_id))
     .first::<Entry>(&mut conn);
 
   match result {
@@ -254,9 +254,9 @@ pub fn get_entry_with_tags(
 ) -> Result<EntryWithTags, EphemerideError> {
   let mut conn = establish_connection();
 
-  let result = entries::table
-    .filter(entries::id.eq(entry_id))
-    .filter(entries::user_id.eq(user_id))
+  let result = schema::entries::table
+    .filter(schema::entries::id.eq(entry_id))
+    .filter(schema::entries::user_id.eq(user_id))
     .first::<Entry>(&mut conn);
 
   if result.is_err() {
@@ -265,8 +265,8 @@ pub fn get_entry_with_tags(
 
   let entry = result.unwrap();
 
-  let entry_tags_result = crate::schema::entry_tags::table
-    .filter(crate::schema::entry_tags::entry_id.eq(entry_id))
+  let entry_tags_result = schema::entry_tags::table
+    .filter(schema::entry_tags::entry_id.eq(entry_id))
     .load::<EntryTag>(&mut conn);
 
   if entry_tags_result.is_err() {
@@ -299,16 +299,17 @@ pub fn delete_entry(entry_id: &str, user_id: &str) -> Result<bool, EphemerideErr
   let mut conn = establish_connection();
 
   let deleted_entry_tags =
-    diesel::delete(entry_tags::table.filter(entry_tags::entry_id.eq(entry_id))).execute(&mut conn);
+    diesel::delete(schema::entry_tags::table.filter(schema::entry_tags::entry_id.eq(entry_id)))
+      .execute(&mut conn);
 
   if deleted_entry_tags.is_err() {
     return Err(EphemerideError::DatabaseError);
   }
 
   let result = diesel::delete(
-    entries::table
-      .filter(entries::id.eq(entry_id))
-      .filter(entries::user_id.eq(user_id)),
+    schema::entries::table
+      .filter(schema::entries::id.eq(entry_id))
+      .filter(schema::entries::user_id.eq(user_id)),
   )
   .execute(&mut conn);
 
@@ -354,8 +355,8 @@ pub fn get_entries(
   options: Option<EntryOptions>,
 ) -> Result<Vec<EntryWithTags>, EphemerideError> {
   let mut conn = establish_connection();
-  let mut query = entries::table
-    .filter(entries::user_id.eq(user_id))
+  let mut query = schema::entries::table
+    .filter(schema::entries::user_id.eq(user_id))
     .into_boxed();
 
   match options {
@@ -366,7 +367,7 @@ pub fn get_entries(
             Ok(date) => date,
             Err(_) => return Err(EphemerideError::BadRequest),
           };
-          query = query.filter(entries::date.ge(from_naive_date));
+          query = query.filter(schema::entries::date.ge(from_naive_date));
         }
         None => (),
       }
@@ -377,21 +378,21 @@ pub fn get_entries(
             Ok(date) => date,
             Err(_) => return Err(EphemerideError::BadRequest),
           };
-          query = query.filter(entries::date.le(to_naive_date));
+          query = query.filter(schema::entries::date.le(to_naive_date));
         }
         None => (),
       }
 
       match options.from_mood {
         Some(from_mood) => {
-          query = query.filter(entries::mood.ge(from_mood));
+          query = query.filter(schema::entries::mood.ge(from_mood));
         }
         None => (),
       }
 
       match options.to_mood {
         Some(to_mood) => {
-          query = query.filter(entries::mood.le(to_mood));
+          query = query.filter(schema::entries::mood.le(to_mood));
         }
         None => (),
       }
@@ -401,10 +402,10 @@ pub fn get_entries(
           if !tags.is_empty() {
             for tag in tags {
               query = query.filter(
-                entries::id.eq_any(
-                  entry_tags::table
-                    .filter(entry_tags::tag_id.eq(tag))
-                    .select(entry_tags::entry_id),
+                schema::entries::id.eq_any(
+                  schema::entry_tags::table
+                    .filter(schema::entry_tags::tag_id.eq(tag))
+                    .select(schema::entry_tags::entry_id),
                 ),
               );
             }
@@ -415,41 +416,81 @@ pub fn get_entries(
 
       match options.order {
         Some(EntryOptionsOrder::DateAsc) => {
-          query = query.order(entries::date.asc());
+          query = query.order(schema::entries::date.asc());
         }
         Some(EntryOptionsOrder::DateDesc) => {
-          query = query.order(entries::date.desc());
+          query = query.order(schema::entries::date.desc());
         }
         Some(EntryOptionsOrder::MoodAsc) => {
-          query = query.order((entries::mood.asc(), entries::date.desc()));
+          query = query.order((schema::entries::mood.asc(), schema::entries::date.desc()));
         }
         Some(EntryOptionsOrder::MoodDesc) => {
-          query = query.order((entries::mood.desc(), entries::date.desc()));
+          query = query.order((schema::entries::mood.desc(), schema::entries::date.desc()));
         }
         None => {
-          query = query.order(entries::date.desc());
+          query = query.order(schema::entries::date.desc());
         }
       }
     }
     None => {
-      query = query.order(entries::date.desc());
+      query = query.order(schema::entries::date.desc());
     }
   }
 
-  let results = query.load::<Entry>(&mut conn);
+  // Use a single query with LEFT JOIN to fetch entries and their tags
+  let results = query
+    .left_join(schema::entry_tags::table.on(schema::entries::id.eq(schema::entry_tags::entry_id)))
+    .select((
+      schema::entries::id,
+      schema::entries::user_id,
+      schema::entries::created_at,
+      schema::entries::mood,
+      schema::entries::entry,
+      schema::entries::date,
+      schema::entry_tags::tag_id.nullable(),
+    ))
+    .load::<(
+      String,
+      String,
+      i64,
+      i32,
+      Option<String>,
+      chrono::NaiveDate,
+      Option<String>,
+    )>(&mut conn);
 
   if results.is_err() {
     return Err(EphemerideError::DatabaseError);
   }
 
-  let entries = results.unwrap();
-  let mut entries_with_tags: Vec<EntryWithTags> = Vec::new();
+  let rows = results.unwrap();
 
-  for entry in entries {
-    let entry_with_tags = get_entry_with_tags(&entry.id, user_id)?;
+  // Group by entry_id and collect tags
+  use std::collections::HashMap;
+  let mut entries_map: HashMap<String, EntryWithTags> = HashMap::new();
 
-    entries_with_tags.push(entry_with_tags);
+  for (id, user_id, created_at, mood, entry, date, tag_id) in rows {
+    entries_map
+      .entry(id.clone())
+      .or_insert_with(|| EntryWithTags {
+        id: id.clone(),
+        user_id,
+        date,
+        created_at,
+        mood,
+        entry,
+        selected_tags: Vec::new(),
+      });
+
+    if let Some(tag_id) = tag_id {
+      if let Some(entry_with_tags) = entries_map.get_mut(&id) {
+        entry_with_tags.selected_tags.push(tag_id);
+      }
+    }
   }
+
+  // Convert HashMap to Vec, preserving the original order
+  let entries_with_tags: Vec<EntryWithTags> = entries_map.into_values().collect();
 
   Ok(entries_with_tags)
 }
