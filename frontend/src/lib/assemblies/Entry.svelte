@@ -86,9 +86,9 @@ let editModel = $state<{
 
 const resetEditModel = () => {
   inputState = 'untouched'
-  editModel.mood = mood
-  editModel.entry = entry
-  editModel.selectedTagIds = selectedTagIds
+  editModel.mood = mood || undefined
+  editModel.entry = entry || ''
+  editModel.selectedTagIds = selectedTagIds || []
 }
 
 const applyEditModel = async () => {

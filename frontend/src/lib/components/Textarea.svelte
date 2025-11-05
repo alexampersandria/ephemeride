@@ -98,7 +98,7 @@ const circlePercentage = $derived.by(() => {
       aria-live="polite"
       aria-atomic="true">
       <div class="length-text">
-        {formatNumber(value.length)} / {formatNumber(maxlength)}
+        {value ? formatNumber(value.length) : 0} / {formatNumber(maxlength)}
       </div>
       <div class="circle">
         <FilledCircle

@@ -1,104 +1,112 @@
 <script lang="ts">
 import Entry from '$lib/assemblies/Entry.svelte'
-import Spinner from '$lib/components/Spinner.svelte'
 import { useDataStore } from '$lib/store/dataStore.svelte'
+import type { EditEntry, Entry as EntryType, NewEntry } from '$lib/types/log'
 import type { PageProps } from './$types'
 
 let { data }: PageProps = $props()
 
 let dataStore = useDataStore()
 
-let entry = $derived.by(() => {
-  return dataStore.getEntry(data.date)
-})
+let entry: EntryType | null = $state(null)
 
-// force reload to reset Entry component when date param changes
-// this is a hack and should be fixed properly later
-// #TODO: above
-let forceReload = $state(true)
+const getData = () => {
+  setTimeout(() => {
+    // first fetch the entry from the backend to ensure we have the latest data
+    // this is not done automatically in the dataStore to avoid excessive requests
+    dataStore.fetchEntry(data.date).then(() => {
+      entry = dataStore.getEntry(data.date) || null
+    })
+  }, 0)
+}
+
 $effect(() => {
   if (data.date) {
-    dataStore.fetchEntry(data.date)
-    forceReload = true
-    setTimeout(() => {
-      forceReload = false
-    }, 0)
+    getData()
   }
 })
+
+const onCreate = async (newEntry: NewEntry) => {
+  const created = await dataStore.createEntry({
+    date: data.date,
+    entry: newEntry.entry,
+    mood: newEntry.mood,
+    selected_tags: newEntry.selected_tags,
+  })
+  if (created) {
+    entry = created
+  }
+  return created
+}
+
+const onUpdate = async (updatedEntry: EditEntry) => {
+  const updated = await dataStore.updateEntry({
+    id: updatedEntry.id,
+    date: data.date,
+    entry: updatedEntry.entry,
+    mood: updatedEntry.mood,
+    selected_tags: updatedEntry.selected_tags,
+  })
+  if (updated) {
+    entry = updated
+  }
+  return updated
+}
+
+const onDelete = async (entryId: string) => {
+  const success = await dataStore.deleteEntry(entryId)
+  if (success) {
+    getData()
+  }
+  return success
+}
 </script>
 
 <div class="entry-page">
-  {#if !forceReload}
-    {#if dataStore.categories}
-      <Entry
-        mode={entry ? 'view' : 'create'}
-        id={entry ? entry.id : undefined}
-        date={data.date}
-        entry={entry ? entry.entry : undefined}
-        mood={entry ? entry.mood : undefined}
-        selectedTagIds={entry ? entry.selected_tags : undefined}
-        categories={dataStore.categories}
-        onCreate={async entry => {
-          return dataStore.createEntry({
-            date: data.date,
-            entry: entry.entry,
-            mood: entry.mood,
-            selected_tags: entry.selected_tags,
-          })
-        }}
-        onUpdate={async entry => {
-          return dataStore.updateEntry({
-            id: entry.id,
-            date: data.date,
-            entry: entry.entry,
-            mood: entry.mood,
-            selected_tags: entry.selected_tags,
-          })
-        }}
-        onDelete={async id => {
-          return dataStore.deleteEntry(id)
-        }}
-        onAddTag={async tag => {
-          return dataStore.createTag({
-            name: tag.name,
-            color: tag.color,
-            category_id: tag.category_id,
-          })
-        }}
-        onEditTag={async tag => {
-          return dataStore.updateTag({
-            id: tag.id,
-            name: tag.name,
-            color: tag.color,
-          })
-        }}
-        onRemoveTag={async tagId => {
-          return dataStore.deleteTag(tagId)
-        }}
-        onAddCategory={async category => {
-          return dataStore.createCategory({
-            name: category.name,
-          })
-        }}
-        onEditCategory={async category => {
-          return dataStore.updateCategory({
-            id: category.id,
-            name: category.name,
-          })
-        }}
-        onDeleteCategory={async categoryId => {
-          return dataStore.deleteCategory(categoryId)
-        }} />
-    {:else}
-      <div class="loading">
-        <Spinner />
-      </div>
-    {/if}
-  {:else}
-    <div class="loading">
-      <Spinner />
-    </div>
-  {/if}
+  {#key entry ? entry.id : data.date}
+    <Entry
+      mode={entry ? 'view' : 'create'}
+      id={entry ? entry.id : undefined}
+      date={data.date}
+      entry={entry ? entry.entry : undefined}
+      mood={entry ? entry.mood : undefined}
+      selectedTagIds={entry ? entry.selected_tags : undefined}
+      categories={dataStore.categories}
+      {onCreate}
+      {onUpdate}
+      {onDelete}
+      onAddTag={async tag => {
+        return dataStore.createTag({
+          name: tag.name,
+          color: tag.color,
+          category_id: tag.category_id,
+        })
+      }}
+      onEditTag={async tag => {
+        return dataStore.updateTag({
+          id: tag.id,
+          name: tag.name,
+          color: tag.color,
+        })
+      }}
+      onRemoveTag={async tagId => {
+        return dataStore.deleteTag(tagId)
+      }}
+      onAddCategory={async category => {
+        return dataStore.createCategory({
+          name: category.name,
+        })
+      }}
+      onEditCategory={async category => {
+        return dataStore.updateCategory({
+          id: category.id,
+          name: category.name,
+        })
+      }}
+      onDeleteCategory={async categoryId => {
+        return dataStore.deleteCategory(categoryId)
+      }} />
+  {/key}
 </div>
 
 <style lang="scss">
@@ -106,11 +114,5 @@ $effect(() => {
   display: flex;
   justify-content: center;
   padding: var(--padding-l);
-
-  .loading {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-  }
 }
 </style>

@@ -1,3 +1,5 @@
+import { browser } from '$app/environment'
+import { page } from '$app/state'
 import { env } from '$env/dynamic/public'
 import type {
   Category,
@@ -13,12 +15,22 @@ import type {
   TagWithCategory,
 } from '$lib/types/log'
 import { getEntries, type FetchEntriesOptions } from '$lib/utils/api'
-import { monthDateRange, sortCategories } from '$lib/utils/log'
+import {
+  calendarDefaults,
+  currentDate,
+  datesInRange,
+  monthDateRange,
+  sortCategories,
+} from '$lib/utils/log'
 import { useUserStore, type UserState } from './userStore.svelte'
 
 let userStore: UserState | null = null
 
 export type DataState = {
+  calendarPosition: {
+    year: number
+    month: number
+  }
   categories: CategoryWithTags[]
   entries: Entry[]
   loaded: boolean
@@ -46,6 +58,66 @@ export type DataState = {
   deleteData: () => void
 }
 
+// periodically clean up entries that are not needed in memory
+// can probably be done better but this works so 🤷‍♀️
+let lastCleanup = $state(0)
+const cleanupEntries = () => {
+  if (browser) {
+    const timeSinceLastCleanup = Date.now() - lastCleanup
+    if (timeSinceLastCleanup < 60_000) {
+      return
+    }
+
+    let datesWeCannotDelete: string[] = []
+
+    // always keep the entry for the current route if on an entry page
+    // as well as all other entries for the same month as the current route
+    // and the current month as well
+
+    datesWeCannotDelete.push(currentDate())
+
+    const route = page.url.pathname
+    if (route.startsWith('/app/entry/')) {
+      const dateStr = route.replace('/app/entry/', '').replaceAll('/', '')
+      const dateRegex = /^\d{4}-\d{2}-\d{2}$/
+      if (dateRegex.test(dateStr)) {
+        datesWeCannotDelete.push(dateStr)
+      }
+    }
+
+    const calendarRage = monthDateRange(
+      calendarPosition.year,
+      calendarPosition.month,
+    )
+    datesWeCannotDelete.push(calendarRage.firstDate)
+
+    datesWeCannotDelete.forEach(date => {
+      const dateObj = new Date(date)
+      const year = dateObj.getFullYear()
+      const month = dateObj.getMonth()
+      const dateRange = monthDateRange(year, month + 1)
+      const datesInThisMonth = datesInRange(
+        dateRange.firstDate,
+        dateRange.lastDate,
+      )
+      datesWeCannotDelete.push(...datesInThisMonth)
+    })
+
+    datesWeCannotDelete = Array.from(new Set(datesWeCannotDelete))
+
+    entries = entries.filter(entry => datesWeCannotDelete.includes(entry.date))
+    lastCleanup = Date.now()
+  }
+}
+
+setInterval(() => {
+  cleanupEntries()
+}, 5_000)
+
+let calendarPosition = $state<{ year: number; month: number }>({
+  year: calendarDefaults().year,
+  month: calendarDefaults().month,
+})
 let categories: CategoryWithTags[] = $state([])
 let entries: Entry[] = $state([])
 let loaded: boolean = $state(false)
@@ -95,16 +167,11 @@ const fetchEntries = async (options?: FetchEntriesOptions) => {
 
 const fetchEntry = async (date: string) => {
   if (entries) {
-    const entry = getEntry(date)
-    if (entry) {
-      return entry
-    } else {
-      await fetchEntries({
-        from_date: date,
-        to_date: date,
-      })
-      return getEntry(date)
-    }
+    await fetchEntries({
+      from_date: date,
+      to_date: date,
+    })
+    return getEntry(date)
   }
   return null
 }
@@ -471,6 +538,12 @@ export const useDataStore: () => DataState = () => {
       // }
       // return []
       return entries
+    },
+    get calendarPosition() {
+      return calendarPosition
+    },
+    set calendarPosition(value) {
+      calendarPosition = value
     },
     set categories(value) {
       categories = value

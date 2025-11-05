@@ -2,7 +2,6 @@
 import type { CalendarProps } from '$lib/types/components/calendar'
 import {
   calendarDaysInMonth,
-  calendarDefaults,
   currentDate,
   formatMonth,
   monthDateRange,
@@ -15,8 +14,8 @@ import { onMount } from 'svelte'
 let dataStore = useDataStore()
 
 let {
-  month = calendarDefaults().month,
-  year = calendarDefaults().year,
+  month = dataStore.calendarPosition.month,
+  year = dataStore.calendarPosition.year,
 }: CalendarProps = $props()
 
 let daysInMonth = $derived.by(() => {
@@ -45,6 +44,7 @@ const navigate = (increment: number) => {
     year += 1
   }
 
+  dataStore.calendarPosition = { year, month }
   getData()
 }
 
