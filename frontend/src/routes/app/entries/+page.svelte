@@ -10,6 +10,7 @@ import Button from '$lib/components/Button.svelte'
 import Input from '$lib/components/Input.svelte'
 import Select from '$lib/components/Select.svelte'
 import { goto } from '$app/navigation'
+import EntryPreview from '$lib/components/EntryPreview.svelte'
 
 let {
   data,
@@ -105,9 +106,9 @@ const toggleTag = (tagId: string) => {
 }
 </script>
 
-<div class="entries-page">
+<div class="app-page entries-page">
   <div class="container">
-    <div class="title">
+    <div class="app-page-title">
       <ScrollText />
       Entries (WIP)
     </div>
@@ -174,53 +175,22 @@ const toggleTag = (tagId: string) => {
     {:else if list.length === 0}
       <div class="dimmed">No entries found</div>
     {:else}
-      <div class="count">
-        {list.length} entr{list.length === 1 ? 'y' : 'ies'} found
+      <div class="entries">
+        <div class="count">
+          {list.length} entr{list.length === 1 ? 'y' : 'ies'} found
+        </div>
+        {#each list as entry}
+          <div class="entry-item">
+            <EntryPreview date={entry.date} {entry} />
+          </div>
+        {/each}
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Mood</th>
-            <th>Tags</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each list as entry}
-            <tr>
-              <td>
-                <a href={`/app/entry/${entry.date}`}>{entry.date}</a>
-              </td>
-              <td>{entry.mood}</td>
-              <td class="tags">
-                {#each entry.selected_tags as tag}
-                  <a href={`/app/tag/${tag}`}>
-                    {dataStore.getTag(tag)?.category.name}/{dataStore.getTag(
-                      tag,
-                    )?.name}
-                  </a>
-                {/each}
-              </td>
-            </tr>
-          {/each}
-        </tbody>
-      </table>
     {/if}
   </div>
 </div>
 
 <style lang="scss">
 .entries-page {
-  padding: var(--padding-l);
-
-  .title {
-    font-size: var(--font-size-l);
-    display: flex;
-    align-items: center;
-    gap: var(--padding-s);
-    margin-bottom: var(--padding-m);
-  }
-
   .filters {
     display: flex;
     flex-wrap: wrap;
@@ -228,21 +198,25 @@ const toggleTag = (tagId: string) => {
     margin-bottom: var(--padding-m);
   }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
+  .entries {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--padding-s);
 
-    th,
-    td {
-      text-align: left;
-      padding: var(--padding-xs);
-      border: 1px solid var(--border-color);
+    .count {
+      font-size: var(--font-size-s);
+      color: var(--text-muted);
+      text-align: right;
+      width: 100%;
+      flex-basis: 100%;
+      flex-grow: 1;
+      flex-shrink: 0;
     }
 
-    td.tags {
-      a:not(:last-child) {
-        margin-right: var(--padding-xs);
-      }
+    .entry-item {
+      flex: 1 1 calc(50% - var(--padding-s));
+      min-width: var(--block-size-xs);
+      width: calc(100% / 3 - var(--padding-s));
     }
   }
 }

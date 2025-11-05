@@ -8,7 +8,7 @@ let { data }: PageProps = $props()
 
 let dataStore = useDataStore()
 
-let entry: EntryType | null = $state(null)
+let entry: EntryType | null = $state(dataStore.getEntry(data.date) || null)
 
 const getData = () => {
   setTimeout(() => {
@@ -49,6 +49,9 @@ const onUpdate = async (updatedEntry: EditEntry) => {
   })
   if (updated) {
     entry = updated
+  } else {
+    // if update fails, it could be because the entry was deleted elsewhere so refresh data
+    getData()
   }
   return updated
 }
@@ -62,57 +65,58 @@ const onDelete = async (entryId: string) => {
 }
 </script>
 
-<div class="entry-page">
-  {#key entry ? entry.id : data.date}
-    <Entry
-      mode={entry ? 'view' : 'create'}
-      id={entry ? entry.id : undefined}
-      date={data.date}
-      entry={entry ? entry.entry : undefined}
-      mood={entry ? entry.mood : undefined}
-      selectedTagIds={entry ? entry.selected_tags : undefined}
-      categories={dataStore.categories}
-      {onCreate}
-      {onUpdate}
-      {onDelete}
-      onAddTag={async tag => {
-        return dataStore.createTag({
-          name: tag.name,
-          color: tag.color,
-          category_id: tag.category_id,
-        })
-      }}
-      onEditTag={async tag => {
-        return dataStore.updateTag({
-          id: tag.id,
-          name: tag.name,
-          color: tag.color,
-        })
-      }}
-      onRemoveTag={async tagId => {
-        return dataStore.deleteTag(tagId)
-      }}
-      onAddCategory={async category => {
-        return dataStore.createCategory({
-          name: category.name,
-        })
-      }}
-      onEditCategory={async category => {
-        return dataStore.updateCategory({
-          id: category.id,
-          name: category.name,
-        })
-      }}
-      onDeleteCategory={async categoryId => {
-        return dataStore.deleteCategory(categoryId)
-      }} />
-  {/key}
+<div class="app-page entry-page">
+  <div class="container">
+    {#key entry ? entry.id : data.date}
+      <Entry
+        mode={entry ? 'view' : 'create'}
+        id={entry ? entry.id : undefined}
+        date={data.date}
+        entry={entry ? entry.entry : undefined}
+        mood={entry ? entry.mood : undefined}
+        selectedTagIds={entry ? entry.selected_tags : undefined}
+        categories={dataStore.categories}
+        {onCreate}
+        {onUpdate}
+        {onDelete}
+        onAddTag={async tag => {
+          return dataStore.createTag({
+            name: tag.name,
+            color: tag.color,
+            category_id: tag.category_id,
+          })
+        }}
+        onEditTag={async tag => {
+          return dataStore.updateTag({
+            id: tag.id,
+            name: tag.name,
+            color: tag.color,
+          })
+        }}
+        onRemoveTag={async tagId => {
+          return dataStore.deleteTag(tagId)
+        }}
+        onAddCategory={async category => {
+          return dataStore.createCategory({
+            name: category.name,
+          })
+        }}
+        onEditCategory={async category => {
+          return dataStore.updateCategory({
+            id: category.id,
+            name: category.name,
+          })
+        }}
+        onDeleteCategory={async categoryId => {
+          return dataStore.deleteCategory(categoryId)
+        }} />
+    {/key}
+  </div>
 </div>
 
 <style lang="scss">
 .entry-page {
   display: flex;
   justify-content: center;
-  padding: var(--padding-l);
 }
 </style>

@@ -268,6 +268,16 @@ $effect(() => {
       fullwidth>
       <Github /> GitHub
     </Button>
+
+    <Button
+      type="destructive"
+      fullwidth
+      onclick={() => {
+        dataStore.deleteData()
+        window.location.reload()
+      }}>
+      Delete dataStore data and reload (debug)
+    </Button>
   </div>
 </Modal>
 

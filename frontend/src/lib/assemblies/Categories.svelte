@@ -156,16 +156,18 @@ const deleteCategory = async () => {
   {/if}
 
   {#each categories as category}
-    <Category
-      id={category.id}
-      name={category.name}
-      tags={category.tags}
-      bind:selectedTagIds
-      onEditCategory={() => startEditCategory(category)}
-      onAddTag={categoryAddTag}
-      onEditTag={categoryEditTag}
-      onRemoveTag={categoryRemoveTag}
-      {mode} />
+    {#key category.id}
+      <Category
+        id={category.id}
+        name={category.name}
+        tags={category.tags}
+        bind:selectedTagIds
+        onEditCategory={() => startEditCategory(category)}
+        onAddTag={categoryAddTag}
+        onEditTag={categoryEditTag}
+        onRemoveTag={categoryRemoveTag}
+        {mode} />
+    {/key}
   {/each}
 </div>
 

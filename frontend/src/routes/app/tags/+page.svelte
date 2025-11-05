@@ -6,9 +6,9 @@ import { Tags } from 'lucide-svelte'
 let dataStore = useDataStore()
 </script>
 
-<div class="tags-page">
+<div class="app-page tags-page">
   <div class="container">
-    <div class="title">
+    <div class="app-page-title">
       <Tags />
       Tags
     </div>
@@ -22,17 +22,3 @@ let dataStore = useDataStore()
     </div>
   </div>
 </div>
-
-<style lang="scss">
-.tags-page {
-  padding: var(--padding-l);
-
-  .title {
-    font-size: var(--font-size-l);
-    display: flex;
-    align-items: center;
-    gap: var(--padding-s);
-    margin-bottom: var(--padding-m);
-  }
-}
-</style>

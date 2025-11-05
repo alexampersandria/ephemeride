@@ -6,9 +6,9 @@ import { useDataStore } from '$lib/store/dataStore.svelte'
 let dataStore = useDataStore()
 </script>
 
-<div class="categories-page">
+<div class="app-page categories-page">
   <div class="container">
-    <div class="title">
+    <div class="app-page-title">
       <FolderOpen />
       Categories
     </div>
@@ -42,17 +42,3 @@ let dataStore = useDataStore()
     </div>
   </div>
 </div>
-
-<style lang="scss">
-.categories-page {
-  padding: var(--padding-l);
-
-  .title {
-    font-size: var(--font-size-l);
-    display: flex;
-    align-items: center;
-    gap: var(--padding-s);
-    margin-bottom: var(--padding-m);
-  }
-}
-</style>

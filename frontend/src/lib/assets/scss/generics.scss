@@ -99,6 +99,18 @@ textarea {
   margin: 0 auto;
 }
 
+.app-page {
+  padding: var(--padding-l) 0;
+
+  .app-page-title {
+    font-size: var(--font-size-l);
+    display: flex;
+    align-items: center;
+    gap: var(--padding-s);
+    margin-bottom: var(--padding-m);
+  }
+}
+
 .fill {
   width: 100%;
   height: 100%;
@@ -305,5 +317,19 @@ blockquote {
     width: 1.5em;
     height: 1.5em;
     vertical-align: -0.15em;
+  }
+}
+
+.mobile-only {
+  display: none;
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+}
+
+.desktop-only {
+  @media (max-width: 768px) {
+    display: none;
   }
 }

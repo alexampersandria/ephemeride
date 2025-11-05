@@ -167,11 +167,22 @@ const fetchEntries = async (options?: FetchEntriesOptions) => {
 
 const fetchEntry = async (date: string) => {
   if (entries) {
-    await fetchEntries({
+    await getEntries(userStore?.sessionId || '', {
       from_date: date,
       to_date: date,
+    }).then(data => {
+      if (data && data.length > 0) {
+        const entry = data[0]
+        if (getEntry(entry.date)) {
+          entries = entries.map(e => (e.date === entry.date ? entry : e))
+        } else {
+          entries.push(entry)
+        }
+        return entry
+      } else {
+        entries = entries.filter(e => e.date !== date)
+      }
     })
-    return getEntry(date)
   }
   return null
 }
@@ -266,6 +277,8 @@ const updateEntry = async (entry: EditEntry): Promise<Entry | null> => {
     })
     .catch(err => {
       console.error('Error updating entry:', err)
+      // if update fails, remove the entry from the store
+      entries = entries.filter(e => e.id !== entry.id)
       return null
     })
 }
@@ -496,6 +509,10 @@ const deleteTag = async (id: string): Promise<boolean | null> => {
 }
 
 const deleteData = () => {
+  calendarPosition = {
+    year: calendarDefaults().year,
+    month: calendarDefaults().month,
+  }
   categories = []
   entries = []
 }

@@ -21,9 +21,9 @@ let isActive = (session: Session): boolean => {
 }
 </script>
 
-<div class="user-page">
+<div class="app-page user-page">
   <div class="container">
-    <div class="title">
+    <div class="app-page-title">
       <User />
       Manage account (WIP)
     </div>
@@ -87,16 +87,6 @@ let isActive = (session: Session): boolean => {
 
 <style lang="scss">
 .user-page {
-  padding: var(--padding-l);
-
-  .title {
-    font-size: var(--font-size-l);
-    display: flex;
-    align-items: center;
-    gap: var(--padding-s);
-    margin-bottom: var(--padding-m);
-  }
-
   .section {
     margin-bottom: var(--padding-l);
 
