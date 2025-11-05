@@ -358,6 +358,7 @@ pub fn get_entries(
   let mut query = schema::entries::table
     .filter(schema::entries::user_id.eq(user_id))
     .into_boxed();
+  let mut sort_order: &str = "date_desc";
 
   match options {
     Some(options) => {
@@ -416,29 +417,24 @@ pub fn get_entries(
 
       match options.order {
         Some(EntryOptionsOrder::DateAsc) => {
-          query = query.order(schema::entries::date.asc());
+          sort_order = "date_asc";
         }
         Some(EntryOptionsOrder::DateDesc) => {
-          query = query.order(schema::entries::date.desc());
+          sort_order = "date_desc";
         }
         Some(EntryOptionsOrder::MoodAsc) => {
-          query = query.order((schema::entries::mood.asc(), schema::entries::date.desc()));
+          sort_order = "mood_asc";
         }
         Some(EntryOptionsOrder::MoodDesc) => {
-          query = query.order((schema::entries::mood.desc(), schema::entries::date.desc()));
+          sort_order = "mood_desc";
         }
-        None => {
-          query = query.order(schema::entries::date.desc());
-        }
+        None => (),
       }
     }
-    None => {
-      query = query.order(schema::entries::date.desc());
-    }
+    None => (),
   }
 
-  // Use a single query with LEFT JOIN to fetch entries and their tags
-  let results = query
+  let result = query
     .left_join(schema::entry_tags::table.on(schema::entries::id.eq(schema::entry_tags::entry_id)))
     .select((
       schema::entries::id,
@@ -459,13 +455,14 @@ pub fn get_entries(
       Option<String>,
     )>(&mut conn);
 
-  if results.is_err() {
+  if result.is_err() {
     return Err(EphemerideError::DatabaseError);
   }
 
-  let rows = results.unwrap();
+  let rows = result.unwrap();
 
   // Group by entry_id and collect tags
+  // #TODO: move all this logic to the sql query
   use std::collections::HashMap;
   let mut entries_map: HashMap<String, EntryWithTags> = HashMap::new();
 
@@ -490,7 +487,30 @@ pub fn get_entries(
   }
 
   // Convert HashMap to Vec, preserving the original order
-  let entries_with_tags: Vec<EntryWithTags> = entries_map.into_values().collect();
+  let mut entries_with_tags: Vec<EntryWithTags> = entries_map.into_values().collect();
+
+  // sort entries_with_tags according to sort_order
+  // not doing this in sql because of the join and subsequent grouping
+  // which messed with the sort order and this is a quick fix that does not seem to affect performance significantly
+  // but this entire process of manipulating entries to add the tags as an array should be done in sql if possible
+  // this would allow us to sort and paginate (which we might need at some point but aren't doing rn) directly in sql
+  // the current implementation that sort after the query is not optimal for large datasets
+  // and pagination _does_ work with this method, but since we already fetched all the entries it's stupid and there is really no point
+  match sort_order {
+    "date_asc" => {
+      entries_with_tags.sort_by_key(|e| e.date);
+    }
+    "date_desc" => {
+      entries_with_tags.sort_by_key(|e| std::cmp::Reverse(e.date));
+    }
+    "mood_asc" => {
+      entries_with_tags.sort_by_key(|e| (e.mood, std::cmp::Reverse(e.date)));
+    }
+    "mood_desc" => {
+      entries_with_tags.sort_by_key(|e| (std::cmp::Reverse(e.mood), std::cmp::Reverse(e.date)));
+    }
+    _ => (),
+  }
 
   Ok(entries_with_tags)
 }
