@@ -169,19 +169,19 @@ const deleteCategory = async () => {
   {/each}
 </div>
 
-{#if mode === 'edit'}
+{#if mode === 'edit' || mode === 'select'}
   <div class="add-category">
     <Button type="ghost" fullwidth onclick={startAddCategory}>
-      <Plus /> Add Category
+      <Plus /> Add category
     </Button>
 
     <Modal open={categoryDetails.open}>
       <div class="category-details">
         <div class="category-details-title">
           {#if categoryDetails.mode === 'create'}
-            Add Category
+            Add category
           {:else if categoryDetails.mode === 'edit'}
-            Edit Category
+            Edit category
           {/if}
         </div>
 
