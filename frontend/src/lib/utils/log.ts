@@ -158,6 +158,8 @@ export const formatMonth = (month: number) => {
  * @param month - The month (1-12)
  */
 export const calendarDaysInMonth = (year: number, month: number) => {
+  // #TODO: this whole thing is kinda stupid, think of a better way to do it
+
   const daysInMonth = new Date(year, month, 0).getDate()
   const firstDayOfMonth = new Date(year, month - 1, 1).getDay()
   const weeks: (number | null)[][] = []
@@ -182,6 +184,11 @@ export const calendarDaysInMonth = (year: number, month: number) => {
   }
   if (currentWeek.length > 0) {
     weeks.push(currentWeek)
+  }
+  // always return 6 weeks for consistent calendar display
+  while (weeks.length < 6) {
+    const emptyWeek: (number | null)[] = [null]
+    weeks.push(emptyWeek)
   }
 
   return weeks

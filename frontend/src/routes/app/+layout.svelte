@@ -1,6 +1,5 @@
 <script lang="ts">
 import { goto } from '$app/navigation'
-import { onMount } from 'svelte'
 import {
   Book,
   CalendarDays,
@@ -42,8 +41,8 @@ let userDetailsModal = $state(false)
 let settingsModal = $state(false)
 let leftMenuOpenMobile = $state(false)
 
-onMount(() => {
-  if (!userStore.sessionId) {
+$effect(() => {
+  if (!userStore.sessionId && !uiStore.loading) {
     goto('/')
   }
 })

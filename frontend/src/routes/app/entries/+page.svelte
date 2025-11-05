@@ -25,7 +25,7 @@ let search = $derived.by(() => {
   return {
     from_date: urlSearchParams.get('from_date') || undefined,
     to_date: urlSearchParams.get('to_date') || undefined,
-    tags: urlSearchParams.getAll('tags') || undefined,
+    tags: urlSearchParams.get('tags')?.split(',') || undefined,
     from_mood: urlSearchParams.get('from_mood') || undefined,
     to_mood: urlSearchParams.get('to_mood') || undefined,
     order: urlSearchParams.get('order') || 'date_desc',
@@ -70,7 +70,10 @@ const getData = async () => {
     if (options.from_date) params.append('from_date', options.from_date)
     if (options.to_date) params.append('to_date', options.to_date)
     if (options.tags) {
-      options.tags.forEach(tag => params.append('tags', tag))
+      const tagString = options.tags.join(',')
+      if (tagString) {
+        params.append('tags', tagString)
+      }
     }
     if (options.from_mood) params.append('from_mood', `${options.from_mood}`)
     if (options.to_mood) params.append('to_mood', `${options.to_mood}`)
@@ -121,16 +124,19 @@ const toggleTag = (tagId: string) => {
       <div>
         tags:
         {#each dataStore.getTags() || [] as tag}
-          <input
-            type="checkbox"
-            name={tag.id}
-            id={tag.id}
-            onchange={() => {
-              toggleTag(tag.id)
-            }} />
-          <label for={tag.id}>
-            {tag.category.name}/{tag.name}
-          </label>
+          <div class="form-field inline">
+            <label for={tag.id}>
+              {tag.category.name}/{tag.name}
+            </label>
+            <input
+              type="checkbox"
+              name={tag.id}
+              id={tag.id}
+              checked={options.tags?.includes(tag.id)}
+              onchange={() => {
+                toggleTag(tag.id)
+              }} />
+          </div>
         {/each}
       </div>
       <div class="form-field inline">

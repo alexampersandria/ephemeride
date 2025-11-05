@@ -1,3 +1,5 @@
+import { browser } from '$app/environment'
+import { page } from '$app/state'
 import { env } from '$env/dynamic/public'
 import type {
   Category,
@@ -13,7 +15,12 @@ import type {
   TagWithCategory,
 } from '$lib/types/log'
 import { getEntries, type FetchEntriesOptions } from '$lib/utils/api'
-import { monthDateRange, sortCategories, sortEntries } from '$lib/utils/log'
+import {
+  currentDate,
+  datesInRange,
+  monthDateRange,
+  sortCategories,
+} from '$lib/utils/log'
 import { useUserStore, type UserState } from './userStore.svelte'
 
 let userStore: UserState | null = null
@@ -443,23 +450,34 @@ export const useDataStore: () => DataState = () => {
   $effect(() => {
     if (userStore && userStore.sessionId && !loaded) {
       fetchCategories()
-      fetchEntries()
+      // loaded true means this will only be called once per "session"
       loaded = true
     }
   })
 
   return {
     get categories() {
+      // this sorting should be done server-side ideally
+      // or at least moved to whenever categories are set/updated
+      // but this works for now and doesn't seem to have massive
+      // performance issues because categories are usually few
+      // at leasst compared to entries
       if (categories) {
         return sortCategories(categories)
       }
       return []
     },
     get entries() {
-      if (entries) {
-        return sortEntries(entries)
-      }
-      return []
+      // remove sort because of performance issues
+      // also entries are sorted on the backend
+      // so this is only an issue when entries are added
+      // as it will be added as a single entry unsorted
+      // not sorted by the /entries api call
+      // if (entries) {
+      //   return sortEntries(entries)
+      // }
+      // return []
+      return entries
     },
     set categories(value) {
       categories = value

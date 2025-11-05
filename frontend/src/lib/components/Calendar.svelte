@@ -10,6 +10,7 @@ import {
 import { ChevronLeft, ChevronRight } from 'lucide-svelte'
 import { useDataStore } from '$lib/store/dataStore.svelte'
 import { page } from '$app/state'
+import { onMount } from 'svelte'
 
 let dataStore = useDataStore()
 
@@ -22,6 +23,18 @@ let daysInMonth = $derived.by(() => {
   return calendarDaysInMonth(year, month)
 })
 
+const getData = () => {
+  const { firstDate, lastDate } = monthDateRange(year, month)
+  dataStore.fetchEntries({
+    from_date: firstDate,
+    to_date: lastDate,
+  })
+}
+
+onMount(() => {
+  getData()
+})
+
 const navigate = (increment: number) => {
   month += increment
   if (month < 1) {
@@ -32,12 +45,7 @@ const navigate = (increment: number) => {
     year += 1
   }
 
-  // update entries for the new month
-  const { firstDate, lastDate } = monthDateRange(year, month)
-  dataStore.fetchEntries({
-    from_date: firstDate,
-    to_date: lastDate,
-  })
+  getData()
 }
 
 const formatDay = (day: number): string => {
@@ -51,14 +59,7 @@ const entryLink = (day: number): string => {
 }
 
 const dayMood = (day: number | null) => {
-  if (dataStore.entries && day !== null) {
-    const dateStr = formatDay(day)
-    const entry = dataStore.getEntry(dateStr)
-    if (entry) {
-      return entry.mood
-    }
-  }
-  return 'null'
+  return dataStore.getEntry(formatDay(day || 0))?.mood || null
 }
 
 const isToday = (day: number | null) => {
@@ -121,6 +122,8 @@ const isActive = (day: number | null) => {
             class:active={isActive(day)}>
             {#if day}
               <a href={entryLink(day)} class="day-button">{day}</a>
+            {:else}
+              <div class="day-button empty">&nbsp;</div>
             {/if}
           </div>
         {/each}
@@ -186,7 +189,8 @@ const isActive = (day: number | null) => {
       display: table-row;
 
       &.weekdays {
-        font-weight: 600;
+        color: var(--text-muted);
+        font-size: var(--font-size-xs);
 
         .day {
           padding-bottom: var(--padding-s);
@@ -254,16 +258,22 @@ const isActive = (day: number | null) => {
         }
 
         .day-button {
-          background-color: transparent;
+          width: 100%;
           color: var(--text-muted);
           border: none;
           border-radius: var(--button-radius);
           height: var(--button-height);
-          width: 100%;
           display: inline-block;
           line-height: var(--button-height);
           font-size: var(--font-size-s);
+          background-color: transparent;
 
+          &.empty {
+            user-select: none;
+          }
+        }
+
+        a.day-button {
           &:hover {
             background-color: var(--background-accent);
             color: var(--text-primary);

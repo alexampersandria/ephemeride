@@ -22,8 +22,11 @@ export const getEntries = async (
   if (options?.to_date) {
     params.append('to_date', options.to_date)
   }
-  if (options?.tags && options.tags.length > 0) {
-    params.append('tags', options.tags.join(','))
+  if (options?.tags) {
+    const tagString = options.tags.join(',')
+    if (tagString) {
+      params.append('tags', tagString)
+    }
   }
   if (options?.from_mood) {
     params.append('from_mood', `${options.from_mood}`)
