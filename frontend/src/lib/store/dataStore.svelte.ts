@@ -1,5 +1,3 @@
-import { browser } from '$app/environment'
-import { page } from '$app/state'
 import { env } from '$env/dynamic/public'
 import type {
   Category,
@@ -15,12 +13,7 @@ import type {
   TagWithCategory,
 } from '$lib/types/log'
 import { getEntries, type FetchEntriesOptions } from '$lib/utils/api'
-import {
-  currentDate,
-  datesInRange,
-  monthDateRange,
-  sortCategories,
-} from '$lib/utils/log'
+import { monthDateRange, sortCategories } from '$lib/utils/log'
 import { useUserStore, type UserState } from './userStore.svelte'
 
 let userStore: UserState | null = null
