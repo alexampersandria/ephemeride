@@ -43,7 +43,11 @@ async fn main() -> Result<(), std::io::Error> {
     .nest("/api", api::index::endpoint())
     .nest(
       "/",
-      StaticFilesEndpoint::new("../www").index_file("index.html"),
+      StaticFilesEndpoint::new("../www")
+        .index_file("index.html")
+        // fallback to index for any non-static built items
+        // this allows for sveltekit routing to take over
+        .fallback_to_index(),
     )
     .with((NormalizePath::new(TrailingSlash::Trim), cors))
     .with(Tracing);
