@@ -5,7 +5,8 @@ use crate::{
   util::{self, error::EphemerideError},
 };
 use diesel::{
-  deserialize::Queryable, prelude::Insertable, ExpressionMethods, JoinOnDsl, QueryDsl, RunQueryDsl,
+  deserialize::Queryable, prelude::Insertable, AggregateExpressionMethods, ExpressionMethods,
+  JoinOnDsl, QueryDsl, RunQueryDsl,
 };
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -254,7 +255,7 @@ pub fn active_user_count(since_timestamp: i64) -> Result<i64, EphemerideError> {
   let result = schema::users::table
     .inner_join(schema::sessions::table.on(schema::users::id.eq(schema::sessions::user_id)))
     .filter(schema::sessions::accessed_at.ge(since_timestamp))
-    .select(diesel::dsl::count_distinct(schema::users::id))
+    .select(diesel::dsl::count(schema::users::id).aggregate_distinct())
     .first::<i64>(&mut conn);
 
   match result {
