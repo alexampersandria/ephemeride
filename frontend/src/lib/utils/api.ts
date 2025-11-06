@@ -1,5 +1,6 @@
 import { env } from '$env/dynamic/public'
 import type { Entry } from '$lib/types/log'
+import type { Paginated } from '$lib/types/paginated'
 import type { Session } from '$lib/types/user'
 
 export type FetchEntriesOptions = {
@@ -9,12 +10,14 @@ export type FetchEntriesOptions = {
   from_mood?: number
   to_mood?: number
   order?: 'date_asc' | 'date_desc'
+  limit?: number
+  offset?: number
 }
 
 export const getEntries = async (
   sessionId: string,
   options?: FetchEntriesOptions,
-): Promise<Entry[] | void> => {
+): Promise<Paginated<Entry> | void> => {
   const params = new URLSearchParams()
   if (options?.from_date) {
     params.append('from_date', options.from_date)
@@ -37,6 +40,12 @@ export const getEntries = async (
   if (options?.order) {
     params.append('order', options.order)
   }
+  if (options?.limit) {
+    params.append('limit', `${options.limit}`)
+  }
+  if (options?.offset) {
+    params.append('offset', `${options.offset}`)
+  }
   const url = new URL(`${env.PUBLIC_VITE_API_URL}/v1/entries`)
   url.search = params.toString()
 
@@ -49,7 +58,7 @@ export const getEntries = async (
       }
       return res.json()
     })
-    .then((data: Entry[]) => {
+    .then((data: Paginated<Entry>) => {
       return data
     })
     .catch(err => {

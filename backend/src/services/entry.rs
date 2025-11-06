@@ -6,11 +6,15 @@ use crate::{
   services::{
     get_user,
     tag::{get_tag, Tag},
+    Paginated, PaginationObject,
   },
   util::{self, EphemerideError},
 };
 use diesel::{
+  define_sql_function,
+  dsl::sql,
   prelude::{Insertable, Queryable},
+  sql_types::{Bool, Nullable, VarChar},
   ExpressionMethods, JoinOnDsl, NullableExpressionMethods, QueryDsl, RunQueryDsl,
 };
 use regex::Regex;
@@ -328,37 +332,67 @@ pub enum EntryOptionsOrder {
 }
 
 #[derive(Debug, Deserialize)]
-pub struct EntryOptions {
+pub struct GetEntriesOptions {
   pub from_date: Option<String>,
   pub to_date: Option<String>,
   pub tags: Option<Vec<String>>,
   pub from_mood: Option<i32>,
   pub to_mood: Option<i32>,
   pub order: Option<EntryOptionsOrder>,
+  pub limit: Option<i64>,
+  pub offset: Option<i64>,
 }
 
-impl Default for EntryOptions {
+impl Default for GetEntriesOptions {
   fn default() -> Self {
-    EntryOptions {
+    GetEntriesOptions {
       from_date: None,
       to_date: None,
       tags: None,
       from_mood: None,
       to_mood: None,
       order: Some(EntryOptionsOrder::DateDesc),
+      limit: Some(31),
+      offset: Some(0),
     }
   }
 }
 
 pub fn get_entries(
   user_id: &str,
-  options: Option<EntryOptions>,
-) -> Result<Vec<EntryWithTags>, EphemerideError> {
+  options: Option<GetEntriesOptions>,
+) -> Result<Paginated<EntryWithTags>, EphemerideError> {
+  define_sql_function!(
+    #[aggregate]
+    fn array_agg(x: Nullable<VarChar>) -> Array<Nullable<VarChar>>;
+  );
+
   let mut conn = establish_connection();
+
+  let selected_tags = array_agg(schema::entry_tags::tag_id.nullable());
+  let row_count = sql::<diesel::sql_types::BigInt>("COUNT(*) OVER()");
+
+  let mut pagination = PaginationObject {
+    limit: 31,
+    offset: 0,
+    total_count: 0,
+  };
+
   let mut query = schema::entries::table
     .filter(schema::entries::user_id.eq(user_id))
+    .left_join(schema::entry_tags::table.on(schema::entries::id.eq(schema::entry_tags::entry_id)))
+    .group_by(schema::entries::id)
+    .select((
+      schema::entries::id,
+      schema::entries::user_id,
+      schema::entries::created_at,
+      schema::entries::mood,
+      schema::entries::entry,
+      schema::entries::date,
+      selected_tags,
+      row_count,
+    ))
     .into_boxed();
-  let mut sort_order: &str = "date_desc";
 
   match options {
     Some(options) => {
@@ -401,15 +435,23 @@ pub fn get_entries(
       match options.tags {
         Some(tags) => {
           if !tags.is_empty() {
-            for tag in tags {
-              query = query.filter(
-                schema::entries::id.eq_any(
-                  schema::entry_tags::table
-                    .filter(schema::entry_tags::tag_id.eq(tag))
-                    .select(schema::entry_tags::entry_id),
-                ),
-              );
-            }
+            let tag_list = tags
+              .iter()
+              .map(|t| format!("'{}'", t.replace("'", "''")))
+              .collect::<Vec<_>>()
+              .join(", ");
+            // build the having clause
+            // when using diesels overlaps_with we get the error:
+            // `operator does not exist: character varying[] && text[]`
+            // because the tag_list is not of the same type as entry_tags.tag_id
+            // "(Diesel does not currently support implicit coercions)."
+            // #TODO: find a way to achieve this natively with diesel
+            // but this is acceptable since it allows us to array_agg and filter/limit/offset in a single query
+            let having_clause = format!(
+              "ARRAY_AGG(entry_tags.tag_id) @> ARRAY[{}]::varchar[]",
+              tag_list
+            );
+            query = query.having(sql::<Bool>(&having_clause));
           }
         }
         None => (),
@@ -417,100 +459,90 @@ pub fn get_entries(
 
       match options.order {
         Some(EntryOptionsOrder::DateAsc) => {
-          sort_order = "date_asc";
+          query = query.order(schema::entries::date.asc());
         }
         Some(EntryOptionsOrder::DateDesc) => {
-          sort_order = "date_desc";
+          query = query.order(schema::entries::date.desc());
         }
         Some(EntryOptionsOrder::MoodAsc) => {
-          sort_order = "mood_asc";
+          query = query.order((schema::entries::mood.asc(), schema::entries::date.asc()));
         }
         Some(EntryOptionsOrder::MoodDesc) => {
-          sort_order = "mood_desc";
+          query = query.order((schema::entries::mood.desc(), schema::entries::date.desc()));
         }
-        None => (),
+        None => query = query.order(schema::entries::date.desc()),
+      }
+
+      match options.limit {
+        Some(limit) => {
+          // if limit is 0, there is no limit
+          if limit > 0 {
+            query = query.limit(limit);
+            pagination.limit = limit;
+          }
+        }
+        None => query = query.limit(pagination.limit),
+      }
+
+      match options.offset {
+        Some(offset) => {
+          query = query.offset(offset);
+          pagination.offset = offset;
+        }
+        None => query = query.offset(pagination.offset),
       }
     }
-    None => (),
+    None => {
+      query = query
+        .order(schema::entries::date.desc())
+        .limit(pagination.limit)
+        .offset(pagination.offset);
+    }
   }
 
-  let result = query
-    .left_join(schema::entry_tags::table.on(schema::entries::id.eq(schema::entry_tags::entry_id)))
-    .select((
-      schema::entries::id,
-      schema::entries::user_id,
-      schema::entries::created_at,
-      schema::entries::mood,
-      schema::entries::entry,
-      schema::entries::date,
-      schema::entry_tags::tag_id.nullable(),
-    ))
-    .load::<(
-      String,
-      String,
-      i64,
-      i32,
-      Option<String>,
-      chrono::NaiveDate,
-      Option<String>,
-    )>(&mut conn);
+  let result = query.load::<(
+    String,
+    String,
+    i64,
+    i32,
+    Option<String>,
+    chrono::NaiveDate,
+    Vec<Option<String>>,
+    i64,
+  )>(&mut conn);
 
   if result.is_err() {
+    println!("ERROR: {:?}", result.err());
     return Err(EphemerideError::DatabaseError);
   }
 
   let rows = result.unwrap();
+  if let Some(first_row) = &rows.first() {
+    pagination.total_count = first_row.7;
+  }
+  let mut entries_with_tags: Vec<EntryWithTags> = Vec::new();
+  for row in rows {
+    let tag_ids = row
+      .6
+      .into_iter()
+      .filter_map(|tag_option| tag_option)
+      .collect();
 
-  // Group by entry_id and collect tags
-  // #TODO: move all this logic to the sql query
-  use std::collections::HashMap;
-  let mut entries_map: HashMap<String, EntryWithTags> = HashMap::new();
+    let entry_with_tags = EntryWithTags {
+      id: row.0,
+      user_id: row.1,
+      created_at: row.2,
+      mood: row.3,
+      entry: row.4,
+      date: row.5,
+      selected_tags: tag_ids,
+    };
 
-  for (id, user_id, created_at, mood, entry, date, tag_id) in rows {
-    entries_map
-      .entry(id.clone())
-      .or_insert_with(|| EntryWithTags {
-        id: id.clone(),
-        user_id,
-        date,
-        created_at,
-        mood,
-        entry,
-        selected_tags: Vec::new(),
-      });
-
-    if let Some(tag_id) = tag_id {
-      if let Some(entry_with_tags) = entries_map.get_mut(&id) {
-        entry_with_tags.selected_tags.push(tag_id);
-      }
-    }
+    entries_with_tags.push(entry_with_tags);
   }
 
-  // Convert HashMap to Vec, preserving the original order
-  let mut entries_with_tags: Vec<EntryWithTags> = entries_map.into_values().collect();
-
-  // sort entries_with_tags according to sort_order
-  // not doing this in sql because of the join and subsequent grouping
-  // which messed with the sort order and this is a quick fix that does not seem to affect performance significantly
-  // but this entire process of manipulating entries to add the tags as an array should be done in sql if possible
-  // this would allow us to sort and paginate (which we might need at some point but aren't doing rn) directly in sql
-  // the current implementation that sort after the query is not optimal for large datasets
-  // and pagination _does_ work with this method, but since we already fetched all the entries it's stupid and there is really no point
-  match sort_order {
-    "date_asc" => {
-      entries_with_tags.sort_by_key(|e| e.date);
-    }
-    "date_desc" => {
-      entries_with_tags.sort_by_key(|e| std::cmp::Reverse(e.date));
-    }
-    "mood_asc" => {
-      entries_with_tags.sort_by_key(|e| (e.mood, std::cmp::Reverse(e.date)));
-    }
-    "mood_desc" => {
-      entries_with_tags.sort_by_key(|e| (std::cmp::Reverse(e.mood), std::cmp::Reverse(e.date)));
-    }
-    _ => (),
-  }
-
-  Ok(entries_with_tags)
+  Ok(Paginated {
+    data: entries_with_tags,
+    pagination,
+  })
 }

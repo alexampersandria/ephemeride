@@ -234,7 +234,7 @@ $effect(() => {
           bind:inputstate={model.terms.inputstate} />
       </div>
       <div class="details">
-        <Label for="register-terms" weight="normal" size="small">
+        <Label for="register-terms" size="small">
           Agree to the terms of use
         </Label>
         <div class="explainer extra-small muted">

@@ -5,7 +5,6 @@
 pub use super::category::*;
 pub use super::entry::*;
 pub use super::tag::*;
-
 use crate::{
   establish_connection,
   schema::{categories, entries, tags},

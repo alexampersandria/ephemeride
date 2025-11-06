@@ -9,9 +9,11 @@ let {
   id,
   required,
   'aria-label': ariaLabel,
+  onchange,
+  oninput,
 }: CheckboxProps = $props()
 
-const onClick = () => {
+const onClick = (event: Event) => {
   if (!disabled) {
     value = !value
 
@@ -20,6 +22,9 @@ const onClick = () => {
     } else {
       inputstate = 'touched'
     }
+
+    onchange?.(event)
+    oninput?.(event)
   }
 }
 </script>

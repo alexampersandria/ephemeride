@@ -4,7 +4,7 @@ import type { LabelProps } from '$lib/types/components/label'
 let {
   children,
   for: forProp,
-  weight = 'bold',
+  weight = 'normal',
   size = 'medium',
 }: LabelProps = $props()
 </script>

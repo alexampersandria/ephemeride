@@ -10,10 +10,10 @@ import Label from '$lib/components/Label.svelte'
 
 <DocsExample>
   <Checkbox name="terms" id="terms" />
-  <Label for="terms" weight="normal">I have read and agree to the terms and conditions.</Label>
+  <Label for="terms">I have read and agree to the terms and conditions.</Label>
 </DocsExample>
 
 ```svelte
 <Checkbox name="terms" id="terms" />
-<Label for="terms" weight="normal">I have read and agree to the terms and conditions.</Label>
+<Label for="terms">I have read and agree to the terms and conditions.</Label>
 ```

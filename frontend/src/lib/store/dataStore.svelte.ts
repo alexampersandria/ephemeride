@@ -152,7 +152,7 @@ const fetchEntries = async (options?: FetchEntriesOptions) => {
       },
     )
     if (data) {
-      data.forEach(entry => {
+      data.data.forEach(entry => {
         if (getEntry(entry.date)) {
           // update existing entry
           entries = entries.map(e => (e.date === entry.date ? entry : e))
@@ -171,8 +171,8 @@ const fetchEntry = async (date: string) => {
       from_date: date,
       to_date: date,
     }).then(data => {
-      if (data && data.length > 0) {
-        const entry = data[0]
+      if (data && data.data.length > 0) {
+        const entry = data.data[0]
         if (getEntry(entry.date)) {
           entries = entries.map(e => (e.date === entry.date ? entry : e))
         } else {

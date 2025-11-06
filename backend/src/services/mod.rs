@@ -12,3 +12,5 @@ pub mod entry;
 pub use entry::*;
 pub mod log;
 pub use log::*;
+pub mod pagination;
+pub use pagination::*;

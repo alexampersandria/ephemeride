@@ -1,5 +1,5 @@
 use crate::{
-  services::{authorize_request, log, EntryOptions},
+  services::{authorize_request, log, GetEntriesOptions},
   util::{error::error_response, response},
 };
 use poem::{handler, http::StatusCode, web::Query, Request, Response};
@@ -13,6 +13,8 @@ pub struct EntryParams {
   pub from_mood: Option<i32>,
   pub to_mood: Option<i32>,
   pub order: Option<String>,
+  pub limit: Option<i64>,
+  pub offset: Option<i64>,
 }
 
 #[handler]
@@ -22,7 +24,7 @@ pub fn get_entries(Query(_options): Query<EntryParams>, request: &Request) -> Re
     Err(error) => return error_response(error),
   };
 
-  let options = EntryOptions {
+  let options = GetEntriesOptions {
     from_date: _options.from_date,
     to_date: _options.to_date,
     tags: _options
@@ -37,6 +39,8 @@ pub fn get_entries(Query(_options): Query<EntryParams>, request: &Request) -> Re
       Some("mood_desc") => Some(log::EntryOptionsOrder::MoodDesc),
       _ => None,
     },
+    limit: _options.limit,
+    offset: _options.offset,
     ..Default::default()
   };
 

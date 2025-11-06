@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_ugJfUHj36E
 createdAt: 2025-10-31T08:43:25.706646
-updatedAt: 2025-11-04T09:30:39.240376
+updatedAt: 2025-11-06T16:08:08.690887
 workspaceId: wk_BESCzWuhSE
 folderId: fl_MutDAEV82K
 authentication: {}
@@ -18,5 +18,5 @@ headers: []
 method: GET
 name: get entries
 sortPriority: 3000.0
-url: ${[ base_url ]}/v1/entries
+url: ${[ base_url ]}/v1/entries?limit=2&offset=1000
 urlParameters: []

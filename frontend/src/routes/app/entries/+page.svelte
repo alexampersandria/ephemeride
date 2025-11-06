@@ -11,6 +11,9 @@ import Input from '$lib/components/Input.svelte'
 import Select from '$lib/components/Select.svelte'
 import { goto } from '$app/navigation'
 import EntryPreview from '$lib/components/EntryPreview.svelte'
+import type { PaginationObject } from '$lib/types/paginated'
+import Checkbox from '$lib/components/Checkbox.svelte'
+import Label from '$lib/components/Label.svelte'
 
 let {
   data,
@@ -29,11 +32,16 @@ let search = $derived.by(() => {
     tags: urlSearchParams.get('tags')?.split(',') || undefined,
     from_mood: urlSearchParams.get('from_mood') || undefined,
     to_mood: urlSearchParams.get('to_mood') || undefined,
-    order: urlSearchParams.get('order') || 'date_desc',
+    order: urlSearchParams.get('order') || undefined,
   } as FetchEntriesOptions
 })
 
 let list: Entry[] = $state([])
+let pagination: PaginationObject = $state({
+  limit: 0,
+  offset: 0,
+  total_count: 0,
+})
 let loading = $state(false)
 
 let userStore = useUserStore()
@@ -51,6 +59,7 @@ let options: FetchEntriesOptions = $state({
   from_mood: undefined,
   to_mood: undefined,
   order: 'date_desc',
+  offset: 0,
 })
 
 const reset = () => {
@@ -61,12 +70,22 @@ const reset = () => {
     from_mood: undefined,
     to_mood: undefined,
     order: 'date_desc',
+    offset: 0,
   }
   getData()
 }
 
-const getData = async () => {
+const getData = async (more = false) => {
   if (userStore.sessionId) {
+    console.log('more', more)
+    if (more) {
+      options.offset = pagination.offset + pagination.limit
+    } else {
+      options.offset = 0
+    }
+
+    loading = true
+
     const params = new URLSearchParams()
     if (options.from_date) params.append('from_date', options.from_date)
     if (options.to_date) params.append('to_date', options.to_date)
@@ -83,11 +102,18 @@ const getData = async () => {
 
     goto(`/app/entries/?${params.toString()}`, { replaceState: true })
 
-    loading = true
     const res = await getEntries(userStore.sessionId, options)
     if (res) {
-      list = res
+      if (more) {
+        list = [...list, ...res.data]
+      } else {
+        list = res.data
+      }
+      pagination = res.pagination
+    } else {
+      list = []
     }
+
     loading = false
   }
 }
@@ -104,6 +130,17 @@ const toggleTag = (tagId: string) => {
   }
   getData()
 }
+
+const filtersApplied = $derived.by(() => {
+  return (
+    options.from_date !== undefined ||
+    options.to_date !== undefined ||
+    (options.tags !== undefined && options.tags.length > 0) ||
+    options.from_mood !== undefined ||
+    options.to_mood !== undefined ||
+    (options.order !== undefined && options.order !== 'date_desc')
+  )
+})
 </script>
 
 <div class="app-page entries-page">
@@ -115,41 +152,52 @@ const toggleTag = (tagId: string) => {
 
     <div class="filters">
       <div class="form-field inline">
-        from:
-        <input type="date" bind:value={options.from_date} onchange={getData} />
+        <Label for="from-date">From:</Label>
+        <input
+          id="from-date"
+          type="date"
+          bind:value={options.from_date}
+          onchange={() => getData()} />
       </div>
       <div class="form-field inline">
-        to:
-        <input type="date" bind:value={options.to_date} onchange={getData} />
+        <Label for="to-date">To:</Label>
+        <input
+          id="to-date"
+          type="date"
+          bind:value={options.to_date}
+          onchange={() => getData()} />
       </div>
       <div>
         tags:
-        {#each dataStore.getTags() || [] as tag}
-          <div class="form-field inline">
-            <label for={tag.id}>
-              {tag.category.name}/{tag.name}
-            </label>
-            <input
-              type="checkbox"
-              name={tag.id}
-              id={tag.id}
-              checked={options.tags?.includes(tag.id)}
-              onchange={() => {
-                toggleTag(tag.id)
-              }} />
-          </div>
-        {/each}
+        <div class="tag-options">
+          {#each dataStore.getTags() || [] as tag}
+            <div class="tag-option color-{tag.color}-text">
+              <Checkbox
+                id={tag.id}
+                value={options.tags?.includes(tag.id) || false}
+                onchange={() => toggleTag(tag.id)} />
+              <Label for={tag.id}>
+                {tag.category.name}/{tag.name}
+              </Label>
+            </div>
+          {/each}
+        </div>
       </div>
       <div class="form-field inline">
-        from mood:
+        <Label for="from-mood">from mood:</Label>
         <Input
+          id="from-mood"
           type="number"
           bind:value={options.from_mood}
-          onchange={getData} />
+          onchange={() => getData()} />
       </div>
       <div class="form-field inline">
-        to mood:
-        <Input type="number" bind:value={options.to_mood} onchange={getData} />
+        <Label for="to-mood">to mood:</Label>
+        <Input
+          id="to-mood"
+          type="number"
+          bind:value={options.to_mood}
+          onchange={() => getData()} />
       </div>
 
       <div class="form-field inline">
@@ -162,28 +210,43 @@ const toggleTag = (tagId: string) => {
             { label: 'Mood Descending', value: 'mood_desc' },
             { label: 'Mood Ascending', value: 'mood_asc' },
           ]}
-          onchange={getData} />
+          onchange={() => getData()} />
       </div>
 
       <div class="form-field">
-        <Button onclick={reset}>Reset filters</Button>
+        <Button onclick={reset} disabled={!filtersApplied}>
+          Reset filters
+        </Button>
       </div>
     </div>
 
-    {#if loading}
-      <Spinner />
+    {#if loading && options.offset === 0}
+      <div class="loading">
+        <Spinner />
+      </div>
     {:else if list.length === 0}
       <div class="dimmed">No entries found</div>
     {:else}
       <div class="entries">
         <div class="count">
-          {list.length} entr{list.length === 1 ? 'y' : 'ies'} found
+          showing {list.length} of {pagination.total_count} entries {filtersApplied
+            ? 'matching filters'
+            : ''}
         </div>
         {#each list as entry}
           <div class="entry-item">
             <EntryPreview date={entry.date} {entry} />
           </div>
         {/each}
+      </div>
+      <div class="more">
+        <Button
+          fullwidth
+          onclick={() => getData(true)}
+          {loading}
+          disabled={list.length >= pagination.total_count}>
+          Load more
+        </Button>
       </div>
     {/if}
   </div>
@@ -214,10 +277,27 @@ const toggleTag = (tagId: string) => {
     }
 
     .entry-item {
-      flex: 1 1 calc(50% - var(--padding-s));
+      flex: 0 1 calc(50% - var(--padding-s) / 2);
       min-width: var(--block-size-xs);
       width: calc(100% / 3 - var(--padding-s));
     }
+  }
+
+  .more {
+    margin-top: var(--padding-m);
+  }
+
+  .tag-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--padding-s);
+  }
+
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--padding-l) 0;
   }
 }
 </style>

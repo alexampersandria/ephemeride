@@ -1164,7 +1164,7 @@ fn test_get_entries_in_range() {
   })
   .unwrap();
 
-  let options = log::EntryOptions {
+  let options = log::GetEntriesOptions {
     from_date: Some("2025-10-15".to_string()),
     to_date: Some("2025-10-16".to_string()),
     ..Default::default()
@@ -1173,8 +1173,8 @@ fn test_get_entries_in_range() {
 
   assert!(entries.is_ok());
   let entries = entries.unwrap();
-  assert_eq!(entries.len(), 2);
-  let entry_ids: Vec<String> = entries.into_iter().map(|e| e.id).collect();
+  assert_eq!(entries.data.len(), 2);
+  let entry_ids: Vec<String> = entries.data.into_iter().map(|e| e.id).collect();
   assert!(entry_ids.contains(&entry1.id));
   assert!(entry_ids.contains(&entry2.id));
   assert!(!entry_ids.contains(&entry3.id));
@@ -1207,8 +1207,8 @@ fn test_get_all_entries_no_options() {
 
   assert!(entries.is_ok());
   let entries = entries.unwrap();
-  assert!(entries.len() >= 2);
-  let entry_ids: Vec<String> = entries.into_iter().map(|e| e.id).collect();
+  assert!(entries.data.len() >= 2);
+  let entry_ids: Vec<String> = entries.data.into_iter().map(|e| e.id).collect();
   assert!(entry_ids.contains(&entry1.id));
   assert!(entry_ids.contains(&entry2.id));
 }
@@ -1244,7 +1244,7 @@ fn test_get_entries_in_mood_range() {
   })
   .unwrap();
 
-  let options = log::EntryOptions {
+  let options = log::GetEntriesOptions {
     from_mood: Some(3),
     to_mood: Some(5),
     ..Default::default()
@@ -1253,8 +1253,8 @@ fn test_get_entries_in_mood_range() {
 
   assert!(entries.is_ok());
   let entries = entries.unwrap();
-  assert_eq!(entries.len(), 2);
-  let entry_ids: Vec<String> = entries.into_iter().map(|e| e.id).collect();
+  assert_eq!(entries.data.len(), 2);
+  let entry_ids: Vec<String> = entries.data.into_iter().map(|e| e.id).collect();
   assert!(!entry_ids.contains(&entry1.id));
   assert!(entry_ids.contains(&entry2.id));
   assert!(entry_ids.contains(&entry3.id));
@@ -1294,7 +1294,7 @@ fn test_get_entries_with_tags() {
   })
   .unwrap();
 
-  let options = log::EntryOptions {
+  let options = log::GetEntriesOptions {
     tags: Some(vec![tag.id.clone()]),
     ..Default::default()
   };
@@ -1302,8 +1302,8 @@ fn test_get_entries_with_tags() {
 
   assert!(entries.is_ok());
   let entries = entries.unwrap();
-  assert_eq!(entries.len(), 1);
-  assert_eq!(entries[0].id, entry.id);
+  assert_eq!(entries.data.len(), 1);
+  assert_eq!(entries.data[0].id, entry.id);
 }
 
 #[test]
@@ -1341,4 +1341,36 @@ fn test_delete_category_with_tags_where_tags_are_also_in_use() {
   assert!(found_entry.is_ok());
   let entry_with_tags = found_entry.unwrap();
   assert!(entry_with_tags.selected_tags.is_empty());
+}
+
+#[test]
+fn test_get_entries_limit_and_offset() {
+  let user = create_test_user();
+
+  for i in 1..=10 {
+    let _ = log::create_entry(log::CreateEntry {
+      date: format!("2025-10-{:02}", i),
+      mood: (i % 5) + 1,
+      entry: Some(format!("Entry {}", i)),
+      selected_tags: vec![],
+      user_id: user.id.clone(),
+    });
+  }
+
+  let options = log::GetEntriesOptions {
+    limit: Some(3),
+    offset: Some(4),
+    ..Default::default()
+  };
+  let entries = log::get_entries(&user.id, Some(options));
+
+  assert!(entries.is_ok());
+  let entries = entries.unwrap();
+  assert_eq!(entries.data.len(), 3);
+  assert_eq!(entries.pagination.total_count, 10);
+  assert_eq!(entries.pagination.limit, 3);
+  assert_eq!(entries.pagination.offset, 4);
+  assert_eq!(entries.data[0].entry.as_ref().unwrap(), "Entry 6");
+  assert_eq!(entries.data[1].entry.as_ref().unwrap(), "Entry 5");
+  assert_eq!(entries.data[2].entry.as_ref().unwrap(), "Entry 4");
 }

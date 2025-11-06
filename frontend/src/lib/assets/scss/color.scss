@@ -427,6 +427,16 @@ $moodColors: ('red', 'orange', 'yellow', 'lime', 'green');
   --checkbox-checked-background-color-active: var(--color-base-00);
   --checkbox-checked-border-color: var(--color-base-00);
   --checkbox-checkmark-color: var(--color-base-100);
+
+  @each $color in $saturatedColors {
+    .color-#{$color}-text {
+      color: var(--color-#{$color}-50);
+    }
+
+    .color-#{$color}-background {
+      background-color: var(--color-#{$color}-10);
+    }
+  }
 }
 
 #root.theme-dark {
@@ -568,4 +578,14 @@ $moodColors: ('red', 'orange', 'yellow', 'lime', 'green');
   --checkbox-checked-background-color-active: var(--color-base-80);
   --checkbox-checked-border-color: var(--color-base-100);
   --checkbox-checkmark-color: var(--color-base-00);
+
+  @each $color in $saturatedColors {
+    .color-#{$color}-text {
+      color: var(--color-#{$color}-60);
+    }
+
+    .color-#{$color}-background {
+      background-color: var(--color-#{$color}-90);
+    }
+  }
 }

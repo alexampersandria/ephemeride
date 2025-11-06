@@ -246,7 +246,7 @@ $effect(() => {
     <div class="title">Settings</div>
 
     <div class="form-field inline">
-      <Label weight="normal">Theme</Label>
+      <Label>Theme</Label>
       <ThemeToggle />
     </div>
 
