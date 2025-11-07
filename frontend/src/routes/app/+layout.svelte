@@ -181,16 +181,18 @@ $effect(() => {
 
       <div class="footer">
         {#if userStore.userDetails}
-          <Button
-            type="navigation"
-            fullwidth
-            onclick={() => (userDetailsModal = true)}
-            left>
-            <User />
-            <div class="ellipsis">
-              {userStore.userDetails.name}
-            </div>
-          </Button>
+          <div class="user">
+            <Button
+              type="navigation"
+              fullwidth
+              onclick={() => (userDetailsModal = true)}
+              left>
+              <User />
+              <div class="ellipsis">
+                {userStore.userDetails.name}
+              </div>
+            </Button>
+          </div>
           <div class="settings">
             <Button
               type="navigation"
@@ -398,11 +400,18 @@ $effect(() => {
       .actions {
         display: flex;
         flex-direction: column;
+        flex-shrink: 1;
+        overflow: auto;
       }
 
       .footer {
         display: flex;
         flex-shrink: 0;
+
+        .user {
+          display: flex;
+          flex-grow: 1;
+        }
 
         .settings {
           display: flex;
@@ -481,26 +490,6 @@ $effect(() => {
         display: none;
       }
     }
-  }
-
-  ::-webkit-scrollbar {
-    background-color: transparent;
-    width: 0.5rem;
-    height: 0.5rem;
-  }
-
-  ::-webkit-scrollbar-track {
-    background-color: var(--background-primary);
-    border-radius: 9999px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background-color: var(--background-accent);
-    border-radius: 9999px;
-  }
-
-  ::-webkit-scrollbar-corner {
-    background-color: transparent;
   }
 
   @keyframes fadeOutEllipsis {

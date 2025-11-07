@@ -66,6 +66,7 @@ let clickHandler = () => {
   line-height: 2; // ensure consistent line height depending on element type and no overflow from text
   overflow: hidden;
   white-space: nowrap;
+  flex-shrink: 0;
 
   .button-content {
     padding: var(--button-padding);
