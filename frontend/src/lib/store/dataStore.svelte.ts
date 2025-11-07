@@ -17,10 +17,10 @@ import type {
 import { getEntries, type FetchEntriesOptions } from '$lib/utils/api'
 import {
   calendarDefaults,
-  currentDate,
-  datesInRange,
+  currentDateObject,
   monthDateRange,
   sortCategories,
+  sortEntries,
 } from '$lib/utils/log'
 import { useUserStore, type UserState } from './userStore.svelte'
 
@@ -57,62 +57,6 @@ export type DataState = {
 
   deleteData: () => void
 }
-
-// periodically clean up entries that are not needed in memory
-// can probably be done better but this works so 🤷‍♀️
-let lastCleanup = $state(0)
-const cleanupEntries = () => {
-  if (browser) {
-    const timeSinceLastCleanup = Date.now() - lastCleanup
-    if (timeSinceLastCleanup < 60_000) {
-      return
-    }
-
-    let datesWeCannotDelete: string[] = []
-
-    // always keep the entry for the current route if on an entry page
-    // as well as all other entries for the same month as the current route
-    // and the current month as well
-
-    datesWeCannotDelete.push(currentDate())
-
-    const route = page.url.pathname
-    if (route.startsWith('/app/entry/')) {
-      const dateStr = route.replace('/app/entry/', '').replaceAll('/', '')
-      const dateRegex = /^\d{4}-\d{2}-\d{2}$/
-      if (dateRegex.test(dateStr)) {
-        datesWeCannotDelete.push(dateStr)
-      }
-    }
-
-    const calendarRage = monthDateRange(
-      calendarPosition.year,
-      calendarPosition.month,
-    )
-    datesWeCannotDelete.push(calendarRage.firstDate)
-
-    datesWeCannotDelete.forEach(date => {
-      const dateObj = new Date(date)
-      const year = dateObj.getFullYear()
-      const month = dateObj.getMonth()
-      const dateRange = monthDateRange(year, month + 1)
-      const datesInThisMonth = datesInRange(
-        dateRange.firstDate,
-        dateRange.lastDate,
-      )
-      datesWeCannotDelete.push(...datesInThisMonth)
-    })
-
-    datesWeCannotDelete = Array.from(new Set(datesWeCannotDelete))
-
-    entries = entries.filter(entry => datesWeCannotDelete.includes(entry.date))
-    lastCleanup = Date.now()
-  }
-}
-
-setInterval(() => {
-  cleanupEntries()
-}, 5_000)
 
 let calendarPosition = $state<{ year: number; month: number }>({
   year: calendarDefaults().year,
@@ -529,6 +473,11 @@ export const useDataStore: () => DataState = () => {
       fetchCategories()
       // loaded true means this will only be called once per "session"
       loaded = true
+
+      setInterval(() => {
+        cleanupEntries()
+        // check every minute if cleanup is needed
+      }, 60_000)
     }
   })
 
@@ -626,5 +575,108 @@ export const useDataStore: () => DataState = () => {
     get deleteData() {
       return deleteData
     },
+  }
+}
+
+// periodically clean up entries that are not needed in memory
+// can probably be done better but this works so 🤷‍♀️
+let lastCleanup = $state(0)
+let cleanupInProgress = $state(false)
+const entriesMaxSize = 256_000
+const entriesTargetSize = 128_000
+const cleanupInterval = 60_000 * 15
+
+const cleanupEntries = async () => {
+  if (browser) {
+    if (cleanupInProgress) {
+      return
+    }
+
+    const timeSinceLastCleanup = Date.now() - lastCleanup
+    if (timeSinceLastCleanup < cleanupInterval) {
+      return
+    }
+
+    let entriesSize = JSON.stringify(entries).length
+    if (entriesSize < entriesMaxSize) {
+      return
+    }
+
+    cleanupInProgress = true
+
+    let monthsToPersist: { year: number; month: number }[] = []
+
+    monthsToPersist.push({
+      year: currentDateObject().year,
+      month: currentDateObject().month,
+    })
+
+    monthsToPersist.push({
+      year: calendarPosition.year,
+      month: calendarPosition.month,
+    })
+
+    const route = page.url.pathname
+    if (route.startsWith('/app/entry/')) {
+      const dateStr = route.replace('/app/entry/', '').replaceAll('/', '')
+      const dateRegex = /^\d{4}-\d{2}-\d{2}$/
+      if (dateRegex.test(dateStr)) {
+        const dateObj = new Date(dateStr)
+        const year = dateObj.getFullYear()
+        const month = dateObj.getMonth()
+        monthsToPersist.push({ year, month })
+      }
+    }
+
+    monthsToPersist.forEach(({ year, month }) => {
+      // add next and previous month as well
+      const prevMonth = month === 0 ? 11 : month - 1
+      const prevYear = month === 0 ? year - 1 : year
+      const nextMonth = month === 11 ? 0 : month + 1
+      const nextYear = month === 11 ? year + 1 : year
+
+      monthsToPersist.push({ year: prevYear, month: prevMonth })
+      monthsToPersist.push({ year: nextYear, month: nextMonth })
+    })
+    // remove duplicates
+    monthsToPersist = monthsToPersist.filter(
+      (month, index, self) =>
+        index ===
+        self.findIndex(m => m.year === month.year && m.month === month.month),
+    )
+
+    // sort entries by date ascending so we remove oldest first
+    // this creates a copy so we don't mutate the original array while iterating
+    let entriesCopySorted = sortEntries(entries)
+    for (const entry of entriesCopySorted) {
+      setTimeout(() => {
+        entriesSize = JSON.stringify(entriesCopySorted).length
+
+        if (entriesSize < entriesTargetSize) {
+          return
+        }
+
+        const entryDate = new Date(entry.date)
+        const entryYear = entryDate.getFullYear()
+        const entryMonth = entryDate.getMonth()
+
+        const shouldPersist = monthsToPersist.some(
+          m => m.year === entryYear && m.month === entryMonth,
+        )
+
+        if (!shouldPersist) {
+          // remove entry
+          entriesCopySorted = entriesCopySorted.filter(
+            e => e.date !== entry.date,
+          )
+        }
+      }, 128)
+
+      // write the cleaned up entries back to the store
+      entries = entriesCopySorted
+
+      lastCleanup = Date.now()
+      cleanupInProgress = false
+    }
   }
 }
