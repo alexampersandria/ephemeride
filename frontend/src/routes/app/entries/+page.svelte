@@ -276,9 +276,8 @@ const filtersApplied = $derived.by(() => {
     }
 
     .entry-item {
-      flex: 0 1 calc(50% - var(--padding-s) / 2);
-      min-width: var(--block-size-xs);
-      width: calc(100% / 3 - var(--padding-s));
+      flex: 1 1 100%;
+      max-width: 100%;
     }
   }
 

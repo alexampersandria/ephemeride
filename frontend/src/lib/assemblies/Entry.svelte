@@ -373,7 +373,6 @@ const categoryRemoveTag = async (tagId: string) => {
   flex-direction: column;
   gap: var(--padding-l);
   width: 100%;
-  max-width: var(--block-size-s);
 
   .categories {
     padding-top: var(--padding-m);
@@ -399,6 +398,7 @@ const categoryRemoveTag = async (tagId: string) => {
 
     &.mood-field {
       gap: var(--padding-s);
+      align-items: center;
     }
 
     &.entry-field-text {
@@ -418,6 +418,7 @@ const categoryRemoveTag = async (tagId: string) => {
       font-size: var(--font-size-l);
       display: flex;
       justify-content: space-between;
+      width: 100%;
 
       .inner {
         display: flex;

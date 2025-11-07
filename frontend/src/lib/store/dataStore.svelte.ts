@@ -18,6 +18,7 @@ import { getEntries, type FetchEntriesOptions } from '$lib/utils/api'
 import {
   calendarDefaults,
   currentDateObject,
+  isValidDate,
   monthDateRange,
   sortCategories,
   sortEntries,
@@ -619,8 +620,8 @@ const cleanupEntries = async () => {
     const route = page.url.pathname
     if (route.startsWith('/app/entry/')) {
       const dateStr = route.replace('/app/entry/', '').replaceAll('/', '')
-      const dateRegex = /^\d{4}-\d{2}-\d{2}$/
-      if (dateRegex.test(dateStr)) {
+
+      if (isValidDate(dateStr)) {
         const dateObj = new Date(dateStr)
         const year = dateObj.getFullYear()
         const month = dateObj.getMonth()

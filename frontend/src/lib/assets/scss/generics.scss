@@ -100,7 +100,15 @@ textarea {
 }
 
 .app-page {
-  padding: var(--padding-l) 0;
+  padding: var(--padding-l) var(--padding-m);
+
+  &:has(> .container) {
+    padding-inline: 0;
+  }
+
+  .container {
+    width: 100%;
+  }
 
   .app-page-title {
     font-size: var(--font-size-l);
@@ -285,6 +293,14 @@ blockquote {
       color: var(--text-muted);
     }
   }
+}
+
+.bold {
+  font-weight: 600;
+}
+
+.italic {
+  font-style: italic;
 }
 
 .centered {

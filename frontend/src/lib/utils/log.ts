@@ -42,6 +42,10 @@ export const sortEntries = (entries: Entry[]): Entry[] => {
  * @returns formatted date string like "Monday, January 1, 2023"
  */
 export const fullDate = (dateString: string) => {
+  if (!isValidDate(dateString)) {
+    return null
+  }
+
   const date = new Date(dateString)
 
   const weekday = date.toLocaleDateString(undefined, { weekday: 'long' })
@@ -49,7 +53,16 @@ export const fullDate = (dateString: string) => {
   const day = date.getDate()
   const year = date.getFullYear()
 
+  if (year < 100) {
+    return `${weekday}, ${month} ${day}, Year ${year}`
+  }
+
   return `${weekday}, ${month} ${day}, ${year}`
+}
+
+export const isValidDate = (dateString: string) => {
+  const regex = /^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/
+  return regex.test(dateString)
 }
 
 /**
