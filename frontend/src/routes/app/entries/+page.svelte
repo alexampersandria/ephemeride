@@ -77,7 +77,6 @@ const reset = () => {
 
 const getData = async (more = false) => {
   if (userStore.sessionId) {
-    console.log('more', more)
     if (more) {
       options.offset = pagination.offset + pagination.limit
     } else {

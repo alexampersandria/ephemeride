@@ -13,8 +13,6 @@ let date = $state(new Date())
 let limit = $state(10)
 
 const generateData = async () => {
-  console.log('Generating  data...')
-
   i = 0
   log = []
   let d = new Date(date)

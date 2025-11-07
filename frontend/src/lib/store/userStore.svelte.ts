@@ -55,7 +55,6 @@ export const useUserStore: () => UserState = () => {
         })
         .catch(err => {
           console.error('Error fetching user details:', err)
-          userDetails = null
         })
     }
   })
@@ -69,6 +68,9 @@ export const useUserStore: () => UserState = () => {
     },
     get userDetails() {
       return userDetails
+    },
+    set userDetails(value) {
+      userDetails = value
     },
     get logOut() {
       return logOut

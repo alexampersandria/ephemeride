@@ -53,6 +53,10 @@ let {
 let inputState: InputState = $state('untouched')
 
 let errors = $derived.by(() => {
+  if (serverError !== undefined) {
+    return [serverError]
+  }
+
   const errs: string[] = []
   if (inputState === 'untouched') {
     return errs
@@ -70,6 +74,16 @@ let errors = $derived.by(() => {
 
   return errs
 })
+
+let disableButton = $derived.by(() => {
+  if (serverError !== undefined) {
+    return false
+  } else {
+    return errors.length > 0
+  }
+})
+
+let serverError = $state<string | undefined>(undefined)
 
 let entryTextModal = $state(false)
 
@@ -104,6 +118,7 @@ const startEdit = () => {
 
 const saveChanges = async () => {
   inputState = 'touched'
+  serverError = undefined
 
   if (errors.length > 0) {
     return
@@ -113,27 +128,34 @@ const saveChanges = async () => {
 
   if (mood !== undefined) {
     if (mode === 'create' && onCreate) {
-      onCreate({
+      const res = await onCreate({
         date,
         entry,
         mood,
         selected_tags: selectedTagIds,
       })
+      if (res) {
+        mode = 'view'
+      } else {
+        serverError = 'Failed to create entry'
+      }
     } else if (mode === 'edit' && id && onUpdate) {
-      onUpdate({
+      const res = await onUpdate({
         id,
         date,
         entry,
         mood,
         selected_tags: selectedTagIds,
       })
+      if (res) {
+        mode = 'view'
+      } else {
+        serverError = 'Failed to update entry'
+      }
+    } else {
+      mode = 'view'
     }
-  } else {
-    console.error('Mood is undefined, cannot save entry')
-    return
   }
-
-  mode = 'view'
 }
 
 const cancelChanges = () => {
@@ -329,7 +351,7 @@ const categoryRemoveTag = async (tagId: string) => {
       <Button
         type="primary"
         onclick={() => saveChanges()}
-        disabled={errors.length > 0}>
+        disabled={disableButton}>
         <Save />
         Save changes
       </Button>
@@ -337,7 +359,7 @@ const categoryRemoveTag = async (tagId: string) => {
       <Button
         type="primary"
         onclick={() => saveChanges()}
-        disabled={errors.length > 0}>
+        disabled={disableButton}>
         <Plus />
         Create Entry
       </Button>
