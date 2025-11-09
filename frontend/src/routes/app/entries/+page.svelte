@@ -139,7 +139,8 @@ const filtersApplied = $derived.by(() => {
     (options.tags !== undefined && options.tags.length > 0) ||
     options.from_mood !== undefined ||
     options.to_mood !== undefined ||
-    (options.order !== undefined && options.order !== 'date_desc')
+    (options.order !== undefined && options.order !== 'date_desc') ||
+    (options.limit !== undefined && options.limit !== 20)
   )
 })
 </script>

@@ -21,10 +21,21 @@ let {
 
 const onchange = (event: Event) => {
   const target = event.target as HTMLSelectElement
-  value = target.value
+
+  const isNumber = !isNaN(Number(target.value))
+  const isBoolean =
+    target.value.toLowerCase() === 'true' ||
+    target.value.toLowerCase() === 'false'
+  if (isNumber) {
+    value = Number(target.value)
+  } else if (isBoolean) {
+    value = target.value.toLowerCase() === 'true'
+  } else {
+    value = target.value
+  }
 
   inputstate = evaluateInputState({
-    value,
+    value: `${value}`,
     inputstate,
     required,
   })
