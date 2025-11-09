@@ -6,7 +6,7 @@ import { Smile } from 'lucide-svelte'
 
 let dataStore = useDataStore()
 
-let { date, entry }: EntryPreviewProps = $props()
+let { date, entry, small = false }: EntryPreviewProps = $props()
 
 let tagList = $derived.by(() => {
   let tags =
@@ -22,7 +22,7 @@ let mood = $derived.by(() => {
 </script>
 
 {#key date}
-  <a href={`/app/entry/${date}`} class="entry-preview">
+  <a href={`/app/entry/${date}`} class="entry-preview" class:small>
     <div class="text">
       <div class="date">
         <div class="desktop-only">
@@ -63,6 +63,25 @@ let mood = $derived.by(() => {
   color: var(--text-primary);
   height: var(--entry-preview-height);
   padding: var(--padding-s);
+
+  &.small {
+    height: var(--entry-preview-height-small);
+    padding: 0;
+
+    .text {
+      .no-entry,
+      .tags {
+        font-size: var(--font-size-xs);
+      }
+    }
+
+    .mood {
+      font-size: var(--font-size-s);
+      width: calc(var(--entry-preview-height-small));
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
 
   &:active {
     transform: var(--click-transform);
