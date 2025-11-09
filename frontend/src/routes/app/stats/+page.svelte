@@ -97,12 +97,5 @@ const navigateYear = async (year: number) => {
       }
     }
   }
-
-  .loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: var(--padding-l);
-  }
 }
 </style>
