@@ -239,20 +239,18 @@ const isActive = (day: number | null) => {
         @for $i from 1 through 5 {
           &.mood-#{$i} {
             .day-button {
-              background-color: var(--calendar-day-mood-#{$i}-background);
-              color: var(--calendar-day-mood-#{$i}-color);
+              background-color: var(--mood-value-#{$i}-background);
+              color: var(--mood-value-#{$i}-color);
             }
 
             .day-button:hover {
-              background-color: var(--calendar-day-mood-#{$i}-background-hover);
-              color: var(--calendar-day-mood-#{$i}-color);
+              background-color: var(--mood-value-#{$i}-background-hover);
+              color: var(--mood-value-#{$i}-color);
             }
 
             .day-button:active {
-              background-color: var(
-                --calendar-day-mood-#{$i}-background-active
-              );
-              color: var(--calendar-day-mood-#{$i}-color);
+              background-color: var(--mood-value-#{$i}-background-active);
+              color: var(--mood-value-#{$i}-color);
             }
           }
         }
@@ -284,6 +282,20 @@ const isActive = (day: number | null) => {
             background-color: var(--background-primary);
             color: var(--text-primary);
             transform: var(--click-transform);
+          }
+        }
+      }
+    }
+  }
+
+  &:has(a.day-button:hover) {
+    .day {
+      @for $i from 1 through 5 {
+        &.mood-#{$i} {
+          .day-button {
+            &:not(:hover) {
+              background-color: var(--mood-value-#{$i}-background-muted);
+            }
           }
         }
       }

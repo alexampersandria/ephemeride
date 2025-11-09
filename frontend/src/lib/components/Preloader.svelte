@@ -3,7 +3,7 @@ import { fade } from 'svelte/transition'
 import Spinner from './Spinner.svelte'
 </script>
 
-<div class="preloader" out:fade={{ duration: 333, delay: 333 }}>
+<div class="preloader" out:fade={{ duration: 150, delay: 150 }}>
   <div class="gradient-overlay"></div>
   <Spinner --spinner-color="var(--color-base-60)" />
   <div class="text">Gathering thoughts...</div>
@@ -51,8 +51,8 @@ import Spinner from './Spinner.svelte'
   .text {
     font-size: var(--font-size-s);
     font-weight: 500;
-    animation: textFadeIn 333ms ease both;
-    animation-delay: 666ms;
+    animation: textFadeIn 250ms ease both;
+    animation-delay: 300ms;
   }
 
   @keyframes gradientDrift {

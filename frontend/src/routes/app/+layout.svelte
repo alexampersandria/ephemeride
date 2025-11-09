@@ -255,13 +255,17 @@ $effect(() => {
     <hr />
 
     <div class="internal">
-      <Button href="/" fullwidth>
-        <Logo /> Landing Page
-      </Button>
+      <div class="internal-element">
+        <Button href="/" fullwidth>
+          <Logo /> Landing Page
+        </Button>
+      </div>
 
-      <Button href="/docs" fullwidth>
-        <Book /> Docs
-      </Button>
+      <div class="internal-element">
+        <Button href="/docs" fullwidth>
+          <Book /> Docs
+        </Button>
+      </div>
     </div>
 
     <Button
@@ -627,6 +631,10 @@ $effect(() => {
   .internal {
     display: flex;
     gap: var(--padding-xs);
+
+    .internal-element {
+      flex: 1;
+    }
   }
 }
 </style>

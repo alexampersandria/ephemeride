@@ -1,6 +1,7 @@
 <script lang="ts">
 import type { SelectProps } from '$lib/types/components/select'
 import { evaluateInputState } from '$lib/utils/input'
+import { ChevronDown } from 'lucide-svelte'
 import { onMount } from 'svelte'
 
 let {
@@ -46,78 +47,105 @@ onMount(() => {
 })
 </script>
 
-<select
-  class="select {placeholder && !value ? 'placeholder-selected' : ''}"
-  {disabled}
-  {name}
-  {id}
-  {required}
-  class:fullwidth
-  class:invalid={inputstate === 'invalid'}
-  aria-invalid={inputstate === 'invalid'}
-  aria-label={ariaLabel}
-  {onchange}
-  {oninput}>
-  {#if placeholder}
-    <option class="select-option" value="" disabled selected={!value}>
-      {placeholder}
-    </option>
-  {/if}
-  {#each options as option}
-    <option
-      class="select-option"
-      value={option.value}
-      selected={option.value === value}
-      disabled={option.disabled}>
-      {option.label}
-    </option>
-  {/each}
-</select>
+<div class="select-wrapper">
+  <select
+    class="select {placeholder && !value ? 'placeholder-selected' : ''}"
+    {disabled}
+    {name}
+    {id}
+    {required}
+    class:fullwidth
+    class:invalid={inputstate === 'invalid'}
+    aria-invalid={inputstate === 'invalid'}
+    aria-label={ariaLabel}
+    {onchange}
+    {oninput}>
+    {#if placeholder}
+      <option class="select-option" value="" disabled selected={!value}>
+        {placeholder}
+      </option>
+    {/if}
+    {#each options as option}
+      <option
+        class="select-option"
+        value={option.value}
+        selected={option.value === value}
+        disabled={option.disabled}>
+        {option.label}
+      </option>
+    {/each}
+  </select>
+
+  <div class="arrow">
+    <ChevronDown />
+  </div>
+</div>
 
 <style lang="scss">
-.select {
-  padding: var(--select-padding);
-  border-radius: var(--select-radius);
-  background-color: var(--select-background);
-  border: var(--border-width) solid var(--select-border);
+.select-wrapper {
+  display: inline-block;
+  position: relative;
 
-  &.fullwidth {
-    width: 100%;
+  .arrow {
+    position: absolute;
+    top: 50%;
+    right: var(--select-arrow-right);
+    transform: translateY(calc(-50% + 2px));
+    pointer-events: none;
+    color: var(--text-muted);
+    transition: var(--interactive-transition);
   }
 
-  &:not(:disabled) {
-    cursor: pointer;
+  &:has(.select:hover) .arrow {
+    color: var(--text-normal);
+  }
 
-    &,
-    option:not(:disabled) {
-      color: var(--select-color);
+  .select {
+    padding: var(--select-padding);
+    border-radius: var(--select-radius);
+    background-color: var(--select-background);
+    border: var(--border-width) solid var(--select-border);
+    appearance: none;
+
+    &.fullwidth {
+      width: 100%;
     }
 
-    &:hover {
-      background-color: var(--select-background-hover);
+    &:not(:disabled) {
+      cursor: pointer;
+
+      &,
+      option:not(:disabled) {
+        color: var(--select-color);
+      }
+
+      &:hover {
+        background-color: var(--select-background-hover);
+      }
+
+      &:focus {
+        background-color: var(--select-background);
+      }
     }
 
-    &:focus {
-      background-color: var(--select-background);
+    &:disabled {
+      color: var(--input-disabled-color);
+      background-color: var(--input-disabled-background);
     }
-  }
 
-  &:disabled {
-    color: var(--input-disabled-color);
-    background-color: var(--input-disabled-background);
-  }
+    option:disabled {
+      color: var(--input-disabled-color);
+    }
 
-  option:disabled {
-    color: var(--input-disabled-color);
-  }
+    &.invalid {
+      box-shadow: 0 0 0 var(--state-shadow-width)
+        var(--color-invalid-background);
+      border-color: var(--color-invalid-border);
+    }
 
-  &.invalid {
-    box-shadow: 0 0 0 var(--state-shadow-width) var(--color-invalid-background);
-    border-color: var(--color-invalid-border);
-  }
-
-  &.placeholder-selected {
-    color: var(--select-placeholder-color);
+    &.placeholder-selected {
+      color: var(--select-placeholder-color);
+    }
   }
 }
 </style>

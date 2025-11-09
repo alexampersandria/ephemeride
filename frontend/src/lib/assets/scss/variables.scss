@@ -99,8 +99,9 @@ $mood-bar-width: 2px;
   --message-gap-m: var(--padding-s);
   --message-gap-l: var(--padding-m);
 
-  --select-padding: var(--input-padding);
+  --select-padding: var(--padding-s) calc(var(--padding-m) + 1ch) var(--padding-s) var(--padding-m);
   --select-radius: var(--input-radius);
+  --select-arrow-right: var(--padding-s);
 
   --border-width: #{$border-width};
   --focus-shadow-width: #{$focus-shadow-width};
@@ -163,12 +164,19 @@ $mood-bar-width: 2px;
 
   --calendar-button-spacing: var(--border-width);
 
+  --heatmap-cell-size: 0.8rem;
+  --heatmap-cell-gap: 3px;
+  --heatmap-padding: var(--padding-m);
+  --heatmap-cell-border-radius: var(--radius-xxs);
+  --heatmap-border-radius: var(--radius-s);
+
   --better-ease-out: cubic-bezier(0.09, 0.04, 0.3, 0.93);
   --animation-length-xs: 75ms;
   --animation-length-s: 150ms;
   --animation-length-m: 250ms;
   --animation-length-l: 400ms;
   --animation-length-xl: 600ms;
+  --animation-length-xxl: 1200ms;
   --interactive-transition: color var(--animation-length-s) var(--better-ease-out), background-color var(--animation-length-s) var(--better-ease-out), border-color var(--animation-length-s) var(--better-ease-out), box-shadow var(--animation-length-s) var(--better-ease-out), transform var(--animation-length-s) var(--better-ease-out);
 }
 

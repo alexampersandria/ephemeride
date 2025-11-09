@@ -131,8 +131,8 @@ let mood = $derived.by(() => {
 
     @for $i from 1 through 5 {
       &.mood-#{$i} {
-        background-color: var(--calendar-day-mood-#{$i}-background);
-        color: var(--calendar-day-mood-#{$i}-color);
+        background-color: var(--mood-value-#{$i}-background);
+        color: var(--mood-value-#{$i}-color);
       }
     }
 

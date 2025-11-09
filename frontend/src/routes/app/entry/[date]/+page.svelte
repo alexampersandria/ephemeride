@@ -158,5 +158,12 @@ let valid = $derived.by(() => {
     justify-content: center;
     gap: var(--padding-s);
   }
+
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--padding-l);
+  }
 }
 </style>

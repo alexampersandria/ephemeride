@@ -1,0 +1,129 @@
+<script lang="ts">
+import type { HeatmapProps } from '$lib/types/components/heatmap'
+import { currentDateObject, weeksInYear } from '$lib/utils/log'
+
+let {
+  data,
+  year = currentDateObject().year,
+  loading = false,
+}: HeatmapProps = $props()
+
+let weeks = $derived.by(() => {
+  return weeksInYear(year)
+})
+
+let moodValue = (date: string) => {
+  if (data) {
+    const dataPoint = data.find(point => point.date === date)
+    if (dataPoint) {
+      return dataPoint.value
+    }
+  }
+  return null
+}
+</script>
+
+<div class="heatmap" class:loading>
+  {#each weeks as week, weekIndex}
+    <div class="week week-{weekIndex}">
+      {#each week as day}
+        {@const value = moodValue(day)}
+        <a
+          href={`/app/entry/${day}`}
+          class="day mood-{value ?? 'null'} "
+          aria-label={`${day}: ${value ?? 'null'}`}></a>
+      {/each}
+    </div>
+  {/each}
+</div>
+
+<style lang="scss">
+.heatmap {
+  display: flex;
+  gap: var(--heatmap-cell-gap);
+  padding: var(--heatmap-padding);
+  width: 100%;
+  justify-content: center;
+  overflow-x: auto;
+
+  background-color: var(--heatmap-background);
+  border-radius: var(--heatmap-border-radius);
+  border: var(--border-width) solid var(--border-color);
+
+  .week {
+    display: flex;
+    flex-direction: column;
+    gap: var(--heatmap-cell-gap);
+
+    &:first-child {
+      align-self: flex-end;
+    }
+
+    .day {
+      position: relative;
+      width: var(--heatmap-cell-size);
+      height: var(--heatmap-cell-size);
+      border-radius: var(--heatmap-cell-border-radius);
+      background-color: var(--heatmap-cell-background);
+      overflow: hidden;
+
+      @for $i from 1 through 5 {
+        &.mood-#{$i} {
+          background-color: var(--mood-value-#{$i}-background);
+
+          &:hover {
+            background-color: var(--mood-value-#{$i}-background-hover);
+            box-shadow: var(--mood-value-#{$i}-glow);
+            z-index: 1;
+          }
+
+          &:active {
+            background-color: var(--mood-value-#{$i}-background-active);
+          }
+        }
+      }
+    }
+  }
+
+  &:has(.day:not(.mood-null):hover) {
+    .day {
+      @for $i from 1 through 5 {
+        &:not(:hover) {
+          &.mood-#{$i} {
+            background-color: var(--mood-value-#{$i}-background-muted);
+          }
+        }
+      }
+    }
+  }
+
+  &.loading {
+    .week {
+      .day {
+        animation: loadingAnimation var(--animation-length-xxl)
+          var(--better-ease-out) infinite;
+      }
+
+      @for $i from 1 through 53 {
+        &.week-#{$i} {
+          .day {
+            animation-delay: calc(0.005s * #{$i});
+          }
+        }
+      }
+    }
+
+    @keyframes loadingAnimation {
+      0% {
+        background-color: var(--heatmap-cell-background);
+      }
+      50% {
+        background-color: var(--heatmap-cell-background-loading);
+      }
+      100% {
+        background-color: var(--heatmap-cell-background);
+      }
+    }
+  }
+}
+</style>

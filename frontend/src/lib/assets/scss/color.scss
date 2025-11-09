@@ -395,10 +395,13 @@ $moodColors: ('red', 'orange', 'yellow', 'lime', 'green');
     --mood-button-selected-secondary-#{$index}: var(--color-#{$color}-70);
     --mood-button-selected-tertiary-#{$index}: var(--color-#{$color}-90);
 
-    --calendar-day-mood-#{$index}-background: var(--color-#{$color}-60);
-    --calendar-day-mood-#{$index}-background-hover: var(--color-#{$color}-50);
-    --calendar-day-mood-#{$index}-background-active: var(--color-#{$color}-40);
-    --calendar-day-mood-#{$index}-color: var(--color-base-100);
+    --mood-value-#{$index}-background: var(--color-#{$color}-60);
+    --mood-value-#{$index}-background-hover: var(--color-#{$color}-60);
+    --mood-value-#{$index}-background-active: var(--color-#{$color}-40);
+    --mood-value-#{$index}-color: var(--color-base-100);
+    --mood-value-#{$index}-background-muted: var(--color-#{$color}-70);
+
+    --mood-value-#{$index}-glow: 0 0 2rem var(--mood-value-#{$index}-background);
   }
 
   --mood-bar-color-primary: var(--color-base-80);
@@ -437,6 +440,10 @@ $moodColors: ('red', 'orange', 'yellow', 'lime', 'green');
       background-color: var(--color-#{$color}-10);
     }
   }
+
+  --heatmap-background: var(--background-secondary);
+  --heatmap-cell-background: var(--background-primary);
+  --heatmap-cell-background-loading: var(--background-accent);
 }
 
 #root.theme-dark {
@@ -546,10 +553,11 @@ $moodColors: ('red', 'orange', 'yellow', 'lime', 'green');
     --mood-button-selected-secondary-#{$index}: var(--color-#{$color}-40);
     --mood-button-selected-tertiary-#{$index}: var(--color-#{$color}-20);
 
-    --calendar-day-mood-#{$index}-background: var(--color-#{$color}-40);
-    --calendar-day-mood-#{$index}-background-hover: var(--color-#{$color}-50);
-    --calendar-day-mood-#{$index}-background-active: var(--color-#{$color}-30);
-    --calendar-day-mood-#{$index}-color: var(--color-base-100);
+    --mood-value-#{$index}-background: var(--color-#{$color}-50);
+    --mood-value-#{$index}-background-hover: var(--color-#{$color}-50);
+    --mood-value-#{$index}-background-active: var(--color-#{$color}-40);
+    --mood-value-#{$index}-color: var(--color-base-100);
+    --mood-value-#{$index}-background-muted: var(--color-#{$color}-30);
   }
 
   --mood-bar-color-primary: var(--color-base-40);
