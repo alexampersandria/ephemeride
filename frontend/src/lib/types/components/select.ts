@@ -2,13 +2,13 @@ import type { InputFieldAttributes } from '../input'
 
 export type SelectOption = {
   label: string
-  value: string
+  value: string | number | boolean
   disabled?: boolean
 }
 
 export type SelectProps = {
   options: SelectOption[]
-  value?: string
+  value?: SelectOption['value']
   placeholder?: string
   fullwidth?: boolean
 } & InputFieldAttributes
