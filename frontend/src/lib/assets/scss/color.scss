@@ -355,6 +355,21 @@ $moodColors: ('red', 'orange', 'yellow', 'lime', 'green');
   --button-destructive-border-active: var(--button-destructive-border);
   --button-destructive-color-active: var(--button-destructive-color);
 
+  --button-navigation-background: transparent;
+  --button-navigation-border: transparent;
+  --button-navigation-color: var(--text-muted);
+  --button-navigation-background-hover: var(--background-accent);
+  --button-navigation-border-hover: transparent;
+  --button-navigation-color-hover: var(--text-primary);
+  --button-navigation-background-active: var(--color-base-80);
+  --button-navigation-border-active: transparent;
+  --button-navigation-color-active: var(--text-primary);
+
+  --button-navigation-background-route-active: var(--background-accent);
+  --button-navigation-border-route-active: transparent;
+  --button-navigation-color-route-active: var(--text-primary);
+  --button-navigation-background-route-active-hover: var(--background-accent);
+
   --alert-background: var(--background-primary);
   --alert-border: var(--border-color);
   --alert-color: var(--text-primary);
@@ -516,6 +531,21 @@ $moodColors: ('red', 'orange', 'yellow', 'lime', 'green');
   --button-destructive-background-active: var(--color-red-20);
   --button-destructive-border-active: var(--button-destructive-border);
   --button-destructive-color-active: var(--button-destructive-color);
+
+  --button-navigation-background: transparent;
+  --button-navigation-border: transparent;
+  --button-navigation-color: var(--text-muted);
+  --button-navigation-background-hover: var(--background-accent);
+  --button-navigation-border-hover: transparent;
+  --button-navigation-color-hover: var(--text-primary);
+  --button-navigation-background-active: var(--background-primary);
+  --button-navigation-border-active: transparent;
+  --button-navigation-color-active: var(--text-primary);
+
+  --button-navigation-background-route-active: var(--background-accent);
+  --button-navigation-border-route-active: transparent;
+  --button-navigation-color-route-active: var(--text-primary);
+  --button-navigation-background-route-active-hover: var(--background-accent);
 
   --modal-background: var(--background-primary);
   --modal-backdrop: var(--background-overlay);

@@ -195,29 +195,31 @@ let clickHandler = () => {
   }
 
   &.navigation {
-    background-color: transparent;
-    border-color: transparent;
-    color: var(--text-muted);
+    background-color: var(--button-navigation-background);
+    border-color: var(--button-navigation-border);
+    color: var(--button-navigation-color);
 
     &:not(:disabled, .loading) {
       &:hover {
-        background-color: var(--background-accent);
-        color: var(--text-primary);
-        border-color: transparent;
+        background-color: var(--button-navigation-background-hover);
+        color: var(--button-navigation-color-hover);
+        border-color: var(--button-navigation-border-hover);
       }
 
       &:active {
-        background-color: var(--background-primary);
-        color: var(--text-primary);
-        border-color: transparent;
+        background-color: var(--button-navigation-background-active);
+        color: var(--button-navigation-color-active);
+        border-color: var(--button-navigation-border-active);
       }
 
       &.active {
-        color: var(--text-primary);
-        background-color: var(--background-accent);
+        color: var(--button-navigation-color-route-active);
+        background-color: var(--button-navigation-background-route-active);
 
         &:hover {
-          background-color: var(--background-accent);
+          background-color: var(
+            --button-navigation-background-route-active-hover
+          );
         }
       }
     }
