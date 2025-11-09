@@ -123,6 +123,23 @@ export const monthDateRange = (year?: number, month?: number) => {
 }
 
 /**
+ * returns an object with the first and last date of the given year
+ * defaults to current year
+ * @param year - the year to get the range for
+ * @returns object with first and last date strings YYYY-MM-DD
+ */
+export const yearDateRange = (year?: number) => {
+  if (!year) {
+    year = currentDateObject().year
+  }
+
+  const firstDate = `${year}-01-01`
+  const lastDate = `${year}-12-31`
+
+  return { firstDate, lastDate }
+}
+
+/**
  * gets the current year and month as numbers using the currentDate function
  * @returns the current year and month as numbers using the currentDate function
  */
@@ -227,4 +244,38 @@ export const datesInRange = (startDate: string, endDate: string) => {
   }
 
   return dates
+}
+
+/**
+ * returns an array of weeks in a year, each week is an array of date strings (YYYY-MM-DD)
+ * weeks start on monday
+ * @param year - the year to get the weeks for
+ */
+export const weeksInYear = (year: number) => {
+  const daysInYear =
+    year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0) ? 366 : 365
+  const days = Array.from({ length: daysInYear }, (_, i) => {
+    const date = new Date(Date.UTC(year, 0, i + 1))
+    return date.toISOString().split('T')[0]
+  })
+
+  const weeks: string[][] = []
+  let weekIndex = 0
+
+  days.forEach(day => {
+    const isMonday = new Date(day).getDay() === 1
+    if (isMonday) {
+      if (weeks.length !== 0) {
+        weekIndex++
+      }
+    }
+
+    if (weeks[weekIndex]) {
+      weeks[weekIndex].push(day)
+    } else {
+      weeks[weekIndex] = [day]
+    }
+  })
+
+  return weeks
 }
