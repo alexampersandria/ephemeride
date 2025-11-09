@@ -59,6 +59,7 @@ let options: FetchEntriesOptions = $state({
   from_mood: undefined,
   to_mood: undefined,
   order: 'date_desc',
+  limit: 20,
   offset: 0,
 })
 
@@ -70,6 +71,7 @@ const reset = () => {
     from_mood: undefined,
     to_mood: undefined,
     order: 'date_desc',
+    limit: 20,
     offset: 0,
   }
   getData()
@@ -200,6 +202,20 @@ const filtersApplied = $derived.by(() => {
       </div>
 
       <div class="form-field inline">
+        limit:
+        <Select
+          bind:value={options.limit}
+          options={[
+            { label: '10', value: 10 },
+            { label: '20', value: 20 },
+            { label: '50', value: 50 },
+            { label: '100', value: 100 },
+            { label: 'all', value: 0 },
+          ]}
+          onchange={() => getData()} />
+      </div>
+
+      <div class="form-field inline">
         order:
         <Select
           bind:value={options.order}
@@ -234,7 +250,7 @@ const filtersApplied = $derived.by(() => {
         </div>
         {#each list as entry}
           <div class="entry-item">
-            <EntryPreview date={entry.date} {entry} />
+            <EntryPreview date={entry.date} {entry} small />
           </div>
         {/each}
       </div>
