@@ -158,7 +158,7 @@ $effect(() => {
   &.closed {
     pointer-events: none;
     .modal-backdrop {
-      animation: closeBackdrop var(--animation-length-l) var(--better-ease-out);
+      animation: closeBackdrop var(--animation-length-s) var(--better-ease-out);
       animation-fill-mode: forwards;
 
       &:after {
@@ -198,7 +198,7 @@ $effect(() => {
       height: 100%;
       opacity: 0.02;
 
-      animation: openBackdropAfter var(--animation-length-l)
+      animation: openBackdropAfter var(--animation-length-m)
         var(--better-ease-out);
       animation-delay: var(--animation-length-s);
       animation-fill-mode: backwards;
