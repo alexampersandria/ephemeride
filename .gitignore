@@ -54,3 +54,6 @@ vite.config.ts.timestamp-*
 
 # inlang
 **/*.inlang/cache
+
+# .bak backup files
+*.bak
