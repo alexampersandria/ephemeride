@@ -14,7 +14,7 @@ export type UiState = {
 let theme: Theme = $state('system')
 let loading = $state(true)
 let leftMenuOpen = $state(true)
-let leftMenuWidth = $state(280)
+let leftMenuWidth = $state(326)
 
 const appliedTheme: Theme = $derived.by(() => {
   if (browser) {
