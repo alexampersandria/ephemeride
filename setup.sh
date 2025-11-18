@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # USER INPUT
-echo -e '\033[0;35m🪛 SETUP \033[0m-> postgres \033[0;36musername\033[0m'
+echo -e '\033[0;35m🪛 SETUP\033[0m → postgres \033[0;36musername\033[0m'
 echo -n -e '\033[0;32m❯\033[0m '
 read username
-echo -e '\033[0;35m🪛 SETUP \033[0m-> postgres \033[0;36mpassword\033[0m 🤫'
+echo -e '\033[0;35m🪛 SETUP\033[0m → postgres \033[0;36mpassword\033[0m 🤫'
 echo -n -e '\033[0;32m❯\033[0m '
 read -s password # hide passwordcch
 echo # new line after password
-echo -e '\033[0;35m🪛 SETUP \033[0m-> postgres \033[0;36mdatabase\033[0m'
+echo -e '\033[0;35m🪛 SETUP\033[0m → postgres \033[0;36mdatabase\033[0m'
 echo -n -e '\033[0;32m❯\033[0m '
 read database
 
@@ -19,7 +19,7 @@ start=$(date +%s%N)
 # Check if we're on macOS or Linux and install PostgreSQL accordingly
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # macOS setup
-    echo -e '\033[0;35m🪛 SETUP \033[0m-> Installing PostgreSQL on macOS...'
+    echo -e '\033[0;35m🪛 SETUP\033[0m → Installing PostgreSQL on macOS...'
     
     # Install PostgreSQL using Homebrew
     if ! command -v brew &> /dev/null; then
