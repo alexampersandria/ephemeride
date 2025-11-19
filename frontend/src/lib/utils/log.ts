@@ -1,4 +1,5 @@
 import { colorPriority } from '$lib/types/color'
+import type { Range } from '$lib/types/range'
 import type { CategoryWithTags, Entry } from '$lib/types/log'
 
 /**
@@ -278,4 +279,50 @@ export const weeksInYear = (year: number) => {
   })
 
   return weeks
+}
+
+/**
+ * checks if a date is between two other dates (inclusive)
+ * @param date - date to check (YYYY-MM-DD)
+ * @param range - object with startDate and endDate (YYYY-MM-DD)
+ * @returns true if date is between startDate and endDate, false otherwise
+ */
+export const isDateInRange = (date: string, range: Range<string>) => {
+  const checkDate = new Date(date)
+  const startDate = new Date(range.from)
+  const endDate = new Date(range.to)
+  return checkDate >= startDate && checkDate <= endDate
+}
+
+/**
+ * sorts a date range so that the from date is before the to date
+ */
+export const sortDateRange = (range: Range<string>) => {
+  const fromDate = new Date(range.from)
+  const toDate = new Date(range.to)
+  if (fromDate <= toDate) {
+    return range
+  } else {
+    return { from: range.to, to: range.from }
+  }
+}
+
+/**
+ * determines whether a date is closest to the start or end of a date range
+ */
+export const dateClosestToRangeEdge = (date: string, range: Range<string>) => {
+  const checkDate = new Date(date)
+  const fromDate = new Date(range.from)
+  const toDate = new Date(range.to)
+
+  if (checkDate <= fromDate) {
+    return 'from'
+  } else if (checkDate >= toDate) {
+    return 'to'
+  }
+
+  const distanceToFrom = Math.abs(checkDate.getTime() - fromDate.getTime())
+  const distanceToTo = Math.abs(checkDate.getTime() - toDate.getTime())
+
+  return distanceToFrom <= distanceToTo ? 'from' : 'to'
 }

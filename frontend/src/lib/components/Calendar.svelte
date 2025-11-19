@@ -1,21 +1,36 @@
 <script lang="ts">
-import type { CalendarProps } from '$lib/types/components/calendar'
+import type {
+  CalendarProps,
+  RangepickerValue,
+} from '$lib/types/components/calendar'
 import {
   calendarDaysInMonth,
   currentDate,
+  currentDateObject,
+  dateClosestToRangeEdge,
   formatMonth,
+  isDateInRange,
   monthDateRange,
+  sortDateRange,
 } from '$lib/utils/log'
 import { ChevronLeft, ChevronRight } from 'lucide-svelte'
 import { useDataStore } from '$lib/store/dataStore.svelte'
 import { page } from '$app/state'
 import { onMount } from 'svelte'
+import type { Range } from '$lib/types/range'
 
 let dataStore = useDataStore()
 
+const cdo = currentDateObject()
+
 let {
-  month = dataStore.calendarPosition.month,
-  year = dataStore.calendarPosition.year,
+  mode = 'navigation',
+  value = $bindable(undefined),
+  from = $bindable(undefined),
+  to = $bindable(undefined),
+  month = cdo.month,
+  year = cdo.year,
+  onchange,
 }: CalendarProps = $props()
 
 let daysInMonth = $derived.by(() => {
@@ -31,6 +46,11 @@ const getData = () => {
 }
 
 onMount(() => {
+  if (mode === 'navigation') {
+    month = dataStore.calendarPosition.month
+    year = dataStore.calendarPosition.year
+  }
+
   getData()
 })
 
@@ -79,6 +99,152 @@ const isActive = (day: number | null) => {
   const url = page.url.pathname
   return url === entryLink(day)
 }
+
+const isSelected = (day: number | null) => {
+  if (day === null || !value || mode === 'navigation') {
+    return false
+  }
+
+  const formattedDay = formatDay(day)
+  if (value === formattedDay || from === formattedDay || to === formattedDay) {
+    return true
+  } else {
+    return false
+  }
+}
+
+const isFirstSelected = (day: number | null) => {
+  if (
+    day === null ||
+    !value ||
+    mode !== 'rangepicker' ||
+    typeof value === 'string'
+  ) {
+    return false
+  }
+  if (!isSelected(day)) {
+    return false
+  }
+  if (!value.from || !value.to) {
+    return false
+  }
+  const formattedDay = formatDay(day)
+  return value.from === formattedDay
+}
+
+const isLastSelected = (day: number | null) => {
+  if (
+    day === null ||
+    !value ||
+    mode !== 'rangepicker' ||
+    typeof value === 'string'
+  ) {
+    return false
+  }
+  if (!isSelected(day)) {
+    return false
+  }
+  if (!value.from || !value.to) {
+    return false
+  }
+  const formattedDay = formatDay(day)
+  return value.to === formattedDay
+}
+
+const isBetweenSelected = (day: number | null) => {
+  if (
+    day === null ||
+    !value ||
+    mode !== 'rangepicker' ||
+    typeof value === 'string'
+  ) {
+    return false
+  }
+  if (isSelected(day)) {
+    return false
+  }
+  const formattedDay = formatDay(day)
+  if (value.from && value.to) {
+    return isDateInRange(formattedDay, value as Range<string>)
+  }
+  return false
+}
+
+const clickDay = (day: number) => {
+  const formattedDay = formatDay(day)
+  if (mode === 'datepicker') {
+    if (value === formattedDay) {
+      value = undefined
+    } else {
+      value = formattedDay
+    }
+    from = undefined
+    to = undefined
+  } else if (mode === 'rangepicker') {
+    if (value === undefined) {
+      value = {
+        from: formattedDay,
+        to: undefined,
+      }
+    } else if (typeof value === 'object') {
+      if (value.from === formattedDay) {
+        value.from = undefined
+      } else if (value.to === formattedDay) {
+        value.to = undefined
+      } else if (value.from === undefined) {
+        value.from = formattedDay
+      } else if (value.to === undefined) {
+        value.to = formattedDay
+      } else if (value.from && value.to) {
+        const edge = dateClosestToRangeEdge(
+          formattedDay,
+          value as Range<string>,
+        )
+        if (edge === 'from') {
+          value.from = formattedDay
+        } else {
+          value.to = formattedDay
+        }
+      }
+
+      if (value.from && value.to) {
+        console.log('sorting')
+        value = sortDateRange(value as Range<string>)
+      }
+    }
+
+    from = (value as RangepickerValue).from
+    to = (value as RangepickerValue).to
+  }
+  if (onchange) {
+    onchange()
+  }
+}
+
+$effect(() => {
+  if (to && from) {
+    value = { from, to }
+  } else if (from && !to) {
+    value = { from, to: undefined }
+  } else if (!from && to) {
+    value = { from: undefined, to }
+  } else {
+    value = undefined
+  }
+})
+
+$effect(() => {
+  if (value === undefined) {
+    from = undefined
+    to = undefined
+  } else if (typeof value === 'string') {
+    from = undefined
+    to = undefined
+  } else if (typeof value === 'object') {
+    from = value.from
+    to = value.to
+  }
+})
 </script>
 
 <div class="calendar">
@@ -119,11 +285,20 @@ const isActive = (day: number | null) => {
             class="day mood-{dayMood(day)}"
             class:today={isToday(day)}
             class:future={isFuture(day)}
-            class:active={isActive(day)}>
+            class:selected={isSelected(day)}
+            class:between-selected={isBetweenSelected(day)}
+            class:first-selected={isFirstSelected(day)}
+            class:last-selected={isLastSelected(day)}
+            class:active={isActive(day)}
+            class:empty={day === null}>
             {#if day}
-              <a href={entryLink(day)} class="day-button">{day}</a>
-            {:else}
-              <div class="day-button empty">&nbsp;</div>
+              {#if mode === 'navigation'}
+                <a href={entryLink(day)} class="day-button">{day}</a>
+              {:else}
+                <button onclick={() => clickDay(day)} class="day-button">
+                  {day}
+                </button>
+              {/if}
             {/if}
           </div>
         {/each}
@@ -265,13 +440,10 @@ const isActive = (day: number | null) => {
           line-height: var(--button-height);
           font-size: var(--font-size-s);
           background-color: transparent;
-
-          &.empty {
-            user-select: none;
-          }
         }
 
-        a.day-button {
+        a.day-button,
+        button.day-button {
           &:hover {
             background-color: var(--background-accent);
             color: var(--text-primary);
@@ -284,17 +456,91 @@ const isActive = (day: number | null) => {
             transform: var(--click-transform);
           }
         }
+
+        &.selected {
+          &:after {
+            background-color: var(--calendar-selected-background);
+          }
+
+          a.day-button,
+          button.day-button {
+            background-color: var(--calendar-selected-background);
+            color: var(--calendar-selected-color);
+
+            &:hover {
+              background-color: var(--calendar-selected-background);
+              color: var(--calendar-selected-color);
+            }
+          }
+
+          &.first-selected {
+            padding-right: 0;
+
+            .day-button {
+              border-top-right-radius: 0;
+              border-bottom-right-radius: 0;
+            }
+          }
+
+          &.last-selected {
+            padding-left: 0;
+
+            .day-button {
+              border-top-left-radius: 0;
+              border-bottom-left-radius: 0;
+            }
+          }
+        }
+
+        &.between-selected {
+          &:not(:last-child, :first-child) {
+            padding-inline: 0;
+
+            .day-button {
+              border-radius: 0;
+            }
+          }
+          &:first-child {
+            padding-right: 0;
+
+            .day-button {
+              border-top-right-radius: 0;
+              border-bottom-right-radius: 0;
+            }
+          }
+          &:last-child {
+            padding-left: 0;
+
+            .day-button {
+              border-top-left-radius: 0;
+              border-bottom-left-radius: 0;
+            }
+          }
+
+          a.day-button,
+          button.day-button {
+            background-color: var(--calendar-between-selected-background);
+            color: var(--calendar-between-selected-color);
+
+            &:hover {
+              background-color: var(--calendar-between-selected-background);
+              color: var(--calendar-between-selected-color);
+            }
+          }
+        }
       }
     }
   }
 
-  &:has(a.day-button:hover) {
+  &:has(a.day-button:hover, button.day-button:hover) {
     .day {
       @for $i from 1 through 5 {
         &.mood-#{$i} {
-          .day-button {
-            &:not(:hover) {
-              background-color: var(--mood-value-#{$i}-background-muted);
+          &:not(.selected, .between-selected) {
+            .day-button {
+              &:not(:hover) {
+                background-color: var(--mood-value-#{$i}-background-muted);
+              }
             }
           }
         }

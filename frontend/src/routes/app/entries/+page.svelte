@@ -16,6 +16,7 @@ import Checkbox from '$lib/components/Checkbox.svelte'
 import Label from '$lib/components/Label.svelte'
 import Message from '$lib/components/Message.svelte'
 import { takeAtLeast } from '$lib/utils/takeAtLeast'
+import Calendar from '$lib/components/Calendar.svelte'
 
 let {
   data,
@@ -157,22 +158,14 @@ const filtersApplied = $derived.by(() => {
     </div>
 
     <div class="filters">
-      <div class="form-field inline">
-        <Label for="from-date">From:</Label>
-        <input
-          id="from-date"
-          type="date"
-          bind:value={options.from_date}
+      <div class="rangepicker">
+        <Calendar
+          mode="rangepicker"
+          bind:from={options.from_date}
+          bind:to={options.to_date}
           onchange={() => getData()} />
       </div>
-      <div class="form-field inline">
-        <Label for="to-date">To:</Label>
-        <input
-          id="to-date"
-          type="date"
-          bind:value={options.to_date}
-          onchange={() => getData()} />
-      </div>
+
       <div>
         tags:
         <div class="tag-options">
@@ -283,6 +276,10 @@ const filtersApplied = $derived.by(() => {
     flex-wrap: wrap;
     gap: var(--padding-s);
     margin-bottom: var(--padding-m);
+
+    .rangepicker {
+      flex: 1 1 100%;
+    }
   }
 
   .entries {

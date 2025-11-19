@@ -459,6 +459,11 @@ $moodColors: ('red', 'orange', 'yellow', 'lime', 'green');
   --heatmap-background: var(--background-secondary);
   --heatmap-cell-background: var(--background-primary);
   --heatmap-cell-background-loading: var(--background-accent);
+
+  --calendar-selected-background: var(--color-base-20);
+  --calendar-selected-color: var(--color-base-100);
+  --calendar-between-selected-background: var(--color-base-30);
+  --calendar-between-selected-color: var(--color-base-100);
 }
 
 #root.theme-dark {
@@ -626,4 +631,9 @@ $moodColors: ('red', 'orange', 'yellow', 'lime', 'green');
       background-color: var(--color-#{$color}-90);
     }
   }
+
+  --calendar-selected-background: var(--color-base-90);
+  --calendar-selected-color: var(--color-base-00);
+  --calendar-between-selected-background: var(--color-base-80);
+  --calendar-between-selected-color: var(--color-base-30);
 }
