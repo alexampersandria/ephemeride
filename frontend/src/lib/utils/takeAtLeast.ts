@@ -1,3 +1,5 @@
+export const DEFAULT_TAKEATLEAST_DURATION = 500
+
 /**
  * delay a promise to take at least `minDuration` milliseconds
  * inspired by https:*x.com/vovacodes/status/1989785877740982329 but made simpler to use
@@ -10,11 +12,11 @@
  */
 export const takeAtLeast = async <R>(
   promise: Promise<R>,
-  minDuration: number = 500,
+  duration: number = DEFAULT_TAKEATLEAST_DURATION,
 ): Promise<R> => {
   const [res, _] = await Promise.all([
     promise,
-    new Promise(resolve => setTimeout(resolve, minDuration)),
+    new Promise(resolve => setTimeout(resolve, duration)),
   ])
   return res
 }

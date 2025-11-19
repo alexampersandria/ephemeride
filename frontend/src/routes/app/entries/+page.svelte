@@ -15,7 +15,10 @@ import type { PaginationObject } from '$lib/types/paginated'
 import Checkbox from '$lib/components/Checkbox.svelte'
 import Label from '$lib/components/Label.svelte'
 import Message from '$lib/components/Message.svelte'
-import { takeAtLeast } from '$lib/utils/takeAtLeast'
+import {
+  DEFAULT_TAKEATLEAST_DURATION,
+  takeAtLeast,
+} from '$lib/utils/takeAtLeast'
 import Calendar from '$lib/components/Calendar.svelte'
 
 let {
@@ -104,10 +107,15 @@ const getData = async (more = false) => {
     if (options.to_mood) params.append('to_mood', `${options.to_mood}`)
     if (options.order && options.order !== 'date_desc')
       params.append('order', options.order)
+    if (options.limit !== undefined && options.limit !== 20)
+      params.append('limit', `${options.limit}`)
 
     goto(`/app/entries/?${params.toString()}`, { replaceState: true })
 
-    const res = await takeAtLeast(getEntries(userStore.sessionId, options))
+    const res = await takeAtLeast(
+      getEntries(userStore.sessionId, options),
+      more ? DEFAULT_TAKEATLEAST_DURATION / 2 : DEFAULT_TAKEATLEAST_DURATION,
+    )
     if (res) {
       if (more) {
         list = [...list, ...res.data]
