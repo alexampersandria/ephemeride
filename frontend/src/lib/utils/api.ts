@@ -31,19 +31,19 @@ export const getEntries = async (
       params.append('tags', tagString)
     }
   }
-  if (options?.from_mood) {
+  if (options?.from_mood !== undefined) {
     params.append('from_mood', `${options.from_mood}`)
   }
-  if (options?.to_mood) {
+  if (options?.to_mood !== undefined) {
     params.append('to_mood', `${options.to_mood}`)
   }
   if (options?.order) {
     params.append('order', options.order)
   }
-  if (options?.limit) {
+  if (options?.limit !== undefined) {
     params.append('limit', `${options.limit}`)
   }
-  if (options?.offset) {
+  if (options?.offset !== undefined) {
     params.append('offset', `${options.offset}`)
   }
   const url = new URL(`${env.PUBLIC_VITE_API_URL}/v1/entries`)
