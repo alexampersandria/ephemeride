@@ -14,6 +14,7 @@ import EntryPreview from '$lib/components/EntryPreview.svelte'
 import type { PaginationObject } from '$lib/types/paginated'
 import Checkbox from '$lib/components/Checkbox.svelte'
 import Label from '$lib/components/Label.svelte'
+import Message from '$lib/components/Message.svelte'
 
 let {
   data,
@@ -37,6 +38,7 @@ let search = $derived.by(() => {
 })
 
 let list: Entry[] = $state([])
+let error = $state<string | undefined>(undefined)
 let pagination: PaginationObject = $state({
   limit: 0,
   offset: 0,
@@ -113,6 +115,7 @@ const getData = async (more = false) => {
       pagination = res.pagination
     } else {
       list = []
+      error = 'Failed to fetch entries'
     }
 
     loading = false
@@ -240,8 +243,12 @@ const filtersApplied = $derived.by(() => {
       <div class="loading">
         <Spinner />
       </div>
+    {:else if error}
+      <div class="flex-center">
+        <Message type="error">{error}</Message>
+      </div>
     {:else if list.length === 0}
-      <div class="dimmed">No entries found</div>
+      <div class="centered dimmed">No entries found</div>
     {:else}
       <div class="entries">
         <div class="count">
