@@ -64,8 +64,38 @@ let moodValue = (date: string) => {
         align-self: flex-end;
       }
 
+      @for $i from 1 through 53 {
+        &.week-#{$i} {
+          .day {
+            &:after {
+              animation-delay: calc(0.005s * #{$i});
+            }
+          }
+        }
+      }
+
       .day {
         padding: calc(var(--heatmap-cell-gap) / 2);
+        position: relative;
+
+        &:after {
+          content: '';
+          position: absolute;
+          top: calc(var(--heatmap-cell-gap) / 2);
+          left: calc(var(--heatmap-cell-gap) / 2);
+          z-index: 2;
+          display: block;
+          width: var(--heatmap-cell-size);
+          height: var(--heatmap-cell-size);
+          border-radius: var(--heatmap-cell-border-radius);
+          background-color: var(--heatmap-cell-background);
+
+          animation: loadingAnimation var(--animation-length-xxl)
+            var(--better-ease-out) infinite;
+
+          opacity: 0;
+          transition: opacity var(--animation-length-m) var(--better-ease-out);
+        }
 
         @for $i from 1 through 5 {
           &.mood-#{$i} {
@@ -112,15 +142,10 @@ let moodValue = (date: string) => {
     &.loading {
       .week {
         .day {
-          animation: loadingAnimation var(--animation-length-xxl)
-            var(--better-ease-out) infinite;
-        }
+          position: relative;
 
-        @for $i from 1 through 53 {
-          &.week-#{$i} {
-            .day {
-              animation-delay: calc(0.005s * #{$i});
-            }
+          &:after {
+            opacity: 1;
           }
         }
       }
