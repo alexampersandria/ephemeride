@@ -35,6 +35,8 @@ export type DataState = {
   categories: CategoryWithTags[]
   entries: Entry[]
   loaded: boolean
+  fetchedAt: number
+
   fetchCategories: () => Promise<void>
   fetchEntries: (options?: FetchEntriesOptions) => Promise<void>
 
@@ -66,6 +68,7 @@ let calendarPosition = $state<{ year: number; month: number }>({
 let categories: CategoryWithTags[] = $state([])
 let entries: Entry[] = $state([])
 let loaded: boolean = $state(false)
+let fetchedAt: number = $state(0)
 
 const fetchCategories = async () => {
   await fetch(`${env.PUBLIC_VITE_API_URL}/v1/user/categories`, {
@@ -107,28 +110,29 @@ const fetchEntries = async (options?: FetchEntriesOptions) => {
         }
       })
     }
+    fetchedAt = Date.now()
   }
 }
 
 const fetchEntry = async (date: string) => {
-  if (entries) {
-    await getEntries(userStore?.sessionId || '', {
-      from_date: date,
-      to_date: date,
-    }).then(data => {
-      if (data && data.data.length > 0) {
-        const entry = data.data[0]
-        if (getEntry(entry.date)) {
-          entries = entries.map(e => (e.date === entry.date ? entry : e))
-        } else {
-          entries.push(entry)
-        }
-        return entry
+  await getEntries(userStore?.sessionId || '', {
+    from_date: date,
+    to_date: date,
+  }).then(data => {
+    if (data && data.data.length > 0) {
+      const entry = data.data[0]
+      if (getEntry(entry.date)) {
+        entries = entries.map(e => (e.date === entry.date ? entry : e))
       } else {
-        entries = entries.filter(e => e.date !== date)
+        entries.push(entry)
       }
-    })
-  }
+      return entry
+    } else {
+      entries = entries.filter(e => e.date !== date)
+    }
+  })
+  fetchedAt = Date.now()
+
   return null
 }
 
@@ -521,6 +525,12 @@ export const useDataStore: () => DataState = () => {
     get loaded() {
       return loaded
     },
+    get fetchedAt() {
+      return fetchedAt
+    },
+    set fetchedAt(value) {
+      fetchedAt = value
+    },
 
     get fetchCategories() {
       return fetchCategories
@@ -594,7 +604,11 @@ const cleanupEntries = async () => {
     }
 
     const timeSinceLastCleanup = Date.now() - lastCleanup
-    if (timeSinceLastCleanup < cleanupInterval) {
+    const timeSinceFetchedAt = Date.now() - fetchedAt
+    if (
+      timeSinceLastCleanup < cleanupInterval ||
+      timeSinceFetchedAt < cleanupInterval
+    ) {
       return
     }
 
