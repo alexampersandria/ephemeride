@@ -5,6 +5,7 @@ import Spinner from '$lib/components/Spinner.svelte'
 import { useDataStore } from '$lib/store/dataStore.svelte'
 import type { EditEntry, Entry as EntryType, NewEntry } from '$lib/types/log'
 import { isValidDate } from '$lib/utils/log'
+import { takeAtLeast } from '$lib/utils/takeAtLeast'
 import type { PageProps } from './$types'
 
 let { data }: PageProps = $props()
@@ -20,13 +21,11 @@ const getData = () => {
     entry = undefined
     return
   }
-  setTimeout(() => {
-    console.log(entry === undefined)
+  setTimeout(async () => {
     // first fetch the entry from the backend to ensure we have the latest data
     // this is not done automatically in the dataStore to avoid excessive requests
-    dataStore.fetchEntry(data.date).then(() => {
-      entry = dataStore.getEntry(data.date) || null
-    })
+    await takeAtLeast(dataStore.fetchEntry(data.date))
+    entry = dataStore.getEntry(data.date) || null
   }, 0)
 }
 

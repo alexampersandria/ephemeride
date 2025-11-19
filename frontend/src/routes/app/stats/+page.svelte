@@ -5,6 +5,7 @@ import { useUserStore } from '$lib/store/userStore.svelte'
 import type { HeatmapDataPoint } from '$lib/types/components/heatmap'
 import { getEntries } from '$lib/utils/api'
 import { currentDateObject, yearDateRange } from '$lib/utils/log'
+import { takeAtLeast } from '$lib/utils/takeAtLeast'
 import { ChartLine, ChevronLeft, ChevronRight } from 'lucide-svelte'
 import { onMount } from 'svelte'
 
@@ -13,24 +14,31 @@ let userStore = useUserStore()
 let yearlyDataYear = $state(currentDateObject().year)
 let yearlyData: HeatmapDataPoint[] | undefined = $state(undefined)
 
-const getData = async (year = yearlyDataYear) => {
+const getData = async (
+  year = yearlyDataYear,
+  minDuration: number | undefined = undefined,
+) => {
   if (userStore.sessionId) {
-    return getEntries(userStore.sessionId, {
-      from_date: yearDateRange(year).firstDate,
-      to_date: yearDateRange(year).lastDate,
-      limit: 366,
-    }).then(data => {
-      if (data) {
-        let heatmapData: HeatmapDataPoint[] = data.data.map(entry => {
-          return {
-            date: entry.date,
-            value: entry.mood,
-          }
-        })
-        yearlyData = heatmapData
-        return heatmapData
-      }
-    })
+    const paginatedEntries = await takeAtLeast(
+      getEntries(userStore.sessionId, {
+        from_date: yearDateRange(year).firstDate,
+        to_date: yearDateRange(year).lastDate,
+        limit: 366,
+      }),
+      minDuration,
+    )
+
+    if (paginatedEntries) {
+      const entries = paginatedEntries.data
+      let heatmapData: HeatmapDataPoint[] = entries.map(entry => {
+        return {
+          date: entry.date,
+          value: entry.mood,
+        }
+      })
+      yearlyData = heatmapData
+      return heatmapData
+    }
   }
 }
 
@@ -40,7 +48,7 @@ onMount(() => {
 
 const navigateYear = async (year: number) => {
   yearlyDataYear = year
-  getData(year)
+  getData(year, 0)
 }
 </script>
 

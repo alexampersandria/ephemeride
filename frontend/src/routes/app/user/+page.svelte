@@ -3,6 +3,7 @@ import Spinner from '$lib/components/Spinner.svelte'
 import { useUserStore } from '$lib/store/userStore.svelte'
 import type { Session } from '$lib/types/user'
 import { getSessions } from '$lib/utils/api'
+import { takeAtLeast } from '$lib/utils/takeAtLeast'
 import { User } from 'lucide-svelte'
 import { onMount } from 'svelte'
 
@@ -12,7 +13,7 @@ let sessions: Session[] | null = $state(null)
 
 onMount(async () => {
   if (userStore.sessionId) {
-    sessions = (await getSessions(userStore.sessionId)) || null
+    sessions = (await takeAtLeast(getSessions(userStore.sessionId))) || null
   }
 })
 

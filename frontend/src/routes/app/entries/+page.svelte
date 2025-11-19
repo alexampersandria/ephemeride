@@ -11,10 +11,11 @@ import Input from '$lib/components/Input.svelte'
 import Select from '$lib/components/Select.svelte'
 import { goto } from '$app/navigation'
 import EntryPreview from '$lib/components/EntryPreview.svelte'
-import type { PaginationObject } from '$lib/types/paginated'
+import type { Paginated, PaginationObject } from '$lib/types/paginated'
 import Checkbox from '$lib/components/Checkbox.svelte'
 import Label from '$lib/components/Label.svelte'
 import Message from '$lib/components/Message.svelte'
+import { takeAtLeast } from '$lib/utils/takeAtLeast'
 
 let {
   data,
@@ -105,7 +106,7 @@ const getData = async (more = false) => {
 
     goto(`/app/entries/?${params.toString()}`, { replaceState: true })
 
-    const res = await getEntries(userStore.sessionId, options)
+    const res = await takeAtLeast(getEntries(userStore.sessionId, options))
     if (res) {
       if (more) {
         list = [...list, ...res.data]
