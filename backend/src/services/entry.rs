@@ -454,11 +454,10 @@ pub fn get_entries(
 
       match options.limit {
         Some(limit) => {
-          // if limit is 0, there is no limit
           if limit > 0 {
             query = query.limit(limit);
-            pagination.limit = limit;
           }
+          pagination.limit = limit;
         }
         None => query = query.limit(pagination.limit),
       }
@@ -471,6 +470,8 @@ pub fn get_entries(
         None => query = query.offset(pagination.offset),
       }
     }
+
+    // no options provided, use defaults
     None => {
       query = query
         .order(schema::entries::date.desc())

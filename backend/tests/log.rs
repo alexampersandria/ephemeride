@@ -1387,3 +1387,28 @@ fn test_get_entries_limit_and_offset() {
   assert_eq!(entries.data[1].entry.as_ref().unwrap(), "Entry 5");
   assert_eq!(entries.data[2].entry.as_ref().unwrap(), "Entry 4");
 }
+
+#[test]
+fn test_get_entries_limit_0_selects_more_than_31() {
+  let user = create_test_user();
+
+  for i in 1..=35 {
+    let _ = log::create_entry(log::CreateEntry {
+      date: format!("2025-10-{i:02}"),
+      mood: (i % 5) + 1,
+      entry: Some(format!("Entry {i}")),
+      selected_tags: vec![],
+      user_id: user.id.clone(),
+    });
+  }
+
+  let options = log::GetEntriesOptions {
+    limit: Some(0),
+    ..Default::default()
+  };
+  let entries = log::get_entries(&user.id, Some(options));
+
+  assert!(entries.is_ok());
+  let entries = entries.unwrap();
+  assert_eq!(entries.data.len(), 35);
+}
