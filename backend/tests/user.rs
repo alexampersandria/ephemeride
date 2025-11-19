@@ -4,7 +4,7 @@ use uuid::Uuid;
 #[test]
 fn create_user() {
   let random_name = Uuid::new_v4().to_string();
-  let email = format!("{}@example.com", random_name);
+  let email = format!("{random_name}@example.com");
 
   let user = user::CreateUser {
     name: random_name.clone(),
@@ -27,19 +27,19 @@ fn create_user() {
 
   assert!(found_categories.is_ok());
   let categories = found_categories.unwrap();
-  assert!(categories.len() > 0);
+  assert!(!categories.is_empty());
 
   for category in categories {
     let found_tags = log::get_category_tags(&category.id, &found_user.id);
     assert!(found_tags.is_ok());
-    assert!(found_tags.unwrap().len() > 0);
+    assert!(!found_tags.unwrap().is_empty());
   }
 }
 
 #[test]
 fn create_user_and_delete() {
   let random_name = Uuid::new_v4().to_string();
-  let email = format!("{}@example.com", random_name);
+  let email = format!("{random_name}@example.com");
 
   let user = user::CreateUser {
     name: random_name.clone(),
@@ -56,10 +56,7 @@ fn create_user_and_delete() {
 
   assert!(found_user.is_ok());
 
-  let deleted = match user::delete_user(&found_user.unwrap().id) {
-    Ok(deleted) => deleted,
-    Err(_) => false,
-  };
+  let deleted = user::delete_user(&found_user.unwrap().id).unwrap_or_default();
 
   assert!(deleted);
 
@@ -70,10 +67,7 @@ fn create_user_and_delete() {
 
 #[test]
 fn delete_user_that_does_not_exist() {
-  let deleted = match user::delete_user("INVALID_ID") {
-    Ok(deleted) => deleted,
-    Err(_) => false,
-  };
+  let deleted = user::delete_user("INVALID_ID").unwrap_or_default();
 
   assert!(!deleted);
 }
@@ -81,7 +75,7 @@ fn delete_user_that_does_not_exist() {
 #[test]
 fn updates_user() {
   let random_name = Uuid::new_v4().to_string();
-  let email = format!("{}@example.com", random_name);
+  let email = format!("{random_name}@example.com");
 
   let user = user::CreateUser {
     name: random_name.clone(),
@@ -102,7 +96,7 @@ fn updates_user() {
   assert_eq!(found_user_name, random_name);
 
   let new_random_name = Uuid::new_v4().to_string();
-  let new_email = format!("{}@example.com", new_random_name);
+  let new_email = format!("{new_random_name}@example.com");
 
   let updated_user = user::UpdateUser {
     name: new_random_name.clone(),
@@ -122,7 +116,7 @@ fn updates_user() {
 #[test]
 fn creates_a_session() {
   let random_name = Uuid::new_v4().to_string();
-  let email = format!("{}@example.com", random_name);
+  let email = format!("{random_name}@example.com");
   let password = "password".to_string();
 
   let user = user::CreateUser {
@@ -161,7 +155,7 @@ fn creates_a_session() {
 #[test]
 fn deletes_a_session() {
   let random_name = Uuid::new_v4().to_string();
-  let email = format!("{}@example.com", random_name);
+  let email = format!("{random_name}@example.com");
   let password = "password".to_string();
 
   let user = user::CreateUser {
@@ -210,7 +204,7 @@ fn deletes_a_session() {
 fn user_count() {
   let _created_user = user::create_user(user::CreateUser {
     name: Uuid::new_v4().to_string(),
-    email: format!("{}@example.com", Uuid::new_v4().to_string()),
+    email: format!("{}@example.com", Uuid::new_v4()),
     password: "password".to_string(),
     invite: None,
   });
@@ -230,7 +224,7 @@ fn user_count() {
 #[test]
 fn too_long_password() {
   let random_name = Uuid::new_v4().to_string();
-  let email = format!("{}@example.com", random_name);
+  let email = format!("{random_name}@example.com");
   let long_password = "p".repeat(73); // 73 characters, exceeding the 72 character limit
 
   let user = user::CreateUser {

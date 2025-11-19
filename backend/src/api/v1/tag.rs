@@ -55,7 +55,7 @@ pub fn edit_tag(
   };
 
   let edited_tag = log::edit_tag(log::EditTag {
-    id: id,
+    id,
     name: tag.name,
     color: tag.color,
     user_id: session.user_id,

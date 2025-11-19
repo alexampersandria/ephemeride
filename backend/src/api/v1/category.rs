@@ -50,7 +50,7 @@ pub fn edit_category(
   };
 
   let edited_category = log::edit_category(log::EditCategory {
-    id: id,
+    id,
     name: category.name,
     user_id: session.user_id,
   });

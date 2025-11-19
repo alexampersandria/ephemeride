@@ -2,7 +2,7 @@ use crate::util::response::response;
 use poem::{http::StatusCode, Response};
 use serde::Serialize;
 
-#[derive(Debug, Serialize, Clone, Copy)]
+#[derive(Debug, Serialize, Clone, Copy, PartialEq, Eq)]
 pub enum EphemerideError {
   Unauthorized,
   DatabaseError,

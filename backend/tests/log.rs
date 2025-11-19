@@ -1,9 +1,12 @@
-use ephemeride_backend::services::{log, user};
+use ephemeride_backend::{
+  services::{log, user},
+  util::EphemerideError,
+};
 use uuid::Uuid;
 
 fn create_test_user() -> user::UserDetails {
   let random_name = Uuid::new_v4().to_string();
-  let email = format!("{}@example.com", random_name);
+  let email = format!("{random_name}@example.com");
 
   let user_data = user::CreateUser {
     name: random_name.clone(),
@@ -125,6 +128,16 @@ fn test_get_category_with_tags() {
 }
 
 #[test]
+fn get_category_with_tags_not_found() {
+  let user = create_test_user();
+
+  let result = log::get_category_with_tags("nonexistent_id", &user.id);
+
+  assert!(result.is_err());
+  assert_eq!(result.err().unwrap(), EphemerideError::CategoryNotFound);
+}
+
+#[test]
 fn test_get_user_categories_with_tags() {
   let user = create_test_user();
 
@@ -162,7 +175,7 @@ fn test_get_user_categories_with_tags() {
 
   for category in &categories_with_tags {
     if category.id == cat1.id || category.id == cat2.id {
-      assert!(category.tags.len() > 0);
+      assert!(!category.tags.is_empty());
     }
   }
 }
@@ -187,7 +200,7 @@ fn test_delete_category() {
   let deleted = log::delete_category(&category.id, &user.id);
 
   assert!(deleted.is_ok());
-  assert_eq!(deleted.unwrap(), true);
+  assert!(deleted.unwrap());
 
   let found = log::get_category(&category.id, &user.id);
   assert!(found.is_err());
@@ -349,7 +362,7 @@ fn test_delete_tag() {
   let deleted = log::delete_tag(&tag.id, &user.id);
 
   assert!(deleted.is_ok());
-  assert_eq!(deleted.unwrap(), true);
+  assert!(deleted.unwrap());
 
   let found = log::get_tag(&tag.id, &user.id);
   assert!(found.is_err());
@@ -381,7 +394,7 @@ fn test_delete_all_category_tags() {
   let deleted = log::delete_all_category_tags(&category.id, &user.id);
 
   assert!(deleted.is_ok());
-  assert_eq!(deleted.unwrap(), true);
+  assert!(deleted.unwrap());
 
   let tags = log::get_category_tags(&category.id, &user.id);
   assert!(tags.is_ok());
@@ -1033,7 +1046,7 @@ fn test_delete_tag_in_use_by_entry() {
   let get_entry_again = log::get_entry_with_tags(&entry.id, &user.id);
 
   assert!(deleted.is_ok());
-  assert_eq!(deleted.unwrap(), true);
+  assert!(deleted.unwrap());
   assert!(get_entry_again.is_ok());
   let entry_with_tags = get_entry_again.unwrap();
   assert!(entry_with_tags.selected_tags.is_empty());
@@ -1060,7 +1073,7 @@ fn test_delete_category_with_tags() {
   let found_tag = log::get_tag(&tag.id, &user.id);
 
   assert!(deleted.is_ok());
-  assert_eq!(deleted.unwrap(), true);
+  assert!(deleted.unwrap());
   assert!(found_tag.is_err());
 }
 
@@ -1336,7 +1349,7 @@ fn test_delete_category_with_tags_where_tags_are_also_in_use() {
   let found_entry = log::get_entry_with_tags(&entry.id, &user.id);
 
   assert!(deleted.is_ok());
-  assert_eq!(deleted.unwrap(), true);
+  assert!(deleted.unwrap());
   assert!(found_tag.is_err());
   assert!(found_entry.is_ok());
   let entry_with_tags = found_entry.unwrap();
@@ -1349,9 +1362,9 @@ fn test_get_entries_limit_and_offset() {
 
   for i in 1..=10 {
     let _ = log::create_entry(log::CreateEntry {
-      date: format!("2025-10-{:02}", i),
+      date: format!("2025-10-{i:02}"),
       mood: (i % 5) + 1,
-      entry: Some(format!("Entry {}", i)),
+      entry: Some(format!("Entry {i}")),
       selected_tags: vec![],
       user_id: user.id.clone(),
     });

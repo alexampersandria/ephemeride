@@ -41,7 +41,6 @@ pub fn get_entries(Query(_options): Query<EntryParams>, request: &Request) -> Re
     },
     limit: _options.limit,
     offset: _options.offset,
-    ..Default::default()
   };
 
   let entries = log::get_entries(&session.user_id, Some(options));

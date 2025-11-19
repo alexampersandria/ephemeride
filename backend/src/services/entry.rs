@@ -103,8 +103,8 @@ pub fn create_entry(entry: CreateEntry) -> Result<EntryWithTags, EphemerideError
   for tag_id in &entry.selected_tags {
     let tag = get_tag(tag_id, &entry.user_id);
 
-    if tag.is_ok() {
-      tags.push(tag.unwrap());
+    if let Ok(tag) = tag {
+      tags.push(tag);
     }
   }
 
@@ -173,13 +173,10 @@ pub fn edit_entry(entry: EditEntry) -> Result<EntryWithTags, EphemerideError> {
     Err(_) => return Err(EphemerideError::BadRequest),
   };
 
-  match get_entry_by_date(naive_date, &entry.user_id) {
-    Ok(entry_for_date) => {
-      if entry_for_date.id != entry.id {
-        return Err(EphemerideError::EntryAlreadyExistsForDate);
-      }
+  if let Ok(entry_for_date) = get_entry_by_date(naive_date, &entry.user_id) {
+    if entry_for_date.id != entry.id {
+      return Err(EphemerideError::EntryAlreadyExistsForDate);
     }
-    Err(_) => (),
   }
 
   let mut tags: Vec<Tag> = Vec::new();
@@ -187,8 +184,8 @@ pub fn edit_entry(entry: EditEntry) -> Result<EntryWithTags, EphemerideError> {
   for tag_id in &entry.selected_tags {
     let tag = get_tag(tag_id, &entry.user_id);
 
-    if tag.is_ok() {
-      tags.push(tag.unwrap());
+    if let Ok(tag) = tag {
+      tags.push(tag);
     }
   }
 
@@ -258,26 +255,25 @@ pub fn get_entry_with_tags(
 ) -> Result<EntryWithTags, EphemerideError> {
   let mut conn = establish_connection();
 
-  let result = schema::entries::table
+  let entry_result = schema::entries::table
     .filter(schema::entries::id.eq(entry_id))
     .filter(schema::entries::user_id.eq(user_id))
     .first::<Entry>(&mut conn);
 
-  if result.is_err() {
-    return Err(EphemerideError::EntryNotFound);
-  }
-
-  let entry = result.unwrap();
+  let entry = match entry_result {
+    Ok(entry) => entry,
+    Err(_) => return Err(EphemerideError::EntryNotFound),
+  };
 
   let entry_tags_result = schema::entry_tags::table
     .filter(schema::entry_tags::entry_id.eq(entry_id))
     .load::<EntryTag>(&mut conn);
 
-  if entry_tags_result.is_err() {
-    return Err(EphemerideError::DatabaseError);
-  }
+  let entry_tags = match entry_tags_result {
+    Ok(entry_tags) => entry_tags,
+    Err(_) => return Err(EphemerideError::DatabaseError),
+  };
 
-  let entry_tags = entry_tags_result.unwrap();
   let tag_ids: Vec<String> = entry_tags.into_iter().map(|et| et.tag_id).collect();
 
   let entry_with_tags = EntryWithTags {
@@ -396,65 +392,48 @@ pub fn get_entries(
 
   match options {
     Some(options) => {
-      match options.from_date {
-        Some(from_date) => {
-          let from_naive_date = match chrono::NaiveDate::parse_from_str(&from_date, "%Y-%m-%d") {
-            Ok(date) => date,
-            Err(_) => return Err(EphemerideError::BadRequest),
-          };
-          query = query.filter(schema::entries::date.ge(from_naive_date));
-        }
-        None => (),
+      if let Some(from_date) = options.from_date {
+        let from_naive_date = match chrono::NaiveDate::parse_from_str(&from_date, "%Y-%m-%d") {
+          Ok(date) => date,
+          Err(_) => return Err(EphemerideError::BadRequest),
+        };
+        query = query.filter(schema::entries::date.ge(from_naive_date));
       }
 
-      match options.to_date {
-        Some(to_date) => {
-          let to_naive_date = match chrono::NaiveDate::parse_from_str(&to_date, "%Y-%m-%d") {
-            Ok(date) => date,
-            Err(_) => return Err(EphemerideError::BadRequest),
-          };
-          query = query.filter(schema::entries::date.le(to_naive_date));
-        }
-        None => (),
+      if let Some(to_date) = options.to_date {
+        let to_naive_date = match chrono::NaiveDate::parse_from_str(&to_date, "%Y-%m-%d") {
+          Ok(date) => date,
+          Err(_) => return Err(EphemerideError::BadRequest),
+        };
+        query = query.filter(schema::entries::date.le(to_naive_date));
       }
 
-      match options.from_mood {
-        Some(from_mood) => {
-          query = query.filter(schema::entries::mood.ge(from_mood));
-        }
-        None => (),
+      if let Some(from_mood) = options.from_mood {
+        query = query.filter(schema::entries::mood.ge(from_mood));
       }
 
-      match options.to_mood {
-        Some(to_mood) => {
-          query = query.filter(schema::entries::mood.le(to_mood));
-        }
-        None => (),
+      if let Some(to_mood) = options.to_mood {
+        query = query.filter(schema::entries::mood.le(to_mood));
       }
 
-      match options.tags {
-        Some(tags) => {
-          if !tags.is_empty() {
-            let tag_list = tags
-              .iter()
-              .map(|t| format!("'{}'", t.replace("'", "''")))
-              .collect::<Vec<_>>()
-              .join(", ");
-            // build the having clause
-            // when using diesels overlaps_with we get the error:
-            // `operator does not exist: character varying[] && text[]`
-            // because the tag_list is not of the same type as entry_tags.tag_id
-            // "(Diesel does not currently support implicit coercions)."
-            // #TODO: find a way to achieve this natively with diesel
-            // but this is acceptable since it allows us to array_agg and filter/limit/offset in a single query
-            let having_clause = format!(
-              "ARRAY_AGG(entry_tags.tag_id) @> ARRAY[{}]::varchar[]",
-              tag_list
-            );
-            query = query.having(sql::<Bool>(&having_clause));
-          }
+      if let Some(tags) = options.tags {
+        if !tags.is_empty() {
+          let tag_list = tags
+            .iter()
+            .map(|t| format!("'{}'", t.replace("'", "''")))
+            .collect::<Vec<_>>()
+            .join(", ");
+          // build the having clause
+          // when using diesels overlaps_with we get the error:
+          // `operator does not exist: character varying[] && text[]`
+          // because the tag_list is not of the same type as entry_tags.tag_id
+          // "(Diesel does not currently support implicit coercions)."
+          // #TODO: find a way to achieve this natively with diesel
+          // but this is acceptable since it allows us to array_agg and filter/limit/offset in a single query
+          let having_clause =
+            format!("ARRAY_AGG(entry_tags.tag_id) @> ARRAY[{tag_list}]::varchar[]");
+          query = query.having(sql::<Bool>(&having_clause));
         }
-        None => (),
       }
 
       match options.order {
@@ -511,22 +490,19 @@ pub fn get_entries(
     i64,
   )>(&mut conn);
 
-  if result.is_err() {
-    println!("ERROR: {:?}", result.err());
-    return Err(EphemerideError::DatabaseError);
-  }
+  let rows = match result {
+    Ok(rows) => rows,
+    Err(_) => return Err(EphemerideError::DatabaseError),
+  };
 
-  let rows = result.unwrap();
   if let Some(first_row) = &rows.first() {
     pagination.total_count = first_row.7;
   }
+
   let mut entries_with_tags: Vec<EntryWithTags> = Vec::new();
+
   for row in rows {
-    let tag_ids = row
-      .6
-      .into_iter()
-      .filter_map(|tag_option| tag_option)
-      .collect();
+    let tag_ids = row.6.into_iter().flatten().collect();
 
     let entry_with_tags = EntryWithTags {
       id: row.0,

@@ -128,20 +128,15 @@ pub fn get_category_with_tags(
   category_id: &str,
   user_id: &str,
 ) -> Result<CategoryWithTags, EphemerideError> {
-  let category = get_category(category_id, user_id);
+  let category = match get_category(category_id, user_id) {
+    Ok(category) => category,
+    Err(_) => return Err(EphemerideError::CategoryNotFound),
+  };
 
-  if category.is_err() {
-    return Err(EphemerideError::CategoryNotFound);
-  }
-
-  let tags = get_category_tags(category_id, user_id);
-
-  if tags.is_err() {
-    return Err(EphemerideError::DatabaseError);
-  }
-
-  let category = category.unwrap();
-  let tags = tags.unwrap();
+  let tags = match get_category_tags(category_id, user_id) {
+    Ok(tags) => tags,
+    Err(_) => return Err(EphemerideError::DatabaseError),
+  };
 
   let category_with_tags = CategoryWithTags {
     id: category.id,
@@ -157,28 +152,25 @@ pub fn get_category_with_tags(
 pub fn get_user_categories_with_tags(
   user_id: &str,
 ) -> Result<Vec<CategoryWithTags>, EphemerideError> {
-  let categories = get_all_categories(user_id);
+  let categories = match get_all_categories(user_id) {
+    Ok(categories) => categories,
+    Err(_) => return Err(EphemerideError::DatabaseError),
+  };
 
-  if categories.is_err() {
-    return Err(EphemerideError::DatabaseError);
-  }
-
-  let categories = categories.unwrap();
   let mut categories_with_tags: Vec<CategoryWithTags> = Vec::new();
 
   for category in categories {
-    let tags = get_category_tags(&category.id, user_id);
-
-    if tags.is_err() {
-      return Err(EphemerideError::DatabaseError);
-    }
+    let tags = match get_category_tags(&category.id, user_id) {
+      Ok(tags) => tags,
+      Err(_) => return Err(EphemerideError::DatabaseError),
+    };
 
     let category_with_tags = CategoryWithTags {
       id: category.id,
       name: category.name,
       user_id: category.user_id,
       created_at: category.created_at,
-      tags: tags.unwrap(),
+      tags,
     };
 
     categories_with_tags.push(category_with_tags);

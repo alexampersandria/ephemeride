@@ -59,7 +59,7 @@ pub fn edit_entry(
   };
 
   let edited_entry = log::edit_entry(log::EditEntry {
-    id: id,
+    id,
     date: entry.date,
     mood: entry.mood,
     entry: entry.entry,

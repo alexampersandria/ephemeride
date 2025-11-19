@@ -204,16 +204,10 @@ pub fn delete_all_category_tags(category_id: &str, user_id: &str) -> Result<bool
     return Err(EphemerideError::CategoryNotFound);
   }
 
-  let category_tags = match get_category_tags(category_id, user_id) {
-    Ok(tags) => tags,
-    Err(error) => return Err(error),
-  };
+  let category_tags = get_category_tags(category_id, user_id)?;
 
   for tag in category_tags {
-    match delete_tag(&tag.id, user_id) {
-      Ok(deleted) => deleted,
-      Err(error) => return Err(error),
-    };
+    delete_tag(&tag.id, user_id)?;
   }
 
   Ok(true)

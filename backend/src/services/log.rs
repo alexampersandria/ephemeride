@@ -29,27 +29,26 @@ pub fn create_default_data(user_id: String) -> Result<bool, EphemerideError> {
   ];
 
   for category_name in default_categories {
-    let category = create_category(CreateCategory {
+    let category_result = create_category(CreateCategory {
       name: category_name.to_string(),
       user_id: user_id.clone(),
     });
 
-    if category.is_err() {
-      return Err(EphemerideError::DatabaseError);
-    }
-
-    let category = category.unwrap();
+    let category = match category_result {
+      Ok(category) => category,
+      Err(_) => return Err(EphemerideError::DatabaseError),
+    };
 
     for (cat_name, tag_name, color) in &default_tags {
       if *cat_name == category_name {
-        let tag = create_tag(CreateTag {
+        let tag_result = create_tag(CreateTag {
           name: tag_name.to_string(),
           color: color.to_string(),
           category_id: category.id.clone(),
           user_id: user_id.clone(),
         });
 
-        if tag.is_err() {
+        if tag_result.is_err() {
           return Err(EphemerideError::DatabaseError);
         }
       }

@@ -35,10 +35,7 @@ pub fn get_invite(code: &str) -> Result<Invite, EphemerideError> {
 pub fn use_invite(code: &str) -> Result<Invite, EphemerideError> {
   let mut conn = establish_connection();
 
-  let invite = match get_invite(code) {
-    Ok(invite) => invite,
-    Err(e) => return Err(e),
-  };
+  let invite = get_invite(code)?;
 
   if invite.used {
     return Err(EphemerideError::InviteUsed);

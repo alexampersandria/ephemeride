@@ -226,7 +226,10 @@ pub fn update_user(id: &str, user: UpdateUser) -> Result<bool, EphemerideError> 
 pub fn update_password(id: &str, password: UpdatePassword) -> Result<bool, EphemerideError> {
   let mut conn = establish_connection();
 
-  let password_hash = bcrypt::hash(password.password, bcrypt::DEFAULT_COST).unwrap();
+  let password_hash = match bcrypt::hash(&password.password, bcrypt::DEFAULT_COST) {
+    Ok(hash) => hash,
+    Err(_) => return Err(EphemerideError::InternalServerError),
+  };
 
   let result = diesel::update(schema::users::table.filter(schema::users::id.eq(id)))
     .set(schema::users::password.eq(&password_hash))
