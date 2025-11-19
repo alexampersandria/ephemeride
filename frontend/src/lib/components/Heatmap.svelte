@@ -23,105 +23,118 @@ let moodValue = (date: string) => {
 }
 </script>
 
-<div class="heatmap" class:loading>
-  {#each weeks as week, weekIndex}
-    <div class="week week-{weekIndex}">
-      {#each week as day}
-        {@const value = moodValue(day)}
-        <a
-          href={`/app/entry/${day}`}
-          class="day mood-{value ?? 'null'} "
-          aria-label={`${day}: ${value ?? 'null'}`}></a>
-      {/each}
-    </div>
-  {/each}
+<div class="heatmap-wrapper">
+  <div class="heatmap" class:loading>
+    {#each weeks as week, weekIndex}
+      <div class="week week-{weekIndex}">
+        {#each week as day}
+          {@const value = moodValue(day)}
+          <a
+            href={`/app/entry/${day}`}
+            class="day mood-{value ?? 'null'} "
+            aria-label={`${day}: ${value ?? 'null'}`}>
+            <div class="square"></div>
+          </a>
+        {/each}
+      </div>
+    {/each}
+  </div>
 </div>
 
 <style lang="scss">
-.heatmap {
+.heatmap-wrapper {
   display: flex;
-  gap: var(--heatmap-cell-gap);
-  padding: var(--heatmap-padding);
   width: 100%;
   justify-content: center;
-  overflow-x: auto;
-
   background-color: var(--heatmap-background);
   border-radius: var(--heatmap-border-radius);
   border: var(--border-width) solid var(--border-color);
 
-  .week {
+  .heatmap {
     display: flex;
-    flex-direction: column;
-    gap: var(--heatmap-cell-gap);
+    padding: var(--heatmap-padding);
 
-    &:first-child {
-      align-self: flex-end;
-    }
+    overflow-x: auto;
 
-    .day {
-      position: relative;
-      width: var(--heatmap-cell-size);
-      height: var(--heatmap-cell-size);
-      border-radius: var(--heatmap-cell-border-radius);
-      background-color: var(--heatmap-cell-background);
-      overflow: hidden;
-
-      @for $i from 1 through 5 {
-        &.mood-#{$i} {
-          background-color: var(--mood-value-#{$i}-background);
-
-          &:hover {
-            background-color: var(--mood-value-#{$i}-background-hover);
-            box-shadow: var(--mood-value-#{$i}-glow);
-            z-index: 1;
-          }
-
-          &:active {
-            background-color: var(--mood-value-#{$i}-background-active);
-          }
-        }
-      }
-    }
-  }
-
-  &:has(.day:not(.mood-null):hover) {
-    .day {
-      @for $i from 1 through 5 {
-        &:not(:hover) {
-          &.mood-#{$i} {
-            background-color: var(--mood-value-#{$i}-background-muted);
-          }
-        }
-      }
-    }
-  }
-
-  &.loading {
     .week {
-      .day {
-        animation: loadingAnimation var(--animation-length-xxl)
-          var(--better-ease-out) infinite;
+      display: flex;
+      flex-direction: column;
+
+      &:first-child {
+        align-self: flex-end;
       }
 
-      @for $i from 1 through 53 {
-        &.week-#{$i} {
-          .day {
-            animation-delay: calc(0.005s * #{$i});
+      .day {
+        padding: calc(var(--heatmap-cell-gap) / 2);
+
+        @for $i from 1 through 5 {
+          &.mood-#{$i} {
+            .square {
+              background-color: var(--mood-value-#{$i}-background);
+
+              &:hover {
+                background-color: var(--mood-value-#{$i}-background-hover);
+                box-shadow: var(--mood-value-#{$i}-glow);
+                z-index: 1;
+              }
+
+              &:active {
+                background-color: var(--mood-value-#{$i}-background-active);
+              }
+            }
+          }
+        }
+
+        .square {
+          position: relative;
+          width: var(--heatmap-cell-size);
+          height: var(--heatmap-cell-size);
+          border-radius: var(--heatmap-cell-border-radius);
+          background-color: var(--heatmap-cell-background);
+        }
+      }
+    }
+
+    &:has(.day:not(.mood-null):hover) {
+      .day {
+        @for $i from 1 through 5 {
+          &:not(:hover) {
+            &.mood-#{$i} {
+              .square {
+                background-color: var(--mood-value-#{$i}-background-muted);
+              }
+            }
           }
         }
       }
     }
 
-    @keyframes loadingAnimation {
-      0% {
-        background-color: var(--heatmap-cell-background);
+    &.loading {
+      .week {
+        .day {
+          animation: loadingAnimation var(--animation-length-xxl)
+            var(--better-ease-out) infinite;
+        }
+
+        @for $i from 1 through 53 {
+          &.week-#{$i} {
+            .day {
+              animation-delay: calc(0.005s * #{$i});
+            }
+          }
+        }
       }
-      50% {
-        background-color: var(--heatmap-cell-background-loading);
-      }
-      100% {
-        background-color: var(--heatmap-cell-background);
+
+      @keyframes loadingAnimation {
+        0% {
+          background-color: var(--heatmap-cell-background);
+        }
+        50% {
+          background-color: var(--heatmap-cell-background-loading);
+        }
+        100% {
+          background-color: var(--heatmap-cell-background);
+        }
       }
     }
   }
