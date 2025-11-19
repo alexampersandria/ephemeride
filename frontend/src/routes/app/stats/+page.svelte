@@ -30,14 +30,12 @@ const getData = async (
 
     if (paginatedEntries) {
       const entries = paginatedEntries.data
-      let heatmapData: HeatmapDataPoint[] = entries.map(entry => {
+      yearlyData = entries.map(entry => {
         return {
           date: entry.date,
           value: entry.mood,
         }
       })
-      yearlyData = heatmapData
-      return heatmapData
     }
   }
 }
