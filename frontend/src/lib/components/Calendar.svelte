@@ -362,6 +362,10 @@ $effect(() => {
     .row {
       display: table-row;
 
+      &.week {
+        height: calc(var(--button-height) + var(--calendar-button-spacing) * 2);
+      }
+
       &.weekdays {
         color: var(--text-muted);
         font-size: var(--font-size-xs);
