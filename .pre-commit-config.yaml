@@ -1,0 +1,61 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: detect-private-key
+      - id: check-yaml
+      - id: check-toml
+      - id: check-json
+  - repo: local
+    hooks:
+      - id: cargo-fmt
+        name: cargo fmt
+        entry: bash -c 'cd backend && cargo fmt --check'
+        language: rust
+        files: ^backend/
+        types_or: [rust, toml]
+      - id: cargo-clippy
+        name: cargo clippy
+        entry: bash -c 'cd backend && cargo clippy --verbose'
+        language: rust
+        files: ^backend/
+        types_or: [rust, toml]
+      - id: cargo-build
+        name: cargo build
+        entry: bash -c 'cd backend && cargo build'
+        language: rust
+        files: ^backend/
+        types_or: [rust, toml]
+      - id: cargo-test
+        name: cargo test
+        entry: bash -c 'cd backend && cargo test --verbose'
+        language: rust
+        files: ^backend/
+        types_or: [rust, toml]
+      - id: yarn-install
+        name: yarn
+        entry: bash -c 'cd frontend && yarn'
+        language: node
+        files: ^frontend/
+        types_or: [javascript, ts, svelte, json]
+      - id: yarn-lint
+        name: yarn lint
+        entry: bash -c 'cd frontend && yarn lint'
+        language: node
+        files: ^frontend/
+        types_or: [javascript, ts, svelte, json]
+      - id: yarn-check
+        name: yarn check
+        entry: bash -c 'cd frontend && yarn check'
+        language: node
+        files: ^frontend/
+        types_or: [javascript, ts, svelte, json]
+      - id: yarn-test
+        name: yarn test
+        entry: bash -c 'cd frontend && yarn test'
+        language: node
+        files: ^frontend/
+        types_or: [javascript, ts, svelte, json]
