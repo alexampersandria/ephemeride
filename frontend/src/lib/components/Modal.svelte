@@ -3,12 +3,21 @@ import { page } from '$app/state'
 import type { ModalProps } from '$lib/types/components/modal'
 import { firstFocusable } from '$lib/utils/focus'
 import { X } from 'lucide-svelte'
+import { watch } from 'runed'
 import Portal from 'svelte-portal'
 
-let { children, open = $bindable(false), size = 's' }: ModalProps = $props()
+let {
+  children,
+  open = $bindable(false),
+  size = 's',
+  onclose,
+}: ModalProps = $props()
 
 const close = () => {
-  open = false
+  if (open) {
+    open = false
+    onclose?.()
+  }
 }
 
 let shown = $state(false)
@@ -52,11 +61,14 @@ $effect(() => {
   }
 })
 
-$effect(() => {
-  if (page.url.pathname) {
-    close()
-  }
-})
+watch(
+  () => page.url.pathname,
+  (curr, prev) => {
+    if (open && curr !== prev) {
+      close()
+    }
+  },
+)
 </script>
 
 <Portal target="#root">
@@ -223,7 +235,6 @@ $effect(() => {
 
     display: flex;
     flex-direction: column;
-    justify-content: center;
 
     &.size-xxs {
       width: var(--block-size-xxs);

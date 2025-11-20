@@ -5,4 +5,5 @@ export type ModalProps = {
   open?: boolean
   children: Snippet
   size?: BlockSize
+  onclose?: () => void
 }

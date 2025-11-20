@@ -1903,7 +1903,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esm-env@npm:^1.2.1, esm-env@npm:^1.2.2":
+"esm-env@npm:^1.0.0, esm-env@npm:^1.2.1, esm-env@npm:^1.2.2":
   version: 1.2.2
   resolution: "esm-env@npm:1.2.2"
   checksum: 10c0/3d25c973f2fd69c25ffff29c964399cea573fe10795ecc1d26f6f957ce0483d3254e1cceddb34bf3296a0d7b0f1d53a28992f064ba509dfe6366751e752c4166
@@ -2151,6 +2151,7 @@ __metadata:
     prettier: "npm:^3.5.1"
     prettier-plugin-svelte: "npm:^3.3.3"
     rehype-slug: "npm:^6.0.0"
+    runed: "npm:^0.36.0"
     sass-embedded: "npm:^1.83.4"
     svelte: "npm:^5.0.0"
     svelte-check: "npm:^4.0.0"
@@ -3985,6 +3986,26 @@ __metadata:
   dependencies:
     queue-microtask: "npm:^1.2.2"
   checksum: 10c0/200b5ab25b5b8b7113f9901bfe3afc347e19bb7475b267d55ad0eb86a62a46d77510cb0f232507c9e5d497ebda569a08a9867d0d14f57a82ad5564d991588b39
+  languageName: node
+  linkType: hard
+
+"runed@npm:^0.36.0":
+  version: 0.36.0
+  resolution: "runed@npm:0.36.0"
+  dependencies:
+    dequal: "npm:^2.0.3"
+    esm-env: "npm:^1.0.0"
+    lz-string: "npm:^1.5.0"
+  peerDependencies:
+    "@sveltejs/kit": ^2.21.0
+    svelte: ^5.7.0
+    zod: ^4.1.0
+  peerDependenciesMeta:
+    "@sveltejs/kit":
+      optional: true
+    zod:
+      optional: true
+  checksum: 10c0/935b5c32d9a5296cf927712db8d6128b792fa368976a8a4ea0ea525c682eaad8efee3d09b6e0128bf8eb6df5bc35c0d8a4186c12bcdf24d0726b050089e912b2
   languageName: node
   linkType: hard
 

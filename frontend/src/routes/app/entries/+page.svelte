@@ -2,7 +2,7 @@
 import Spinner from '$lib/components/Spinner.svelte'
 import { getEntries, type FetchEntriesOptions } from '$lib/utils/api'
 import type { Entry } from '$lib/types/log'
-import { ScrollText } from 'lucide-svelte'
+import { FilterX, ScrollText, SlidersHorizontal } from 'lucide-svelte'
 import { onMount } from 'svelte'
 import { useUserStore } from '$lib/store/userStore.svelte'
 import { useDataStore } from '$lib/store/dataStore.svelte'
@@ -20,6 +20,7 @@ import {
   takeAtLeast,
 } from '$lib/utils/takeAtLeast'
 import Calendar from '$lib/components/Calendar.svelte'
+import Modal from '$lib/components/Modal.svelte'
 
 let {
   data,
@@ -50,6 +51,7 @@ let pagination: PaginationObject = $state({
   total_count: 0,
 })
 let loading = $state(false)
+let showFilters = $state(false)
 
 let userStore = useUserStore()
 let dataStore = useDataStore()
@@ -81,7 +83,6 @@ const reset = () => {
     limit: 20,
     offset: 0,
   }
-  getData()
 }
 
 const getData = async (more = false) => {
@@ -142,7 +143,6 @@ const toggleTag = (tagId: string) => {
   } else {
     options.tags.splice(index, 1)
   }
-  getData()
 }
 
 const filtersApplied = $derived.by(() => {
@@ -162,81 +162,11 @@ const filtersApplied = $derived.by(() => {
   <div class="container">
     <div class="app-page-title">
       <ScrollText />
-      Entries (WIP)
-    </div>
+      Entries
 
-    <div class="filters">
-      <div class="rangepicker">
-        <Calendar
-          mode="rangepicker"
-          bind:from={options.from_date}
-          bind:to={options.to_date}
-          onchange={() => getData()} />
-      </div>
-
-      <div>
-        tags:
-        <div class="tag-options">
-          {#each dataStore.getTags() || [] as tag}
-            <div class="tag-option color-{tag.color}-text">
-              <Checkbox
-                id={tag.id}
-                value={options.tags?.includes(tag.id) || false}
-                onchange={() => toggleTag(tag.id)} />
-              <Label for={tag.id}>
-                {tag.category.name}/{tag.name}
-              </Label>
-            </div>
-          {/each}
-        </div>
-      </div>
-      <div class="form-field inline">
-        <Label for="from-mood">from mood:</Label>
-        <Input
-          id="from-mood"
-          type="number"
-          bind:value={options.from_mood}
-          onchange={() => getData()} />
-      </div>
-      <div class="form-field inline">
-        <Label for="to-mood">to mood:</Label>
-        <Input
-          id="to-mood"
-          type="number"
-          bind:value={options.to_mood}
-          onchange={() => getData()} />
-      </div>
-
-      <div class="form-field inline">
-        limit:
-        <Select
-          bind:value={options.limit}
-          options={[
-            { label: '10', value: 10 },
-            { label: '20', value: 20 },
-            { label: '50', value: 50 },
-            { label: '100', value: 100 },
-            { label: 'all', value: 0 },
-          ]}
-          onchange={() => getData()} />
-      </div>
-
-      <div class="form-field inline">
-        order:
-        <Select
-          bind:value={options.order}
-          options={[
-            { label: 'Date Descending', value: 'date_desc' },
-            { label: 'Date Ascending', value: 'date_asc' },
-            { label: 'Mood Descending', value: 'mood_desc' },
-            { label: 'Mood Ascending', value: 'mood_asc' },
-          ]}
-          onchange={() => getData()} />
-      </div>
-
-      <div class="form-field">
-        <Button onclick={reset} disabled={!filtersApplied}>
-          Reset filters
+      <div class="toggle-filters">
+        <Button onclick={() => (showFilters = true)}>
+          <SlidersHorizontal />
         </Button>
       </div>
     </div>
@@ -254,9 +184,7 @@ const filtersApplied = $derived.by(() => {
     {:else}
       <div class="entries">
         <div class="count">
-          showing {list.length} of {pagination.total_count} entries {filtersApplied
-            ? 'matching filters'
-            : ''}
+          showing {list.length} of {pagination.total_count} entries
         </div>
         {#each list as entry}
           <div class="entry-item">
@@ -277,17 +205,83 @@ const filtersApplied = $derived.by(() => {
   </div>
 </div>
 
+<Modal bind:open={showFilters} size="m" onclose={() => getData()}>
+  <div class="filters">
+    <div class="filters-title">
+      Filter entries
+
+      <div class="clear-filters">
+        <Button onclick={reset} disabled={!filtersApplied}>
+          <FilterX />
+        </Button>
+      </div>
+    </div>
+
+    <div class="rangepicker">
+      <Label>Date range</Label>
+      <Calendar
+        mode="rangepicker"
+        bind:from={options.from_date}
+        bind:to={options.to_date} />
+    </div>
+
+    <div>
+      <Label>Tags</Label>
+      <div class="tag-options">
+        {#each dataStore.getTags() || [] as tag}
+          <div class="tag-option color-{tag.color}-text">
+            <Checkbox
+              id={tag.id}
+              value={options.tags?.includes(tag.id) || false}
+              onchange={() => toggleTag(tag.id)} />
+            <Label for={tag.id}>
+              {tag.category.name}/{tag.name}
+            </Label>
+          </div>
+        {/each}
+      </div>
+    </div>
+
+    <div class="form-field inline">
+      <Label for="from-mood">Mood</Label>
+      <div class="inputs">
+        <Input id="from-mood" type="number" bind:value={options.from_mood} />
+        to
+        <Input id="to-mood" type="number" bind:value={options.to_mood} />
+      </div>
+    </div>
+
+    <div class="form-field inline">
+      <Label for="limit">Results per page</Label>
+      <Select
+        bind:value={options.limit}
+        options={[
+          { label: '10', value: 10 },
+          { label: '20', value: 20 },
+          { label: '50', value: 50 },
+          { label: '100', value: 100 },
+          { label: 'all', value: 0 },
+        ]} />
+    </div>
+
+    <div class="form-field inline">
+      <Label for="order">Sort</Label>
+      <Select
+        bind:value={options.order}
+        options={[
+          { label: 'Date Descending', value: 'date_desc' },
+          { label: 'Date Ascending', value: 'date_asc' },
+          { label: 'Mood Descending', value: 'mood_desc' },
+          { label: 'Mood Ascending', value: 'mood_asc' },
+        ]} />
+    </div>
+  </div>
+</Modal>
+
 <style lang="scss">
 .entries-page {
-  .filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--padding-s);
-    margin-bottom: var(--padding-m);
-
-    .rangepicker {
-      flex: 1 1 100%;
-    }
+  .toggle-filters {
+    margin-left: auto;
   }
 
   .entries {
@@ -315,17 +309,38 @@ const filtersApplied = $derived.by(() => {
     margin-top: var(--padding-m);
   }
 
-  .tag-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--padding-s);
-  }
-
   .loading {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: var(--padding-l) 0;
+  }
+}
+
+.filters {
+  padding-top: var(--padding-m);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--padding-s);
+  margin-bottom: var(--padding-m);
+
+  .filters-title {
+    font-weight: 600;
+    font-size: var(--font-size-xl);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .rangepicker {
+    flex: 1 1 100%;
+  }
+
+  .tag-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--padding-s);
   }
 }
 </style>
