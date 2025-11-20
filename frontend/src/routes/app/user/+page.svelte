@@ -6,7 +6,15 @@ import { useUserStore } from '$lib/store/userStore.svelte'
 import { type UserDetails, type Session } from '$lib/types/user'
 import { getSessions } from '$lib/utils/api'
 import { takeAtLeast } from '$lib/utils/takeAtLeast'
-import { Pencil, PencilOff, Save, User } from 'lucide-svelte'
+import {
+  Pencil,
+  PencilOff,
+  Save,
+  Trash,
+  TriangleAlert,
+  User,
+  X,
+} from 'lucide-svelte'
 import { onMount } from 'svelte'
 import Button from '$lib/components/Button.svelte'
 import Message from '$lib/components/Message.svelte'
@@ -14,10 +22,12 @@ import { diff } from 'deep-object-diff'
 import { timestampToDate } from '$lib/utils/log'
 import EmailInput from '$lib/assemblies/EmailInput.svelte'
 import type { InputState } from '$lib/types/input'
+import Modal from '$lib/components/Modal.svelte'
 
 let userStore = useUserStore()
 
 let sessions: Session[] | null = $state(null)
+
 let editUser = $state(false)
 let editModel = $state<UserDetails | undefined>(undefined)
 let editInputState = $state<{
@@ -29,6 +39,9 @@ let editInputState = $state<{
 })
 let editLoading = $state(false)
 let editError = $state<string | null>(null)
+
+let deleteModal = $state(false)
+let deleteEmail = $state('')
 
 const startEdit = () => {
   if (userStore.userDetails) {
@@ -58,6 +71,10 @@ let isValid = $derived.by(() => {
   )
 })
 
+const deleteValid = $derived.by(() => {
+  return deleteEmail === userStore.userDetails?.email
+})
+
 const changed = $derived.by(() => {
   if (editModel && userStore.userDetails) {
     const objDiff = diff(userStore.userDetails, editModel)
@@ -82,6 +99,12 @@ const saveChanges = async () => {
     } else {
       editError = 'An error occurred'
     }
+  }
+}
+
+const confirmDelete = async () => {
+  if (deleteValid) {
+    await takeAtLeast(userStore.deleteAccount(), 500)
   }
 }
 
@@ -189,8 +212,55 @@ onMount(async () => {
         </div>
       {/if}
     </div>
+
+    <div class="section delete">
+      <div class="delete-button">
+        <Button type="destructive" onclick={() => (deleteModal = true)}>
+          <Trash />
+          Delete account
+        </Button>
+      </div>
+
+      <div class="muted small">
+        <TriangleAlert />
+        This action is irreversible, all of your data will be permanently deleted
+        with no way to recover it
+      </div>
+    </div>
   </div>
 </div>
+
+<Modal bind:open={deleteModal}>
+  <div class="delete-modal">
+    <div class="delete-modal-title">
+      <Trash />
+      Delete Account
+    </div>
+
+    <div class="confirm-email">
+      <div class="muted small">
+        <TriangleAlert />
+        This action is irreversible <br />
+        To confirm the deletion of your account please enter your email
+      </div>
+      <EmailInput bind:value={deleteEmail} />
+    </div>
+
+    <div class="delete-actions">
+      <Button type="secondary" onclick={() => (deleteModal = false)}>
+        <X />
+        Cancel
+      </Button>
+      <Button
+        type="destructive"
+        disabled={!deleteValid}
+        onclick={confirmDelete}>
+        <Trash />
+        Delete account
+      </Button>
+    </div>
+  </div>
+</Modal>
 
 <style lang="scss">
 .user-page {
@@ -259,6 +329,12 @@ onMount(async () => {
       }
     }
 
+    &.delete {
+      display: flex;
+      flex-direction: column;
+      gap: var(--padding-xs);
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -274,6 +350,24 @@ onMount(async () => {
         background-color: var(--color-success-background);
       }
     }
+  }
+}
+
+.delete-modal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-m);
+
+  .confirm-email {
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-xs);
+  }
+
+  .delete-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 }
 </style>

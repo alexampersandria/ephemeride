@@ -1413,3 +1413,40 @@ fn test_get_entries_limit_0_selects_more_than_31() {
   let entries = entries.unwrap();
   assert_eq!(entries.data.len(), 35);
 }
+
+#[test]
+fn test_delete_user_deletes_all_data() {
+  let user = create_test_user();
+  let category = log::create_category(log::CreateCategory {
+    name: "Test Category".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  let tag = log::create_tag(log::CreateTag {
+    name: "Test Tag".to_string(),
+    color: "blue".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  let entry = log::create_entry(log::CreateEntry {
+    date: "2025-10-17".to_string(),
+    mood: 5,
+    entry: Some("Test entry".to_string()),
+    selected_tags: vec![tag.id.clone()],
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let deleted = user::delete_user(&user.id);
+
+  let found_category = log::get_category(&category.id, &user.id);
+  let found_tag = log::get_tag(&tag.id, &user.id);
+  let found_entry = log::get_entry_with_tags(&entry.id, &user.id);
+
+  assert!(deleted.is_ok());
+  assert!(deleted.unwrap());
+  assert!(found_category.is_err());
+  assert!(found_tag.is_err());
+  assert!(found_entry.is_err());
+}

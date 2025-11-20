@@ -13,6 +13,7 @@ export type UserState = {
   updateUserDetails: (
     details: Partial<UserDetails>,
   ) => Promise<UserDetails | null>
+  deleteAccount: () => Promise<boolean>
 }
 
 let sessionId: string | null = $state(null)
@@ -73,6 +74,35 @@ const updateUserDetails = async (details: Partial<UserDetails>) => {
   return null
 }
 
+const deleteAccount = async (): Promise<boolean> => {
+  if (userDetails) {
+    const res = await fetch(`${env.PUBLIC_VITE_API_URL}/v1/user`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${sessionId}`,
+      },
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Failed to delete user account')
+        }
+        if (res.status === 204) {
+          return true
+        }
+        throw new Error('Unexpected response status')
+      })
+      .catch(err => {
+        console.error('Error deleting user account:', err)
+        return false
+      })
+    if (res) {
+      logOut()
+    }
+    return res
+  }
+  return false
+}
+
 export const useUserStore: () => UserState = () => {
   $effect(() => {
     if (!dataStore) {
@@ -122,6 +152,9 @@ export const useUserStore: () => UserState = () => {
     },
     get updateUserDetails() {
       return updateUserDetails
+    },
+    get deleteAccount() {
+      return deleteAccount
     },
   }
 }

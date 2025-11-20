@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_RNuzpvo3dn
 createdAt: 2025-10-30T16:58:16.311248
-updatedAt: 2025-10-31T10:51:47.127063
+updatedAt: 2025-11-20T13:09:50.028705
 workspaceId: wk_BESCzWuhSE
 folderId: fl_s7uAHUrDvi
 authentication: {}
@@ -19,7 +19,7 @@ headers: []
 method: DELETE
 name: delete user
 sortPriority: 5000.0
-url: ${[ base_url ]}/api/v1/user
+url: ${[ base_url ]}/v1/user
 urlParameters:
 - enabled: true
   name: ''
