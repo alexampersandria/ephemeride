@@ -459,7 +459,7 @@ $effect(() => {
 
         &.selected {
           &:after {
-            background-color: var(--calendar-selected-background);
+            background-color: var(--calendar-selected-color);
           }
 
           a.day-button,
@@ -515,6 +515,10 @@ $effect(() => {
               border-top-left-radius: 0;
               border-bottom-left-radius: 0;
             }
+          }
+
+          &:after {
+            background-color: var(--calendar-between-selected-color);
           }
 
           a.day-button,
