@@ -15,13 +15,14 @@ import {
   Settings,
   Tags,
   User,
+  UserCog,
 } from 'lucide-svelte'
 
 import Button from '$lib/components/Button.svelte'
 import Modal from '$lib/components/Modal.svelte'
 import { useUiStore } from '$lib/store/uiStore.svelte'
 import { useUserStore } from '$lib/store/userStore.svelte'
-import { currentDate, fullDate } from '$lib/utils/log'
+import { currentDate } from '$lib/utils/log'
 import Chip from '$lib/components/Chip.svelte'
 import ThemeToggle from '$lib/components/ThemeToggle.svelte'
 import Label from '$lib/components/Label.svelte'
@@ -221,16 +222,18 @@ $effect(() => {
 {#if userStore.userDetails}
   <Modal bind:open={userDetailsModal}>
     <div class="app-modal user-details">
-      <div class="title">User details</div>
-      <div class="name">Display name: {userStore.userDetails.name}</div>
-      <div class="email">Email: {userStore.userDetails.email}</div>
-      <div class="member-since">
-        Member since: {fullDate(userStore.userDetails.created_at)}
+      <div class="title">
+        <User />
+        {userStore.userDetails.name}
+      </div>
+
+      <div class="muted small">
+        {userStore.userDetails.email}
       </div>
 
       <div class="user-actions">
         <Button href="/app/user/" fullwidth>
-          <User />
+          <UserCog />
           Manage account
         </Button>
 
@@ -616,7 +619,6 @@ $effect(() => {
 .app-modal {
   display: flex;
   flex-direction: column;
-  gap: var(--padding-xs);
 
   .title {
     font-size: var(--font-size-l);
@@ -624,6 +626,7 @@ $effect(() => {
   }
 
   .user-actions {
+    padding-top: var(--padding-m);
     display: flex;
     flex-direction: column;
     gap: var(--padding-xs);

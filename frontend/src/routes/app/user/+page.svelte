@@ -12,7 +12,7 @@ import {
   Save,
   Trash,
   TriangleAlert,
-  User,
+  UserCog,
   X,
 } from 'lucide-svelte'
 import { onMount } from 'svelte'
@@ -116,7 +116,7 @@ onMount(async () => {
 <div class="app-page user-page">
   <div class="container">
     <div class="app-page-title">
-      <User />
+      <UserCog />
       Manage account
     </div>
 
