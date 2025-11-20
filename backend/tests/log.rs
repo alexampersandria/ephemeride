@@ -1393,8 +1393,9 @@ fn test_get_entries_limit_0_selects_more_than_31() {
   let user = create_test_user();
 
   for i in 1..=35 {
+    let year = 1998 + i;
     let _ = log::create_entry(log::CreateEntry {
-      date: format!("2025-10-{i:02}"),
+      date: format!("{year}-10-01"),
       mood: (i % 5) + 1,
       entry: Some(format!("Entry {i}")),
       selected_tags: vec![],
