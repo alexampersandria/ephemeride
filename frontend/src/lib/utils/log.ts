@@ -326,3 +326,11 @@ export const dateClosestToRangeEdge = (date: string, range: Range<string>) => {
 
   return distanceToFrom <= distanceToTo ? 'from' : 'to'
 }
+
+/**
+ * returns YYYY-MM-DD date string from a timestamp
+ */
+export const timestampToDate = (timestamp: number | string) => {
+  const date = new Date(timestamp)
+  return date.toISOString().split('T')[0]
+}

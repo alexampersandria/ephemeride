@@ -1,5 +1,5 @@
 import { env } from '$env/dynamic/public'
-import type { UserDetails } from '$lib/types/user'
+import type { EditUserDetails, UserDetails } from '$lib/types/user'
 import { goto } from '$app/navigation'
 import { useDataStore, type DataState } from './dataStore.svelte'
 
@@ -10,6 +10,9 @@ export type UserState = {
   userDetails: UserDetails | null
   logOut: () => void
   logIn: (sessionId: string) => void
+  updateUserDetails: (
+    details: Partial<UserDetails>,
+  ) => Promise<UserDetails | null>
 }
 
 let sessionId: string | null = $state(null)
@@ -30,6 +33,44 @@ const logIn = (newSessionId: string) => {
     dataStore.fetchCategories()
   }
   goto('/app')
+}
+
+const updateUserDetails = async (details: Partial<UserDetails>) => {
+  if (userDetails) {
+    const updatedDetails = { ...userDetails, ...details }
+    const body: Partial<EditUserDetails> = {
+      name: updatedDetails.name,
+      email: updatedDetails.email,
+    }
+    const res = await fetch(`${env.PUBLIC_VITE_API_URL}/v1/user`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${sessionId}`,
+      },
+      body: JSON.stringify(body),
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Failed to update user details')
+        }
+        if (res.status === 204) {
+          return updatedDetails
+        }
+        return res.json()
+      })
+      .then((data: UserDetails) => {
+        console.log('Updated user details:', data)
+        userDetails = data
+        return userDetails
+      })
+      .catch(err => {
+        console.error('Error updating user details:', err)
+        return null
+      })
+    return res
+  }
+  return null
 }
 
 export const useUserStore: () => UserState = () => {
@@ -72,11 +113,15 @@ export const useUserStore: () => UserState = () => {
     set userDetails(value) {
       userDetails = value
     },
+
     get logOut() {
       return logOut
     },
     get logIn() {
       return logIn
+    },
+    get updateUserDetails() {
+      return updateUserDetails
     },
   }
 }

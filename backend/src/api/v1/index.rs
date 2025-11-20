@@ -13,7 +13,7 @@ pub fn endpoint() -> poem::Route {
     .at("/user/password", patch(v1::user::update_password))
 
     .at("/user/categories", get(v1::user::get_user_categories_with_tags))
-    
+
     .at("/category", post(v1::category::create_category))
     .at("/category/:id", patch(v1::category::edit_category)
     .delete(v1::category::delete_category))
@@ -27,6 +27,7 @@ pub fn endpoint() -> poem::Route {
     .delete(v1::entry::delete_entry))
     .at("/entries", get(v1::entries::get_entries))
 
+    // #TODO: add delete all sessions endpoint and delete session by id endpoint
     .at("/sessions", get(v1::sessions::get_sessions))
 
     .at("/auth", post(v1::auth::authenticate_user))

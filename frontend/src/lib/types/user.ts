@@ -6,6 +6,11 @@ export type UserDetails = {
   invite?: string
 }
 
+export type EditUserDetails = {
+  name?: string
+  email?: string
+}
+
 export type Session = {
   id: string
   user_id: string

@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_iLsWYjKLqw
 createdAt: 2025-10-30T16:53:53.213165
-updatedAt: 2025-10-31T10:51:47.126271
+updatedAt: 2025-11-20T12:41:22.740311
 workspaceId: wk_BESCzWuhSE
 folderId: fl_s7uAHUrDvi
 authentication: {}
@@ -11,7 +11,7 @@ body:
   text: |-
     {
       "name": "${[ name ]} changed",
-      "email": "new${[ email ]}"
+      "email": "new${[ email ]}2"
     }
 bodyType: application/json
 description: ''
@@ -23,7 +23,7 @@ headers:
 method: PATCH
 name: update user info
 sortPriority: 4000.0
-url: ${[ base_url ]}/api/v1/user
+url: ${[ base_url ]}/v1/user
 urlParameters:
 - enabled: true
   name: ''

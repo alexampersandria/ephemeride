@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_8LGYieo97A
 createdAt: 2025-10-30T18:55:34.109589
-updatedAt: 2025-10-31T10:50:07.879537
+updatedAt: 2025-11-20T11:04:30.323446
 workspaceId: wk_BESCzWuhSE
 folderId: fl_d8b3aPxGc3
 authentication: {}
@@ -10,7 +10,7 @@ authenticationType: null
 body:
   text: |-
     {
-      "nae": "a new category"
+      "name": "a new category"
     }
 bodyType: application/json
 description: ''

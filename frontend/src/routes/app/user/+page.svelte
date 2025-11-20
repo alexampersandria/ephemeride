@@ -1,59 +1,165 @@
 <script lang="ts">
+import Input from '$lib/components/Input.svelte'
+import Label from '$lib/components/Label.svelte'
 import Spinner from '$lib/components/Spinner.svelte'
 import { useUserStore } from '$lib/store/userStore.svelte'
-import type { Session } from '$lib/types/user'
+import { type UserDetails, type Session } from '$lib/types/user'
 import { getSessions } from '$lib/utils/api'
 import { takeAtLeast } from '$lib/utils/takeAtLeast'
-import { User } from 'lucide-svelte'
+import { Pencil, PencilOff, Save, User } from 'lucide-svelte'
 import { onMount } from 'svelte'
+import Button from '$lib/components/Button.svelte'
+import Message from '$lib/components/Message.svelte'
+import { diff } from 'deep-object-diff'
+import { timestampToDate } from '$lib/utils/log'
+import EmailInput from '$lib/assemblies/EmailInput.svelte'
+import type { InputState } from '$lib/types/input'
 
 let userStore = useUserStore()
 
 let sessions: Session[] | null = $state(null)
+let editUser = $state(false)
+let editModel = $state<UserDetails | undefined>(undefined)
+let editInputState = $state<{
+  name: InputState
+  email: InputState
+}>({
+  name: 'untouched',
+  email: 'untouched',
+})
+let editLoading = $state(false)
+let editError = $state<string | null>(null)
 
-onMount(async () => {
+const startEdit = () => {
+  if (userStore.userDetails) {
+    editModel = { ...userStore.userDetails }
+    editUser = true
+    editError = null
+    editLoading = false
+  }
+}
+
+const getData = async () => {
   if (userStore.sessionId) {
     sessions = (await takeAtLeast(getSessions(userStore.sessionId))) || null
   }
-})
+}
 
 let isActive = (session: Session): boolean => {
   return session.id === userStore.sessionId
 }
+
+let isValid = $derived.by(() => {
+  return (
+    editModel !== undefined &&
+    editInputState.name !== 'invalid' &&
+    editInputState.email !== 'invalid' &&
+    editError === null
+  )
+})
+
+const changed = $derived.by(() => {
+  if (editModel && userStore.userDetails) {
+    const objDiff = diff(userStore.userDetails, editModel)
+    return Object.keys(objDiff).length > 0
+  }
+  return false
+})
+
+const saveChanges = async () => {
+  if (editModel && userStore.userDetails) {
+    if (!changed) {
+      editUser = false
+      return
+    }
+
+    editLoading = true
+    const res = await takeAtLeast(userStore.updateUserDetails(editModel), 500)
+    console.log('Update result:', res)
+    editLoading = false
+    if (res) {
+      editUser = false
+    } else {
+      editError = 'An error occurred'
+    }
+  }
+}
+
+onMount(async () => {
+  getData()
+})
 </script>
 
 <div class="app-page user-page">
   <div class="container">
     <div class="app-page-title">
       <User />
-      Manage account (WIP)
+      Manage account
     </div>
 
-    <div class="section details">
-      <div class="section-title">User Details</div>
-      <table>
-        <tbody>
-          <tr>
-            <th>Name</th>
-            <td>{userStore.userDetails?.name}</td>
-          </tr>
-          <tr>
-            <th>Email</th>
-            <td>{userStore.userDetails?.email}</td>
-          </tr>
-          <tr>
-            <th>Member Since</th>
-            <td
-              >{new Date(
-                userStore.userDetails?.created_at || '',
-              ).toLocaleString()}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    {#if userStore.userDetails}
+      <div class="section details" class:editing={editUser}>
+        {#if !editUser}
+          <div class="text">
+            <div class="text-section section-title">
+              {userStore.userDetails.name}
+            </div>
+
+            <div class="text-section small muted">
+              {userStore.userDetails.email}
+            </div>
+
+            <div class="text-section small muted">
+              Member since {timestampToDate(userStore.userDetails.created_at)}
+            </div>
+          </div>
+
+          <div class="edit">
+            <Button onclick={startEdit} disabled={editLoading}>
+              <Pencil />
+            </Button>
+          </div>
+        {:else if editModel}
+          <div class="detail-item display-name">
+            <Label>Display name</Label>
+            <Input
+              required
+              bind:inputstate={editInputState.name}
+              bind:value={editModel.name} />
+          </div>
+          <div class="detail-item email">
+            <Label>Email</Label>
+            <EmailInput
+              required
+              bind:inputstate={editInputState.email}
+              bind:value={editModel.email} />
+          </div>
+
+          {#if editError}
+            <Message type="error" size="small">
+              {editError}
+            </Message>
+          {/if}
+
+          <div class="actions">
+            <Button onclick={() => (editUser = false)} disabled={editLoading}>
+              <PencilOff /> Cancel
+            </Button>
+
+            <Button
+              type="primary"
+              onclick={saveChanges}
+              loading={editLoading}
+              disabled={!isValid}>
+              <Save /> Save Changes
+            </Button>
+          </div>
+        {/if}
+      </div>
+    {/if}
 
     <div class="section sessions">
-      <div class="section-title">Active Sessions</div>
+      <div class="section-title">Active Sessions (WIP)</div>
       {#if sessions}
         <table>
           <thead>
@@ -94,7 +200,63 @@ let isActive = (session: Session): boolean => {
     .section-title {
       font-size: var(--font-size-m);
       font-weight: 600;
-      margin-bottom: var(--padding-m);
+    }
+
+    &.details {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+
+      .section-title {
+        margin-bottom: var(--padding-xs);
+      }
+
+      &.editing {
+        gap: var(--padding-xs);
+      }
+
+      &:not(.editing) {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+        overflow: hidden;
+
+        .text {
+          overflow: hidden;
+
+          .text-section {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+      }
+
+      .detail-item {
+        display: flex;
+        flex-direction: column;
+        gap: var(--padding-xxs);
+      }
+
+      .actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: var(--padding-xs);
+      }
+    }
+
+    &.sessions {
+      .section-title {
+        margin-bottom: var(--padding-s);
+      }
+
+      .loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: var(--padding-l);
+      }
     }
 
     table {
