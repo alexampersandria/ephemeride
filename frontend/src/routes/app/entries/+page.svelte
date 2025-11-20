@@ -180,7 +180,9 @@ const filtersApplied = $derived.by(() => {
         <Message type="error">{error}</Message>
       </div>
     {:else if list.length === 0}
-      <div class="centered dimmed">No entries found</div>
+      <div class="no-entries centered dimmed">
+        No entries found {#if filtersApplied}matching filters{/if}
+      </div>
     {:else}
       <div class="entries">
         <div class="count">
@@ -282,6 +284,10 @@ const filtersApplied = $derived.by(() => {
 .entries-page {
   .toggle-filters {
     margin-left: auto;
+  }
+
+  .no-entries {
+    padding: var(--padding-l) 0;
   }
 
   .entries {
