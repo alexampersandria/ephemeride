@@ -208,7 +208,6 @@ const clickDay = (day: number) => {
       }
 
       if (value.from && value.to) {
-        console.log('sorting')
         value = sortDateRange(value as Range<string>)
       }
     }
