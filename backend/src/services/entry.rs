@@ -298,14 +298,6 @@ pub fn delete_entry(entry_id: &str, user_id: &str) -> Result<bool, EphemerideErr
 
   let mut conn = establish_connection();
 
-  let deleted_entry_tags =
-    diesel::delete(schema::entry_tags::table.filter(schema::entry_tags::entry_id.eq(entry_id)))
-      .execute(&mut conn);
-
-  if deleted_entry_tags.is_err() {
-    return Err(EphemerideError::DatabaseError);
-  }
-
   let result = diesel::delete(
     schema::entries::table
       .filter(schema::entries::id.eq(entry_id))

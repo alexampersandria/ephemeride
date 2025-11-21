@@ -1,6 +1,6 @@
 use crate::{
   establish_connection,
-  schema::{entry_tags, tags},
+  schema::tags,
   services::{category::get_category, get_user},
   util::{self, Color, EphemerideError},
 };
@@ -170,13 +170,6 @@ pub fn delete_tag(tag_id: &str, user_id: &str) -> Result<bool, EphemerideError> 
   }
 
   let mut conn = establish_connection();
-
-  let deleted_entry_tags =
-    diesel::delete(entry_tags::table.filter(entry_tags::tag_id.eq(tag_id))).execute(&mut conn);
-
-  if deleted_entry_tags.is_err() {
-    return Err(EphemerideError::DatabaseError);
-  }
 
   let result = diesel::delete(
     tags::table

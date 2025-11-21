@@ -4,7 +4,7 @@ use ephemeride_backend::{
 };
 use uuid::Uuid;
 
-fn create_test_user() -> user::UserDetails {
+fn create_user() -> user::UserDetails {
   let random_name = Uuid::new_v4().to_string();
   let email = format!("{random_name}@example.com");
 
@@ -19,8 +19,8 @@ fn create_test_user() -> user::UserDetails {
 }
 
 #[test]
-fn test_create_category() {
-  let user = create_test_user();
+fn create_category() {
+  let user = create_user();
 
   let category = log::create_category(log::CreateCategory {
     name: "Test Category".to_string(),
@@ -34,8 +34,8 @@ fn test_create_category() {
 }
 
 #[test]
-fn test_edit_category() {
-  let user = create_test_user();
+fn edit_category() {
+  let user = create_user();
 
   let category = log::create_category(log::CreateCategory {
     name: "Original Name".to_string(),
@@ -56,8 +56,8 @@ fn test_edit_category() {
 }
 
 #[test]
-fn test_get_category() {
-  let user = create_test_user();
+fn get_category() {
+  let user = create_user();
 
   let category = log::create_category(log::CreateCategory {
     name: "Get Test".to_string(),
@@ -74,8 +74,8 @@ fn test_get_category() {
 }
 
 #[test]
-fn test_get_all_categories() {
-  let user = create_test_user();
+fn get_all_categories() {
+  let user = create_user();
 
   log::create_category(log::CreateCategory {
     name: "Category 1".to_string(),
@@ -96,8 +96,8 @@ fn test_get_all_categories() {
 }
 
 #[test]
-fn test_get_category_with_tags() {
-  let user = create_test_user();
+fn get_category_with_tags() {
+  let user = create_user();
 
   let category = log::create_category(log::CreateCategory {
     name: "Category with Tags".to_string(),
@@ -129,7 +129,7 @@ fn test_get_category_with_tags() {
 
 #[test]
 fn get_category_with_tags_not_found() {
-  let user = create_test_user();
+  let user = create_user();
 
   let result = log::get_category_with_tags("nonexistent_id", &user.id);
 
@@ -138,8 +138,8 @@ fn get_category_with_tags_not_found() {
 }
 
 #[test]
-fn test_get_user_categories_with_tags() {
-  let user = create_test_user();
+fn get_user_categories_with_tags() {
+  let user = create_user();
 
   let cat1 = log::create_category(log::CreateCategory {
     name: "Category 1".to_string(),
@@ -181,8 +181,8 @@ fn test_get_user_categories_with_tags() {
 }
 
 #[test]
-fn test_delete_category() {
-  let user = create_test_user();
+fn delete_category() {
+  let user = create_user();
 
   let category = log::create_category(log::CreateCategory {
     name: "To Delete".to_string(),
@@ -207,8 +207,8 @@ fn test_delete_category() {
 }
 
 #[test]
-fn test_create_tag() {
-  let user = create_test_user();
+fn create_tag() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "Test Category".to_string(),
     user_id: user.id.clone(),
@@ -230,8 +230,8 @@ fn test_create_tag() {
 }
 
 #[test]
-fn test_edit_tag() {
-  let user = create_test_user();
+fn edit_tag() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "Test Category".to_string(),
     user_id: user.id.clone(),
@@ -259,8 +259,8 @@ fn test_edit_tag() {
 }
 
 #[test]
-fn test_get_tag() {
-  let user = create_test_user();
+fn get_tag() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "Test Category".to_string(),
     user_id: user.id.clone(),
@@ -283,8 +283,8 @@ fn test_get_tag() {
 }
 
 #[test]
-fn test_get_tags() {
-  let user = create_test_user();
+fn get_tags() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "Test Category".to_string(),
     user_id: user.id.clone(),
@@ -314,8 +314,8 @@ fn test_get_tags() {
 }
 
 #[test]
-fn test_get_category_tags() {
-  let user = create_test_user();
+fn get_category_tags() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "Test Category".to_string(),
     user_id: user.id.clone(),
@@ -344,8 +344,8 @@ fn test_get_category_tags() {
 }
 
 #[test]
-fn test_delete_tag() {
-  let user = create_test_user();
+fn delete_tag() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "Test Category".to_string(),
     user_id: user.id.clone(),
@@ -369,8 +369,8 @@ fn test_delete_tag() {
 }
 
 #[test]
-fn test_delete_all_category_tags() {
-  let user = create_test_user();
+fn delete_all_category_tags() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "Test Category".to_string(),
     user_id: user.id.clone(),
@@ -402,8 +402,8 @@ fn test_delete_all_category_tags() {
 }
 
 #[test]
-fn test_create_entry() {
-  let user = create_test_user();
+fn create_entry() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "Test Category".to_string(),
     user_id: user.id.clone(),
@@ -438,8 +438,8 @@ fn test_create_entry() {
 }
 
 #[test]
-fn test_create_entry_without_content() {
-  let user = create_test_user();
+fn create_entry_without_content() {
+  let user = create_user();
 
   let entry = log::create_entry(log::CreateEntry {
     date: "2025-10-17".to_string(),
@@ -456,8 +456,8 @@ fn test_create_entry_without_content() {
 }
 
 #[test]
-fn test_edit_entry() {
-  let user = create_test_user();
+fn edit_entry() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "Test Category".to_string(),
     user_id: user.id.clone(),
@@ -509,8 +509,8 @@ fn test_edit_entry() {
 }
 
 #[test]
-fn test_get_entry_with_tags() {
-  let user = create_test_user();
+fn get_entry_with_tags() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "Test Category".to_string(),
     user_id: user.id.clone(),
@@ -543,8 +543,8 @@ fn test_get_entry_with_tags() {
 }
 
 #[test]
-fn test_create_default_data() {
-  let user = create_test_user();
+fn create_default_data() {
+  let user = create_user();
 
   let result = log::create_default_data(user.id.clone());
 
@@ -573,8 +573,8 @@ fn test_create_default_data() {
 // Validation tests
 
 #[test]
-fn test_create_category_empty_name() {
-  let user = create_test_user();
+fn create_category_empty_name() {
+  let user = create_user();
 
   let category = log::create_category(log::CreateCategory {
     name: "".to_string(),
@@ -585,8 +585,8 @@ fn test_create_category_empty_name() {
 }
 
 #[test]
-fn test_create_category_name_too_long() {
-  let user = create_test_user();
+fn create_category_name_too_long() {
+  let user = create_user();
 
   let long_name = "a".repeat(256);
   let category = log::create_category(log::CreateCategory {
@@ -598,8 +598,8 @@ fn test_create_category_name_too_long() {
 }
 
 #[test]
-fn test_edit_category_empty_name() {
-  let user = create_test_user();
+fn edit_category_empty_name() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "Original Name".to_string(),
     user_id: user.id.clone(),
@@ -616,8 +616,8 @@ fn test_edit_category_empty_name() {
 }
 
 #[test]
-fn test_edit_category_name_too_long() {
-  let user = create_test_user();
+fn edit_category_name_too_long() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "Original Name".to_string(),
     user_id: user.id.clone(),
@@ -635,8 +635,8 @@ fn test_edit_category_name_too_long() {
 }
 
 #[test]
-fn test_create_tag_empty_name() {
-  let user = create_test_user();
+fn create_tag_empty_name() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "Test Category".to_string(),
     user_id: user.id.clone(),
@@ -654,8 +654,8 @@ fn test_create_tag_empty_name() {
 }
 
 #[test]
-fn test_create_tag_name_too_long() {
-  let user = create_test_user();
+fn create_tag_name_too_long() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "Test Category".to_string(),
     user_id: user.id.clone(),
@@ -674,8 +674,8 @@ fn test_create_tag_name_too_long() {
 }
 
 #[test]
-fn test_create_tag_empty_color() {
-  let user = create_test_user();
+fn create_tag_empty_color() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "Test Category".to_string(),
     user_id: user.id.clone(),
@@ -693,8 +693,8 @@ fn test_create_tag_empty_color() {
 }
 
 #[test]
-fn test_create_tag_color_too_long() {
-  let user = create_test_user();
+fn create_tag_color_too_long() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "Test Category".to_string(),
     user_id: user.id.clone(),
@@ -713,8 +713,8 @@ fn test_create_tag_color_too_long() {
 }
 
 #[test]
-fn test_edit_tag_empty_name() {
-  let user = create_test_user();
+fn edit_tag_empty_name() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "Test Category".to_string(),
     user_id: user.id.clone(),
@@ -739,8 +739,8 @@ fn test_edit_tag_empty_name() {
 }
 
 #[test]
-fn test_edit_tag_name_too_long() {
-  let user = create_test_user();
+fn edit_tag_name_too_long() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "Test Category".to_string(),
     user_id: user.id.clone(),
@@ -766,8 +766,8 @@ fn test_edit_tag_name_too_long() {
 }
 
 #[test]
-fn test_edit_tag_empty_color() {
-  let user = create_test_user();
+fn edit_tag_empty_color() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "Test Category".to_string(),
     user_id: user.id.clone(),
@@ -792,8 +792,8 @@ fn test_edit_tag_empty_color() {
 }
 
 #[test]
-fn test_edit_tag_color_too_long() {
-  let user = create_test_user();
+fn edit_tag_color_too_long() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "Test Category".to_string(),
     user_id: user.id.clone(),
@@ -819,8 +819,8 @@ fn test_edit_tag_color_too_long() {
 }
 
 #[test]
-fn test_create_entry_empty_date() {
-  let user = create_test_user();
+fn create_entry_empty_date() {
+  let user = create_user();
 
   let entry = log::create_entry(log::CreateEntry {
     date: "".to_string(),
@@ -834,8 +834,8 @@ fn test_create_entry_empty_date() {
 }
 
 #[test]
-fn test_create_entry_date_too_long() {
-  let user = create_test_user();
+fn create_entry_date_too_long() {
+  let user = create_user();
 
   let long_date = "a".repeat(256);
   let entry = log::create_entry(log::CreateEntry {
@@ -850,8 +850,8 @@ fn test_create_entry_date_too_long() {
 }
 
 #[test]
-fn test_create_entry_mood_too_low() {
-  let user = create_test_user();
+fn create_entry_mood_too_low() {
+  let user = create_user();
 
   let entry = log::create_entry(log::CreateEntry {
     date: "2025-10-17".to_string(),
@@ -865,8 +865,8 @@ fn test_create_entry_mood_too_low() {
 }
 
 #[test]
-fn test_create_entry_mood_too_high() {
-  let user = create_test_user();
+fn create_entry_mood_too_high() {
+  let user = create_user();
 
   let entry = log::create_entry(log::CreateEntry {
     date: "2025-10-17".to_string(),
@@ -880,8 +880,8 @@ fn test_create_entry_mood_too_high() {
 }
 
 #[test]
-fn test_create_entry_content_too_long() {
-  let user = create_test_user();
+fn create_entry_content_too_long() {
+  let user = create_user();
 
   let long_content = "a".repeat(1001);
   let entry = log::create_entry(log::CreateEntry {
@@ -896,8 +896,8 @@ fn test_create_entry_content_too_long() {
 }
 
 #[test]
-fn test_edit_entry_empty_date() {
-  let user = create_test_user();
+fn edit_entry_empty_date() {
+  let user = create_user();
   let entry = log::create_entry(log::CreateEntry {
     date: "2025-10-17".to_string(),
     mood: 3,
@@ -920,8 +920,8 @@ fn test_edit_entry_empty_date() {
 }
 
 #[test]
-fn test_edit_entry_date_too_long() {
-  let user = create_test_user();
+fn edit_entry_date_too_long() {
+  let user = create_user();
   let entry = log::create_entry(log::CreateEntry {
     date: "2025-10-17".to_string(),
     mood: 3,
@@ -945,8 +945,8 @@ fn test_edit_entry_date_too_long() {
 }
 
 #[test]
-fn test_edit_entry_mood_too_low() {
-  let user = create_test_user();
+fn edit_entry_mood_too_low() {
+  let user = create_user();
   let entry = log::create_entry(log::CreateEntry {
     date: "2025-10-17".to_string(),
     mood: 3,
@@ -969,8 +969,8 @@ fn test_edit_entry_mood_too_low() {
 }
 
 #[test]
-fn test_edit_entry_mood_too_high() {
-  let user = create_test_user();
+fn edit_entry_mood_too_high() {
+  let user = create_user();
   let entry = log::create_entry(log::CreateEntry {
     date: "2025-10-17".to_string(),
     mood: 3,
@@ -993,8 +993,8 @@ fn test_edit_entry_mood_too_high() {
 }
 
 #[test]
-fn test_edit_entry_content_too_long() {
-  let user = create_test_user();
+fn edit_entry_content_too_long() {
+  let user = create_user();
   let entry = log::create_entry(log::CreateEntry {
     date: "2025-10-17".to_string(),
     mood: 3,
@@ -1018,8 +1018,8 @@ fn test_edit_entry_content_too_long() {
 }
 
 #[test]
-fn test_delete_tag_in_use_by_entry() {
-  let user = create_test_user();
+fn delete_tag_in_use_by_entry() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "Test Category".to_string(),
     user_id: user.id.clone(),
@@ -1053,8 +1053,8 @@ fn test_delete_tag_in_use_by_entry() {
 }
 
 #[test]
-fn test_delete_category_with_tags() {
-  let user = create_test_user();
+fn delete_category_with_tags() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "To Delete".to_string(),
     user_id: user.id.clone(),
@@ -1078,8 +1078,8 @@ fn test_delete_category_with_tags() {
 }
 
 #[test]
-fn test_create_entry_date_validation() {
-  let user = create_test_user();
+fn create_entry_date_validation() {
+  let user = create_user();
 
   let string_date = log::create_entry(log::CreateEntry {
     date: "invalid-date".to_string(),
@@ -1117,8 +1117,8 @@ fn test_create_entry_date_validation() {
 }
 
 #[test]
-fn test_tag_color_default() {
-  let user = create_test_user();
+fn tag_color_default() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "Test Category".to_string(),
     user_id: user.id.clone(),
@@ -1138,8 +1138,8 @@ fn test_tag_color_default() {
 }
 
 #[test]
-fn test_get_entries_in_range() {
-  let user = create_test_user();
+fn get_entries_in_range() {
+  let user = create_user();
 
   let entry1 = log::create_entry(log::CreateEntry {
     date: "2025-10-15".to_string(),
@@ -1195,8 +1195,8 @@ fn test_get_entries_in_range() {
 }
 
 #[test]
-fn test_get_all_entries_no_options() {
-  let user = create_test_user();
+fn get_all_entries_no_options() {
+  let user = create_user();
 
   let entry1 = log::create_entry(log::CreateEntry {
     date: "2025-10-15".to_string(),
@@ -1227,8 +1227,8 @@ fn test_get_all_entries_no_options() {
 }
 
 #[test]
-fn test_get_entries_in_mood_range() {
-  let user = create_test_user();
+fn get_entries_in_mood_range() {
+  let user = create_user();
 
   let entry1 = log::create_entry(log::CreateEntry {
     date: "2025-10-15".to_string(),
@@ -1274,8 +1274,8 @@ fn test_get_entries_in_mood_range() {
 }
 
 #[test]
-fn test_get_entries_with_tags() {
-  let user = create_test_user();
+fn get_entries_with_tags() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "Test Category".to_string(),
     user_id: user.id.clone(),
@@ -1320,8 +1320,8 @@ fn test_get_entries_with_tags() {
 }
 
 #[test]
-fn test_delete_category_with_tags_where_tags_are_also_in_use() {
-  let user = create_test_user();
+fn delete_category_with_tags_where_tags_are_also_in_use() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "To Delete".to_string(),
     user_id: user.id.clone(),
@@ -1357,8 +1357,8 @@ fn test_delete_category_with_tags_where_tags_are_also_in_use() {
 }
 
 #[test]
-fn test_get_entries_limit_and_offset() {
-  let user = create_test_user();
+fn get_entries_limit_and_offset() {
+  let user = create_user();
 
   for i in 1..=10 {
     let _ = log::create_entry(log::CreateEntry {
@@ -1389,8 +1389,8 @@ fn test_get_entries_limit_and_offset() {
 }
 
 #[test]
-fn test_get_entries_limit_0_selects_more_than_31() {
-  let user = create_test_user();
+fn get_entries_limit_0_selects_more_than_31() {
+  let user = create_user();
 
   for i in 1..=35 {
     let year = 1998 + i;
@@ -1415,8 +1415,8 @@ fn test_get_entries_limit_0_selects_more_than_31() {
 }
 
 #[test]
-fn test_delete_user_deletes_all_data() {
-  let user = create_test_user();
+fn delete_user_deletes_all_data() {
+  let user = create_user();
   let category = log::create_category(log::CreateCategory {
     name: "Test Category".to_string(),
     user_id: user.id.clone(),
@@ -1449,4 +1449,75 @@ fn test_delete_user_deletes_all_data() {
   assert!(found_category.is_err());
   assert!(found_tag.is_err());
   assert!(found_entry.is_err());
+}
+
+#[test]
+fn delete_tag_in_use() {
+  let user = create_user();
+  let category = log::create_category(log::CreateCategory {
+    name: "Test Category".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  let tag = log::create_tag(log::CreateTag {
+    name: "In Use".to_string(),
+    color: "blue".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  let entry = log::create_entry(log::CreateEntry {
+    date: "2025-10-17".to_string(),
+    mood: 5,
+    entry: Some("Test entry".to_string()),
+    selected_tags: vec![tag.id.clone()],
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let deleted = log::delete_tag(&tag.id, &user.id);
+
+  assert!(deleted.is_ok());
+  assert!(deleted.unwrap());
+
+  let found_entry = log::get_entry_with_tags(&entry.id, &user.id);
+  assert!(found_entry.is_ok());
+  let entry_with_tags = found_entry.unwrap();
+  assert!(entry_with_tags.selected_tags.is_empty());
+}
+
+#[test]
+fn delete_entry_with_tags() {
+  let user = create_user();
+  let category = log::create_category(log::CreateCategory {
+    name: "Test Category".to_string(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+  let tag = log::create_tag(log::CreateTag {
+    name: "Test Tag".to_string(),
+    color: "blue".to_string(),
+    category_id: category.id.clone(),
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let entry = log::create_entry(log::CreateEntry {
+    date: "2025-10-17".to_string(),
+    mood: 5,
+    entry: Some("Test entry".to_string()),
+    selected_tags: vec![tag.id.clone()],
+    user_id: user.id.clone(),
+  })
+  .unwrap();
+
+  let deleted = log::delete_entry(&entry.id, &user.id);
+
+  let found_entry = log::get_entry_with_tags(&entry.id, &user.id);
+  let found_tag = log::get_tag(&tag.id, &user.id);
+
+  assert!(deleted.is_ok());
+  assert!(deleted.unwrap());
+  assert!(found_entry.is_err());
+  assert!(found_tag.is_ok());
 }
