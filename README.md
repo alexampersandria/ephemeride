@@ -61,22 +61,6 @@ $ cargo clippy
 $ cargo build
 ```
 
-#### Testing With Frisby
-
-Run the backend locally which frisby will test against. Or configure `env.ts` to point to a different backend.
-
-```bash
-$ cargo run
-```
-
-Run frisby.
-
-```bash
-$ cd frisby
-$ bun install
-$ bun run test
-```
-
 ### 🖥️ Frontend
 
 All of the following commands should be run from the `frontend` directory.
