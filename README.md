@@ -117,8 +117,8 @@ There is a `setup.sh` script that will install the required dependencies, setup 
 
 > ⚠️ **WARNING:** This will overwrite any existing `.env` files.
 
-```bash
-$ ./setup.sh
+```zsh
+$ sh ./setup.sh
 ```
 
 ### 📝 Manual Setup
@@ -154,6 +154,16 @@ $ diesel migration run
 ```bash
 $ cd backend
 $ diesel migration redo --all
+```
+
+### 🐚 lint.sh, build.sh, & test.sh
+
+There are also `lint.sh`, `build.sh`, and `test.sh` scripts that will run linting, building, and testing for both the backend and frontend.
+
+```zsh
+$ sh ./lint.sh
+$ sh ./build.sh
+$ sh ./test.sh
 ```
 
 ## 🩺 Backend Tests
