@@ -10,7 +10,6 @@ import {
   LogOut,
   PanelLeftClose,
   PanelLeftOpen,
-  Plus,
   ScrollText,
   Settings,
   Tags,
@@ -22,8 +21,6 @@ import Button from '$lib/components/Button.svelte'
 import Modal from '$lib/components/Modal.svelte'
 import { useUiStore } from '$lib/store/uiStore.svelte'
 import { useUserStore } from '$lib/store/userStore.svelte'
-import { currentDate } from '$lib/utils/log'
-import Chip from '$lib/components/Chip.svelte'
 import ThemeToggle from '$lib/components/ThemeToggle.svelte'
 import Label from '$lib/components/Label.svelte'
 import Logo from '$lib/components/Logo.svelte'
@@ -78,10 +75,6 @@ const handleLogout = () => {
   userStore.logOut()
 }
 
-const entryForToday = () => {
-  return dataStore.getEntry(currentDate()) !== null
-}
-
 $effect(() => {
   if (page.url.pathname) {
     leftMenuOpenMobile = false
@@ -129,20 +122,9 @@ $effect(() => {
     </div>
 
     <div class="right">
-      <Button href="/app/entry/{currentDate()}" left>
-        {#if entryForToday()}
-          <CalendarDays />
-          Today
-        {:else}
-          <Plus />
-          New entry
-
-          <div class="new-entry-chip">
-            <Chip>
-              {currentDate()}
-            </Chip>
-          </div>
-        {/if}
+      <Button href="/app/entry/today" left>
+        <CalendarDays />
+        Today
       </Button>
     </div>
   </div>
