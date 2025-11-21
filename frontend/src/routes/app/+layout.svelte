@@ -237,38 +237,38 @@ $effect(() => {
       <ThemeToggle />
     </div>
 
-    <hr />
+    <div class="settings-actions">
+      <div class="internal">
+        <div class="internal-element">
+          <Button href="/" fullwidth>
+            <Logo /> Landing Page
+          </Button>
+        </div>
 
-    <div class="internal">
-      <div class="internal-element">
-        <Button href="/" fullwidth>
-          <Logo /> Landing Page
-        </Button>
+        <div class="internal-element">
+          <Button href="/docs" fullwidth>
+            <Book /> Docs
+          </Button>
+        </div>
       </div>
 
-      <div class="internal-element">
-        <Button href="/docs" fullwidth>
-          <Book /> Docs
-        </Button>
-      </div>
+      <Button
+        href="https://github.com/alexampersandria/ephemeride"
+        target="_blank"
+        fullwidth>
+        <Github /> GitHub
+      </Button>
+
+      <Button
+        type="destructive"
+        fullwidth
+        onclick={() => {
+          dataStore.deleteData()
+          window.location.reload()
+        }}>
+        Delete dataStore data and reload (debug)
+      </Button>
     </div>
-
-    <Button
-      href="https://github.com/alexampersandria/ephemeride"
-      target="_blank"
-      fullwidth>
-      <Github /> GitHub
-    </Button>
-
-    <Button
-      type="destructive"
-      fullwidth
-      onclick={() => {
-        dataStore.deleteData()
-        window.location.reload()
-      }}>
-      Delete dataStore data and reload (debug)
-    </Button>
   </div>
 </Modal>
 
@@ -603,7 +603,8 @@ $effect(() => {
     font-weight: 600;
   }
 
-  .user-actions {
+  .user-actions,
+  .settings-actions {
     padding-top: var(--padding-m);
     display: flex;
     flex-direction: column;
