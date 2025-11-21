@@ -44,27 +44,27 @@ repos:
         language: rust
         files: ^backend/
         types_or: [rust, toml]
-      - id: yarn-install
-        name: yarn
-        entry: bash -c 'cd frontend && yarn'
+      - id: bun-install
+        name: bun install
+        entry: bash -c 'cd frontend && bun install'
         language: node
         files: ^frontend/
         types_or: [javascript, ts, svelte, json]
-      - id: yarn-lint
-        name: yarn lint
-        entry: bash -c 'cd frontend && yarn lint'
+      - id: bun-lint
+        name: bun run lint
+        entry: bash -c 'cd frontend && bun run lint'
         language: node
         files: ^frontend/
         types_or: [javascript, ts, svelte, json]
-      - id: yarn-check
-        name: yarn check
-        entry: bash -c 'cd frontend && yarn check'
+      - id: bun-check
+        name: bun run check
+        entry: bash -c 'cd frontend && bun run check'
         language: node
         files: ^frontend/
         types_or: [javascript, ts, svelte, json]
-      - id: yarn-test
-        name: yarn test
-        entry: bash -c 'cd frontend && yarn test'
+      - id: bun-test
+        name: bun run test
+        entry: bash -c 'cd frontend && bun run test'
         language: node
         files: ^frontend/
         types_or: [javascript, ts, svelte, json]

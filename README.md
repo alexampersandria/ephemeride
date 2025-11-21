@@ -61,22 +61,6 @@ $ cargo clippy
 $ cargo build
 ```
 
-#### Testing With Frisby
-
-Run the backend locally which frisby will test against. Or configure `env.ts` to point to a different backend.
-
-```bash
-$ cargo run
-```
-
-Run frisby.
-
-```bash
-$ cd frisby
-$ yarn
-$ yarn test
-```
-
 ### 🖥️ Frontend
 
 All of the following commands should be run from the `frontend` directory.
@@ -88,7 +72,7 @@ $ cd frontend
 #### Install
 
 ```bash
-$ yarn
+$ bun install
 ```
 
 #### Build
@@ -96,13 +80,13 @@ $ yarn
 When the frontend is built, it can be served by the backend.
 
 ```bash
-$ yarn build
+$ bun run build
 ```
 
 #### Dev Server
 
 ```bash
-$ yarn dev
+$ bun run dev
 ```
 
 ### ⛽ Diesel
@@ -117,8 +101,8 @@ There is a `setup.sh` script that will install the required dependencies, setup 
 
 > ⚠️ **WARNING:** This will overwrite any existing `.env` files.
 
-```bash
-$ ./setup.sh
+```zsh
+$ sh ./setup.sh
 ```
 
 ### 📝 Manual Setup
@@ -156,13 +140,23 @@ $ cd backend
 $ diesel migration redo --all
 ```
 
+### 🐚 lint.sh, build.sh, & test.sh
+
+There are also `lint.sh`, `build.sh`, and `test.sh` scripts that will run linting, building, and testing for both the backend and frontend.
+
+```zsh
+$ sh ./lint.sh
+$ sh ./build.sh
+$ sh ./test.sh
+```
+
 ## 🩺 Backend Tests
 
 GitHub actions will run `cargo test ci --verbose` on commit to `main` or when creaing a pull request. In order to have a backend test run using GitHub actions, include `ci` in the test name.
 
 As an example `util::unix_time::ci_unit::positive` could be defined as:
 
-```rust	
+```rust
 #[cfg(test)]
 mod ci_unit {
   use super::*;

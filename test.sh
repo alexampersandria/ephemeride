@@ -7,7 +7,7 @@ cargo test
 
 echo "\033[0;35m👩‍🔬 TEST\033[0m → frontend\033[0m"
 cd ../frontend
-yarn test
+bun run test
 
 # TIME END
 end=$(date +%s%N)

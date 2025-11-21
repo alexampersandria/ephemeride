@@ -2,9 +2,9 @@ name: frontend
 
 on:
   push:
-    branches: ['main']
+    branches: ["main"]
   pull_request:
-    branches: ['main']
+    branches: ["main"]
 
 env:
   CARGO_TERM_COLOR: always
@@ -19,24 +19,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: enable corepack
-        run: corepack enable
-
-      - name: node version
-        uses: actions/setup-node@v4
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: 23.7.0
-          cache: 'yarn'
-          cache-dependency-path: ./frontend/yarn.lock
+          bun-version: 1.3.2
 
       - name: install
-        run: yarn install
+        run: bun install
       - name: lint
-        run: yarn lint
+        run: bun run lint
       - name: check
-        run: yarn check
+        run: bun run check
       - name: build
-        run: yarn build
+        run: bun run build
       - name: test
-        run: yarn test
+        run: bun run test
