@@ -17,7 +17,7 @@ let today = $derived.by(() => {
   <div class="container">
     {#if userStore.userDetails !== null}
       <div class="today">
-        <div class="title">
+        <div class="app-page-title">
           <CalendarDays />
           Today's Entry
         </div>
@@ -26,13 +26,3 @@ let today = $derived.by(() => {
     {/if}
   </div>
 </div>
-
-<style lang="scss">
-.home-page {
-  .today {
-    display: flex;
-    flex-direction: column;
-    gap: var(--padding-s);
-  }
-}
-</style>

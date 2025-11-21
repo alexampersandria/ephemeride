@@ -532,10 +532,6 @@ $effect(() => {
     .top-bar {
       height: var(--app-top-bar-height);
       flex-shrink: 0;
-
-      .new-entry-chip {
-        display: none;
-      }
     }
 
     .content {
