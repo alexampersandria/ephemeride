@@ -73,8 +73,8 @@ Run frisby.
 
 ```bash
 $ cd frisby
-$ yarn
-$ yarn test
+$ bun install
+$ bun run test
 ```
 
 ### 🖥️ Frontend
@@ -88,7 +88,7 @@ $ cd frontend
 #### Install
 
 ```bash
-$ yarn
+$ bun install
 ```
 
 #### Build
@@ -96,13 +96,13 @@ $ yarn
 When the frontend is built, it can be served by the backend.
 
 ```bash
-$ yarn build
+$ bun run build
 ```
 
 #### Dev Server
 
 ```bash
-$ yarn dev
+$ bun run dev
 ```
 
 ### ⛽ Diesel
@@ -162,7 +162,7 @@ GitHub actions will run `cargo test ci --verbose` on commit to `main` or when cr
 
 As an example `util::unix_time::ci_unit::positive` could be defined as:
 
-```rust	
+```rust
 #[cfg(test)]
 mod ci_unit {
   use super::*;

@@ -8,8 +8,8 @@ cargo clippy --verbose
 
 echo "\033[0;35m🧹 LINT\033[0m → frontend\033[0m"
 cd ../frontend
-yarn lint
-yarn check
+bun run lint
+bun run check
 
 # TIME END
 end=$(date +%s%N)
