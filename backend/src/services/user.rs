@@ -204,13 +204,10 @@ pub fn update_user(id: &str, user: UpdateUser) -> Result<bool, EphemerideError> 
     Err(_) => return Err(EphemerideError::BadRequest),
   }
 
-  match get_user_id(&user.email) {
-    Ok(existing_user_id) => {
-      if existing_user_id != id {
-        return Err(EphemerideError::EmailAlreadyInUse);
-      }
+  if let Ok(existing_user_id) = get_user_id(&user.email) {
+    if existing_user_id != id {
+      return Err(EphemerideError::EmailAlreadyInUse);
     }
-    Err(_) => (),
   }
 
   let mut conn = establish_connection();
