@@ -81,8 +81,15 @@ let pastSevenDates = $derived.by(() => {
   .dates {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    background-color: var(--background-secondary);
-    border: var(--border-width) solid var(--border-color);
+    background-color: color-mix(var(--background-primary), transparent 70%);
+    border: var(--border-width) solid
+      color-mix(var(--border-color), transparent 50%);
+    &:hover {
+      background-color: color-mix(var(--background-primary), transparent 30%);
+      border: var(--border-width) solid
+        color-mix(var(--border-color), transparent 30%);
+    }
+    transition: var(--interactive-transition);
     border-radius: var(--radius-s);
     padding: var(--padding-s);
     gap: var(--padding-xs);
@@ -133,11 +140,12 @@ let pastSevenDates = $derived.by(() => {
         flex: 1 0 auto;
         font-size: var(--font-size-l);
         border-radius: var(--radius-s);
-        background-color: var(--background-primary);
+        background-color: color-mix(var(--background-accent), transparent 70%);
         display: flex;
         align-items: center;
         justify-content: center;
         height: 4rem;
+        transition: var(--interactive-transition);
 
         @for $i from 1 through 5 {
           &.mood-#{$i} {
